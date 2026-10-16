@@ -74,8 +74,14 @@ class WhatsAppClient:
         self.auth = {"Authorization": f"Bearer {s.whatsapp_access_token}"}
 
     def _post_message(self, body: dict) -> None:
-        r = self.client.post(f"{self.base}/{self.s.whatsapp_phone_number_id}/messages", headers=self.auth,
-                             json={"messaging_product": "whatsapp", **body})
+        payload = {"messaging_product": "whatsapp", "recipient_type": "individual", **body}
+        r = self.client.post(
+            f"{self.base}/{self.s.whatsapp_phone_number_id}/messages",
+            headers=self.auth,
+            json=payload,
+        )
+        if r.is_error:
+            log.error("Meta Graph API error %s: %s | Sent: %s", r.status_code, r.text, payload)
         r.raise_for_status()
 
     def download_media(self, media_id: str) -> tuple[bytes, str]:
@@ -94,19 +100,26 @@ class WhatsAppClient:
         return r.json()["id"]
 
     def send(self, to: str, o: Outbound) -> None:
+        target = to.strip().lstrip("+")
         if o.kind == "text":
-            self._post_message({"to": to, "type": "text", "text": {"body": o.text[:MAX_TEXT]}})
+            self._post_message({"to": target, "type": "text", "text": {"body": o.text[:MAX_TEXT]}})
         elif o.kind == "buttons":
-            self._post_message({"to": to, "type": "interactive", "interactive": {
-                "type": "button", "body": {"text": o.text[:MAX_BUTTON_BODY]},
-                "action": {"buttons": [{"type": "reply", "reply": {"id": i, "title": title[:MAX_BUTTON_TITLE]}}
-                                       for i, title in o.buttons[:3]]}}})
+            try:
+                self._post_message({"to": target, "type": "interactive", "interactive": {
+                    "type": "button", "body": {"text": o.text[:MAX_BUTTON_BODY]},
+                    "action": {"buttons": [{"type": "reply", "reply": {"id": i, "title": title[:MAX_BUTTON_TITLE]}}
+                                           for i, title in o.buttons[:3]]}}})
+            except Exception as e:
+                log.warning("Interactive button send failed (%s), falling back to text options", e)
+                options = "\n".join(f"{idx+1}. {title}" for idx, (_, title) in enumerate(o.buttons[:3]))
+                fallback = f"{o.text}\n\n{options}" if options else o.text
+                self._post_message({"to": target, "type": "text", "text": {"body": fallback[:MAX_TEXT]}})
         elif o.kind == "image" and o.media:
             mid = self.upload_media(o.media, o.mime or "image/png")
-            self._post_message({"to": to, "type": "image", "image": {"id": mid, "caption": o.text[:1024]}})
+            self._post_message({"to": target, "type": "image", "image": {"id": mid, "caption": o.text[:1024]}})
         elif o.kind == "audio" and o.media:
             mid = self.upload_media(o.media, o.mime or "audio/ogg")
-            self._post_message({"to": to, "type": "audio", "audio": {"id": mid}})
+            self._post_message({"to": target, "type": "audio", "audio": {"id": mid}})
 
 
 def process_webhook(payload: dict, *, bot: Bot, client: WhatsAppClient, store: Store, hash_user) -> int:
