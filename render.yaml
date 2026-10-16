@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: hunar-qr
+    runtime: python
+    region: singapore
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:create_app --factory --app-dir backend --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: ENABLE_DEMO_API
+        value: "true"
+      - key: DATA_DIR
+        value: data
+      - key: PUBLIC_BASE_URL
+        fromService:
+          type: web
+          name: hunar-qr
+          property: host

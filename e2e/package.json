@@ -1,0 +1,14 @@
+{
+  "name": "hunar-qr-e2e",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Runs the web demo in jsdom against the standalone page and against a live backend",
+  "scripts": {
+    "test": "node standalone.js && node api.js"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0",
+    "jsqr": "^1.4.0",
+    "qrcode-generator": "^1.4.4"
+  }
+}

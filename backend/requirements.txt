@@ -1,0 +1,9 @@
+fastapi>=0.110,<1
+uvicorn[standard]>=0.29
+python-multipart>=0.0.9
+httpx>=0.27
+cryptography>=42
+segno>=1.6
+pillow>=10.3
+numpy>=1.26
+opencv-python-headless>=4.8

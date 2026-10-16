@@ -1,0 +1,1636 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Hunar-QR</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;600&family=Noto+Sans+Tamil:wght@400;600&family=Noto+Sans:wght@400;500;600;700&family=Noto+Serif:wght@600;700&display=swap">
+<style>
+/* Layout: Indian Government Portal Design System (GIGW Compliant, Tricolour Band, Ashoka Blue, Crisp White Cards) */
+:root{
+  --scale:1;
+  --bg:#f4f6fa;
+  --surface:#ffffff;
+  --surface-2:#edf2f7;
+  --surface-3:#e2e8f0;
+  --ink:#0f172a;
+  --ink-2:#475569;
+  --line:#cbd5e1;
+  --line-strong:#94a3b8;
+  --primary:#0b2d64;
+  --on-primary:#ffffff;
+  --link:#0b4ea2;
+  --focus:#0b4ea2;
+  --head-bg:#0b2d64;
+  --head-fg:#ffffff;
+  --head-title:#0b2d64;
+  --saffron:#f37023;
+  --on-saffron:#ffffff;
+  --tri-saffron:#ff9933;
+  --tri-white:#ffffff;
+  --tri-green:#138808;
+  --navy:#0b2d64;
+  --ok:#0d731e;
+  --ok-bg:#f0fdf4;
+  --ok-line:#86efac;
+  --ok-solid:#15803d;
+  --bad:#b91c1c;
+  --bad-bg:#fef2f2;
+  --bad-line:#fca5a5;
+  --bad-solid:#dc2626;
+  --warn:#92400e;
+  --warn-bg:#fffbeb;
+  --warn-line:#fcd34d;
+  --warn-solid:#d97706;
+  --chat-bg:#efeae2;
+  --bubble-user:#d9fdd3;
+  --bubble-bot:#ffffff;
+  --qr-bg:#ffffff;
+  --qr-fg:#000000;
+  --r:4px;
+  --font-body:"Noto Sans","Noto Sans Tamil","Noto Sans Devanagari",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-head:"Noto Serif","Noto Sans Tamil","Noto Sans Devanagari",Georgia,"Times New Roman",serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+  font-size:calc(15px * var(--scale));
+  color-scheme:light;
+}
+:root[data-theme="high-contrast"]{
+  --bg:#050e1d; --surface:#0d1a2f; --surface-2:#162846;
+  --ink:#ffffff; --ink-2:#cbd5e1; --line:#334a6e; --line-strong:#607b9e;
+  --primary:#ffcb6b; --on-primary:#050e1d; --link:#93c5fd; --focus:#fde047;
+  --head-bg:#030a16; --head-title:#ffffff;
+  --ok:#86efac; --ok-bg:#062312; --ok-line:#22c55e;
+  --bad:#fca5a5; --bad-bg:#341010; --bad-line:#ef4444;
+  --warn:#fde047; --warn-bg:#2d2406; --warn-line:#eab308;
+  --chat-bg:#081326; --bubble-user:#143823; --bubble-bot:#10223f;
+  color-scheme:dark;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 1rem/1.55 var(--font-body)}
+h1,h2,h3{font-family:var(--font-head);color:var(--primary);text-wrap:balance;line-height:1.25;margin:0;font-weight:700}
+h1{font-size:1.7rem;letter-spacing:-0.01em} h2{font-size:1.25rem} h3{font-size:1.02rem}
+p{margin:0}
+a{color:var(--link);text-decoration:none}
+a:hover{text-decoration:underline}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.skip{position:absolute;left:-9999px;top:8px;background:var(--saffron);color:#ffffff;padding:8px 14px;font-weight:700;z-index:100;border-radius:2px}
+.skip:focus{left:8px}
+
+/* shell */
+.tri{display:flex;height:5px;border-bottom:1px solid rgba(0,0,0,0.06)}
+.tri i{flex:1}
+.tri i:nth-child(1){background:var(--tri-saffron)}
+.tri i:nth-child(2){background:var(--tri-white)}
+.tri i:nth-child(3){background:var(--tri-green)}
+.util{background:#f8fafc;border-bottom:1px solid #e2e8f0;font-size:.82rem;color:#334155}
+.util-in{display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between;padding-block:7px}
+.gov-flag-note{display:flex;align-items:center;gap:8px;font-size:.82rem;color:#1e293b}
+.gov-flag-note b{color:var(--primary)}
+.gov-flag-note .sep{color:#94a3b8}
+.tools{display:flex;flex-wrap:wrap;gap:6px 16px;align-items:center}
+.tgroup{display:flex;align-items:center;gap:4px}
+.tool{min-width:32px;min-height:28px;padding:2px 8px;font-size:.8rem;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);cursor:pointer;border-radius:2px;transition:all .15s ease}
+.tool:hover{border-color:var(--primary);color:var(--primary)}
+.tool[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
+.mast{background:#ffffff;border-bottom:1px solid #cbd5e1}
+.mast-in{display:flex;align-items:center;gap:16px 24px;flex-wrap:wrap;padding-block:16px}
+.brand{display:flex;gap:14px;align-items:center;min-width:0}
+.logo{width:50px;height:50px;flex:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.1))}
+.gov-dept{font-size:.78rem;font-weight:700;color:#0b2d64;line-height:1.25;text-transform:uppercase;letter-spacing:0.04em}
+.gov-dept .en-sub{text-transform:none;font-weight:500;color:#475569}
+.brand-main{display:flex;align-items:baseline;gap:8px;margin-top:1px}
+.brand .hi{font-size:1.25rem;color:var(--primary);font-family:var(--font-head);font-weight:700}
+.brand .nm{font:700 1.8rem/1.1 var(--font-head);color:var(--head-title);letter-spacing:-0.01em}
+.brand .sub{font-size:.84rem;color:#475569;font-weight:500;margin-top:2px}
+.mast-meta{margin-left:auto;font-size:.82rem;color:#475569;text-align:right;line-height:1.55}
+.mast-meta b{color:var(--primary);font-weight:600}
+.gov-badge-row{display:flex;gap:6px;justify-content:flex-end;margin-bottom:4px}
+.gov-pill{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.04em;padding:2px 8px;border:1px solid var(--primary);color:var(--primary);border-radius:2px;background:#f0f4f8}
+.gov-pill.green{border-color:var(--ok-solid);color:var(--ok-solid);background:var(--ok-bg)}
+.nav{background:var(--head-bg);border-bottom:3px solid #ff9933;box-shadow:0 2px 6px rgba(11,45,100,.12)}
+.tabs{display:flex;overflow-x:auto}
+.tab{appearance:none;background:none;border:0;border-bottom:4px solid transparent;color:#ffffff;padding:13px 20px 10px;font:600 .95rem var(--font-body);cursor:pointer;white-space:nowrap;transition:background .15s ease,border-color .15s ease}
+.tab:hover{background:rgba(255,255,255,.12);color:#ffffff}
+.tab[aria-selected="true"]{border-bottom-color:#ff9933;background:rgba(255,255,255,.16);color:#ffffff;font-weight:700}
+.tab:focus-visible{outline:3px solid #ff9933;outline-offset:-3px}
+.crumbs-bar{background:#edf2f7;border-bottom:1px solid #e2e8f0;font-size:.82rem;color:#475569;padding-block:8px;margin-bottom:16px}
+.crumbs{font-size:.82rem;color:#475569;padding-block:10px}
+main{padding-block:4px 36px}
+.lede{color:#334155;max-width:64ch;margin-top:6px;font-size:1.02rem}
+.head-row{display:grid;gap:4px;margin-bottom:16px}
+
+/* generic */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:0 1px 4px rgba(11,45,100,.06)}
+.hint{font-size:.85rem;color:var(--ink-2)}
+.notice{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;background:#fff8ec;border:1px solid #fcd34d;border-left:4px solid #f37023;padding:12px 16px;font-size:.88rem;margin-bottom:18px;border-radius:2px}
+.badge{background:#d97706;color:#ffffff;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px}
+.linkbtn{background:none;border:0;padding:0;color:var(--link);text-decoration:underline;cursor:pointer;font-size:inherit;font-weight:600}
+.btn{min-height:44px;padding:0 20px;border:1px solid var(--primary);background:var(--primary);color:var(--on-primary);font:600 .95rem var(--font-body);cursor:pointer;border-radius:3px;box-shadow:0 1px 3px rgba(11,45,100,.15);transition:background .15s ease,box-shadow .15s ease}
+.btn:hover{background:#08214a;box-shadow:0 2px 6px rgba(11,45,100,.25);filter:none}
+.btn:disabled{opacity:.55;cursor:progress}
+.btn.ghost{background:#ffffff;color:var(--primary);border-color:var(--primary);box-shadow:none}
+.btn.ghost:hover{background:#f0f4f8}
+.btn.small{min-height:34px;padding:0 14px;font-size:.85rem}
+.chip{border:1px solid #cbd5e1;background:#ffffff;color:#1e293b;padding:6px 14px;border-radius:999px;font-size:.84rem;cursor:pointer;transition:all .15s ease;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.chip:hover{background:#f1f5f9;border-color:var(--primary);color:var(--primary)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.tag{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border:1px solid;margin-left:6px;vertical-align:1px;border-radius:2px}
+.tag.live{color:var(--ok);border-color:var(--ok-line);background:var(--ok-bg)}
+.tag.sample{color:var(--warn);border-color:var(--warn-line);background:var(--warn-bg)}
+.tag.plan{color:var(--ink-2);border-color:var(--line-strong)}
+
+/* demo */
+.demo{display:grid;gap:20px;grid-template-columns:minmax(0,1fr) minmax(0,410px);grid-template-areas:"controls phone" "trace phone";align-items:start}
+.controls{grid-area:controls;min-width:0}
+.trace-card{grid-area:trace;min-width:0}
+.phone{grid-area:phone;min-width:0}
+@media (max-width:860px){
+  .demo{grid-template-columns:minmax(0,1fr);grid-template-areas:"controls" "phone" "trace"}
+}
+.seg{display:flex;flex-wrap:wrap;margin-top:14px;border:1px solid var(--line-strong);width:fit-content;max-width:100%;border-radius:3px;overflow:hidden}
+.seg-i{position:relative;display:block}
+.seg-i input{position:absolute;opacity:0;inset:0;cursor:pointer}
+.seg-i span{display:block;padding:10px 18px;font-weight:600;font-size:.9rem;color:var(--ink);background:var(--surface);transition:background .15s ease}
+.seg-i input:checked + span{background:var(--primary);color:var(--on-primary)}
+.seg-i input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
+.form{display:grid;gap:14px;margin-top:16px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
+.fld{min-width:0}
+.lbl{display:block;font-weight:600;font-size:.88rem;color:#1e293b;margin-bottom:4px}
+input[type=text],select,textarea{width:100%;font:inherit;color:var(--ink);background:#ffffff;border:1px solid var(--line-strong);padding:9px 12px;border-radius:3px;min-height:42px}
+input[type=text]:focus,select:focus,textarea:focus{border-color:var(--primary);outline:2px solid rgba(11,45,100,.2)}
+textarea{resize:vertical;line-height:1.45}
+.radios{display:flex;flex-wrap:wrap;gap:6px 18px;padding-top:6px}
+.radios label{display:flex;gap:6px;align-items:center;font-size:.9rem;cursor:pointer}
+.evrow{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.evrow img{width:132px;height:auto;border:1px solid var(--line-strong);display:block;border-radius:3px}
+.evrow .ctl{display:grid;gap:8px;min-width:0;flex:1 1 200px}
+.status{font-size:.85rem;color:var(--bad);min-height:1.2em}
+.trace{list-style:none;margin:12px 0 0;padding:0}
+.tr{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.tr:first-child{border-top:0}
+.st{width:20px;height:20px;border-radius:50%;border:2px solid var(--line-strong);display:grid;place-items:center;margin-top:2px;color:#fff}
+.st svg{width:12px;height:12px}
+.tr[data-state="running"] .st{border-color:var(--link);border-top-color:transparent;animation:spin .8s linear infinite}
+.tr[data-state="done"] .st{background:var(--ok-solid);border-color:var(--ok-solid)}
+.tr[data-state="error"] .st{background:var(--bad-solid);border-color:var(--bad-solid)}
+.tr .tl{font-weight:600;font-size:.92rem;color:var(--ink)}
+.tr .det{font-size:.84rem;color:var(--ink-2);overflow-wrap:anywhere}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* chat */
+.phone{display:flex;flex-direction:column;border:1px solid #cbd5e1;background:#efeae2;height:clamp(540px,80vh,720px);position:sticky;top:calc(12px + env(safe-area-inset-top,0px));overflow:hidden;box-shadow:0 10px 30px rgba(11,45,100,.14);border-radius:8px}
+@media (max-width:860px){.phone{position:static;height:min(640px,86vh)}}
+.phone-head{display:flex;align-items:center;gap:12px;padding:11px 14px;background:#075e54;color:#ffffff;border-bottom:1px solid rgba(0,0,0,.08)}
+.phone-head .logo{width:36px;height:36px;border-radius:50%;background:#ffffff;padding:2px}
+.phone-head strong{display:flex;align-items:center;gap:5px;font-size:.95rem;line-height:1.2;font-weight:600}
+.phone-head strong::after{content:"✓";display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;background:#25d366;color:#ffffff;font-size:10px;font-weight:bold}
+.phone-head small{display:block;font-size:.73rem;opacity:.9;line-height:1.3;color:#e2f7ed}
+.phone-head .tool{margin-left:auto;background:rgba(255,255,255,.16);color:#ffffff;border-color:rgba(255,255,255,.35);border-radius:3px;font-weight:500}
+.phone-head .tool:hover{background:rgba(255,255,255,.25)}
+.chat{flex:1;min-height:0;overflow:auto;background:#efeae2;background-image:radial-gradient(#d5cdc2 0.75px, transparent 0.75px);background-size:16px 16px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:88%;padding:10px 14px;border:1px solid #d5dbd6;background:#ffffff;border-radius:10px;border-top-left-radius:2px;font-size:.92rem;display:grid;gap:6px;overflow-wrap:anywhere;box-shadow:0 1px 2px rgba(0,0,0,.06);color:#111827}
+.msg.user{align-self:flex-end;background:#d9fdd3;border-color:#bce5b5;border-top-left-radius:10px;border-top-right-radius:2px}
+.msg.bot{align-self:flex-start}
+.msg.wide{width:96%;max-width:96%}
+.msg .meta{font-size:.7rem;color:var(--ink-2);text-align:right}
+.msg img.ev{width:100%;max-width:230px;display:block;border:1px solid var(--line);border-radius:3px}
+.msg.typing{display:flex;gap:4px;padding:12px 14px}
+.msg.typing span{width:7px;height:7px;border-radius:50%;background:var(--ink-2);animation:blink 1s infinite}
+.msg.typing span:nth-child(2){animation-delay:.15s}
+.msg.typing span:nth-child(3){animation-delay:.3s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.voice{display:flex;align-items:center;gap:10px;color:var(--ink-2);font-size:.82rem}
+.voice svg{width:140px;height:24px;color:var(--primary);flex:none}
+.fwd{border-left:3px solid var(--line-strong);padding-left:8px;white-space:pre-wrap;font-size:.88rem}
+.fwd-h{font-size:.72rem;color:var(--ink-2);font-style:italic}
+.tcard{display:grid;gap:4px}
+.tcard .cap{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--ink-2)}
+.alertc{border:1px solid var(--line-strong);background:var(--surface);overflow:hidden;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.alertc .ah{display:flex;align-items:center;gap:8px;padding:8px 12px;font-weight:700;color:#fff}
+.alertc .ah svg{width:20px;height:20px;flex:none}
+.alertc.danger .ah{background:var(--bad-solid)}
+.alertc.warning .ah{background:var(--warn-solid)}
+.alertc.low .ah{background:var(--ink-2)}
+.alertc.safe .ah{background:var(--ok-solid)}
+.alertc .ab{display:grid;gap:12px;padding:12px}
+.meter{height:10px;background:var(--surface-2);border:1px solid var(--line);position:relative;border-radius:2px}
+.meter b{position:absolute;inset:0 auto 0 0;display:block;border-radius:2px}
+.meter b.danger{background:var(--bad-solid)} .meter b.warning{background:var(--warn-solid)} .meter b.low{background:var(--ink-2)} .meter b.safe{background:var(--ok-solid)}
+.meter::before,.meter::after{content:"";position:absolute;top:-3px;bottom:-3px;width:1px;background:var(--line-strong)}
+.meter::before{left:25%} .meter::after{left:60%}
+.mscale{display:grid;grid-template-columns:25% 35% 40%;font-size:.68rem;color:var(--ink-2);margin-top:3px}
+.mtxt{font-size:.85rem;font-weight:600;display:flex;justify-content:space-between;gap:8px;margin-bottom:4px}
+.finds{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+.find{display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 8px;font-size:.84rem}
+.find b{font-weight:600}
+.find span.why{grid-column:2;color:var(--ink-2)}
+.sev{font-size:.64rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:1px 6px;border:1px solid;align-self:start;margin-top:2px;text-align:center;min-width:54px;border-radius:2px}
+.sev.high{color:var(--bad);border-color:var(--bad-line);background:var(--bad-bg)}
+.sev.med{color:var(--warn);border-color:var(--warn-line);background:var(--warn-bg)}
+.sev.low,.sev.info{color:var(--ink-2);border-color:var(--line-strong)}
+.sev.ok{color:var(--ok);border-color:var(--ok-line);background:var(--ok-bg)}
+.todo{margin:0;padding-left:1.2em;font-size:.85rem;display:grid;gap:3px}
+.vwarn{display:grid;gap:6px;background:var(--surface-2);padding:10px;font-size:.88rem;border-radius:3px}
+.vwarn .vrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.listing{display:grid;gap:3px;border:1px solid var(--line);background:var(--surface);padding:8px 10px;font-size:.85rem;border-radius:3px}
+.listing b{font-size:.92rem;color:var(--primary)}
+.listing .sm{color:var(--ink-2);font-size:.78rem}
+
+/* passport */
+.pp{background:#ffffff;border:1px solid var(--line-strong);width:100%;border-radius:4px;box-shadow:0 2px 8px rgba(11,45,100,.08);overflow:hidden}
+.pp .tri{height:5px}
+.pp-demo{background:#fff8ec;color:#92400e;border-bottom:1px solid #fcd34d;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;text-align:center}
+.pp-body{padding:16px;display:grid;gap:14px}
+.pp-title{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;border-bottom:1px solid #e2e8f0;padding-bottom:10px}
+.pp-title h3{font-size:1.15rem;color:var(--head-title)}
+.pp-title span{font-size:.85rem;color:var(--ink-2)}
+.pp-main{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;align-items:start}
+.qr{width:128px}
+.qr svg{display:block;width:100%;height:auto;border:1px solid var(--line-strong);border-radius:2px}
+.qr .qb{fill:var(--qr-bg)} .qr .qf{fill:var(--qr-fg)}
+.qr-miss{font-size:.75rem;color:var(--ink-2)}
+.pp.compact .qr{width:104px}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;margin:0;font-size:.88rem}
+.kv dt{color:var(--ink-2)} .kv dd{margin:0;font-weight:600;overflow-wrap:anywhere}
+.kv dd.edited{color:var(--bad)} .kv dd em{font-weight:400}
+.skills{display:flex;flex-wrap:wrap;gap:6px}
+.skills span{border:1px solid var(--line-strong);padding:2px 9px;font-size:.8rem;background:var(--surface-2);border-radius:2px}
+.sec-t{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2);margin-bottom:6px}
+.rb{display:grid;grid-template-columns:minmax(0,1fr) 90px 34px;gap:10px;align-items:center;font-size:.85rem;padding:4px 0}
+.rb .bar{height:8px;background:var(--surface-2);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.rb .bar i{display:block;height:100%;background:var(--primary);border-radius:4px}
+.rb b{text-align:right;font-variant-numeric:tabular-nums}
+.rb-note{font-size:.78rem;color:var(--ink-2);grid-column:1/-1;margin-top:-2px}
+.say{display:grid;gap:6px;border:1px solid var(--line);background:var(--surface-2);padding:10px 12px;border-radius:3px}
+.say .o{font-size:1.02rem}
+.say .e{color:var(--ink-2);font-size:.9rem}
+.mono{font-family:var(--font-mono);font-size:.78rem;overflow-wrap:anywhere;color:var(--ink-2)}
+.pp-ev{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.pp-ev img{width:120px;border:1px solid var(--line-strong);display:block;border-radius:3px}
+
+/* verify */
+.vgrid{display:grid;gap:20px;grid-template-columns:minmax(0,420px) minmax(0,1fr);align-items:start}
+@media (max-width:860px){.vgrid{grid-template-columns:minmax(0,1fr)}}
+.vleft{display:grid;gap:16px;min-width:0}
+.vqr{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
+.vqr .qr{width:150px}
+.vbtns{display:flex;flex-wrap:wrap;gap:8px}
+.verdict{display:flex;align-items:center;gap:10px;padding:12px 14px;color:#fff;font-weight:700;font-size:1.05rem;border-radius:3px}
+.verdict svg{width:24px;height:24px;flex:none}
+.verdict.ok{background:var(--ok-solid)} .verdict.bad{background:var(--bad-solid)}
+.vsteps{list-style:none;margin:0;padding:0}
+
+/* how */
+.sect{display:grid;gap:12px;margin-top:26px}
+.arch{display:grid;gap:10px}
+.arch .box{border:1px solid var(--line-strong);background:var(--surface);padding:12px 14px;font-size:.9rem;border-radius:3px}
+.arch .mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.arch .mod{border:1px solid var(--line-strong);background:var(--surface);min-width:0;border-radius:3px;overflow:hidden}
+.arch .mod h3{background:var(--head-bg);color:var(--head-fg);padding:8px 12px;font:600 .92rem var(--font-body)}
+.arch .mod ul{margin:0;padding:10px 12px 10px 28px;font-size:.88rem;display:grid;gap:4px}
+.arch .arrow{text-align:center;color:var(--ink-2);line-height:1}
+.arch .outs{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.arch .out{border:1px solid var(--ok-line);background:var(--ok-bg);padding:10px 12px;font-size:.88rem;border-radius:3px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:3px;box-shadow:0 1px 3px rgba(11,45,100,.04)}
+.tbl{width:100%;border-collapse:collapse;font-size:.88rem;background:var(--surface)}
+.tbl th{background:var(--head-bg);color:var(--head-fg);text-align:left;padding:10px 12px;font-weight:600;white-space:nowrap}
+.tbl td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+.tbl tr:nth-child(even) td{background:#f8fafc}
+.tbl td.num,.tbl th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tbl tr.total td{font-weight:700;background:var(--surface-2)}
+.plan{list-style:none;margin:0;padding:0;display:grid;gap:0;border:1px solid var(--line);background:var(--surface);border-radius:3px;overflow:hidden}
+.plan li{display:grid;grid-template-columns:130px minmax(0,1fr);gap:12px;padding:10px 14px;border-top:1px solid var(--line);font-size:.9rem}
+.plan li:first-child{border-top:0}
+.plan b{color:var(--head-title)}
+@media (max-width:560px){.plan li{grid-template-columns:minmax(0,1fr);gap:2px}}
+
+.head-row.split{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;align-items:flex-end}
+.head-row.split>div:first-child{display:grid;gap:4px;min-width:0}
+.problem{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));border:1px solid var(--line);background:var(--surface);margin-bottom:18px;border-top:3px solid #ff9933;box-shadow:0 1px 4px rgba(11,45,100,.06)}
+.pcell{padding:16px 18px;display:grid;gap:4px;align-content:start;border-left:1px solid var(--line);min-width:0}
+.pcell:first-child{border-left:0}
+.pnum{font:700 1.85rem/1.1 var(--font-head);color:var(--head-title);letter-spacing:-0.01em}
+.pcell p{font-size:.88rem;color:#1e293b}
+.pcell .src{font-size:.75rem;color:var(--link)}
+.pcell.ans{background:linear-gradient(135deg, #0b2d64 0%, #103d80 100%);color:#ffffff;border-left-color:transparent}
+.pcell.ans b{font:700 1.15rem var(--font-head);color:#ffffff}
+.pcell.ans p{color:rgba(255,255,255,.9)}
+.tourbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;background:var(--head-bg);color:var(--head-fg);padding:10px 14px;margin-bottom:14px;border-radius:3px}
+.tourbar .badge{background:var(--saffron);color:#ffffff}
+.tourbar .tool{margin-left:auto;background:transparent;color:var(--head-fg);border-color:rgba(255,255,255,.5)}
+.crit{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.cc{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:grid;gap:8px;align-content:start;min-width:0;box-shadow:0 1px 3px rgba(11,45,100,.05)}
+.cc p{font-size:.9rem;color:var(--ink-2)}
+.cc .btn{justify-self:start}
+input[type=range]{width:100%;accent-color:var(--primary)}
+.calc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:20px;align-items:start;margin-top:14px}
+@media (max-width:700px){.calc{grid-template-columns:minmax(0,1fr)}}
+.nval{font:700 1.5rem var(--font-head);color:var(--head-title)}
+.foot{background:var(--head-bg);color:#e2e8f0;font-size:.84rem;border-top:4px solid #ff9933}
+.foot-in{display:grid;gap:12px;padding-block:24px}
+.foot-cols{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.2fr);gap:24px}
+@media (max-width:760px){.foot-cols{grid-template-columns:minmax(0,1fr)}}
+.foot-title{font-weight:700;font-size:.95rem;color:#ffffff;margin-bottom:6px;font-family:var(--font-head)}
+.foot-disc{font-size:.76rem;color:#94a3b8;margin-top:6px}
+.helpline-item{font-size:.82rem;margin-bottom:4px;color:#cbd5e1}
+.helpline-item b{color:#ffffff}
+.helpline-item a{color:#93c5fd}
+.foot-links{display:flex;flex-wrap:wrap;gap:8px 14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.15);font-size:.8rem;color:#cbd5e1}
+.foot a{color:#bfdbfe}
+.foot-bottom{font-size:.76rem;color:#94a3b8;padding-top:4px}
+.composer{border-top:1px solid var(--line);background:var(--surface);padding:8px 10px;display:grid;gap:6px}
+.comp-row{display:flex;gap:8px}.comp-row input{flex:1;min-width:0}
+.comp-tools{display:flex;flex-wrap:wrap;gap:6px}
+label.chip{cursor:pointer}
+.msg audio{max-width:100%}
+@media (max-width:720px){.mast-meta{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<a class="skip" href="#main">Skip to main content</a>
+<div class="tri" aria-hidden="true"><i></i><i></i><i></i></div>
+<div class="util">
+  <div class="wrap util-in">
+    <div class="gov-flag-note">
+      <svg class="flag-icon" viewBox="0 0 24 16" width="20" height="14" aria-hidden="true" style="border-radius:1px;box-shadow:0 0 1px rgba(0,0,0,.25)">
+        <rect width="24" height="5.33" fill="#ff9933"/>
+        <rect y="5.33" width="24" height="5.34" fill="#ffffff"/>
+        <rect y="10.67" width="24" height="5.33" fill="#138808"/>
+        <circle cx="12" cy="8" r="2.2" fill="none" stroke="#0b2d64" stroke-width="0.5"/>
+        <path d="M12 5.8v4.4M9.8 8h4.4M10.4 6.4l3.2 3.2M10.4 9.6l3.2-3.2" stroke="#0b2d64" stroke-width="0.3"/>
+      </svg>
+      <span><b>भारत सरकार | Government of India</b></span>
+      <span class="sep">|</span>
+      <span>Seva First Innovation Challenge · Level 3 Prototype</span>
+    </div>
+    <div class="tools">
+      <div class="tgroup" role="group" aria-label="Text size">
+        <span>Text size</span>
+        <button class="tool" type="button" data-scale="0.9" aria-pressed="false" aria-label="Smaller text">A-</button>
+        <button class="tool" type="button" data-scale="1" aria-pressed="true" aria-label="Normal text">A</button>
+        <button class="tool" type="button" data-scale="1.15" aria-pressed="false" aria-label="Larger text">A+</button>
+      </div>
+      <div class="tgroup" role="group" aria-label="Bot language">
+        <span>Bot language</span>
+        <button class="tool" type="button" data-lang="en" aria-pressed="true">English</button>
+        <button class="tool" type="button" data-lang="ta" aria-pressed="false" lang="ta">தமிழ்</button>
+        <button class="tool" type="button" data-lang="hi" aria-pressed="false" lang="hi">हिन्दी</button>
+      </div>
+    </div>
+  </div>
+</div>
+<header class="mast">
+  <div class="wrap mast-in">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 48 48" role="img" aria-label="Hunar-QR logo">
+        <rect width="48" height="48" rx="4" fill="#0b2d64"/>
+        <rect x="7" y="7" width="18" height="18" rx="2" fill="#ffffff"/>
+        <rect x="10" y="10" width="12" height="12" fill="#0b2d64"/>
+        <rect x="13.5" y="13.5" width="5" height="5" fill="#ff9933"/>
+        <rect x="29" y="9" width="4" height="4" fill="#ffffff"/>
+        <rect x="36" y="9" width="4" height="4" fill="#ffffff"/>
+        <rect x="32" y="16" width="4" height="4" fill="#ffffff"/>
+        <rect x="9" y="30" width="4" height="4" fill="#ffffff"/>
+        <rect x="17" y="35" width="4" height="4" fill="#ffffff"/>
+        <rect x="28" y="28" width="13" height="13" rx="2" fill="#138808"/>
+        <rect x="32" y="32" width="5" height="5" fill="#ffffff"/>
+      </svg>
+      <div>
+        <div class="gov-dept">कौशल विकास एवं उद्यमिता मंत्रालय <span class="en-sub">· Ministry of Skill Development and Entrepreneurship</span></div>
+        <div class="brand-main">
+          <span class="hi" lang="hi">हुनर-QR</span>
+          <span class="nm">Hunar-QR</span>
+        </div>
+        <div class="sub">National AI Skill Credentialing &amp; Anti-Fraud Job Shield Portal · राष्ट्रीय कौशल सत्यापन पोर्टल</div>
+      </div>
+    </div>
+    <div class="mast-meta">
+      <div class="gov-badge-row">
+        <span class="gov-pill">कौशल भारत · Skill India</span>
+        <span class="gov-pill green">डिजिटल भारत · Digital India</span>
+      </div>
+      <div><b>Theme</b> Shikshit &amp; Kaushal Bharat (शिक्षित एवं कुशल भारत)</div>
+      <div><b>Also</b> Surakshit Bharat · Level 3 Track A (Product/Technology)</div>
+    </div>
+  </div>
+</header>
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" id="t-demo" aria-controls="tab-demo" aria-selected="true" type="button">Live demo</button>
+      <button class="tab" role="tab" id="t-verify" aria-controls="tab-verify" aria-selected="false" type="button">Employer verify</button>
+      <button class="tab" role="tab" id="t-how" aria-controls="tab-how" aria-selected="false" type="button">How it works</button>
+      <button class="tab" role="tab" id="t-crit" aria-controls="tab-crit" aria-selected="false" type="button">Judging criteria</button>
+    </div>
+  </div>
+</nav>
+<div class="crumbs-bar">
+  <div class="wrap crumbs">Home &rsaquo; Citizen Services &rsaquo; Hunar-QR Skill Verification &amp; Job Shield Portal</div>
+</div>
+
+<main id="main" class="wrap">
+<div class="tourbar" id="tourbar" role="status" hidden><span class="badge">Guided demo</span><span id="tourcap"></span><button class="tool" type="button" id="tourStop">Stop</button></div>
+
+<!-- DEMO -->
+<section id="tab-demo" role="tabpanel" aria-labelledby="t-demo">
+  <div class="head-row split">
+    <div>
+      <h1>Try Hunar-QR</h1>
+      <p class="lede">Send a skill photo and a mentor voice note, or forward a suspicious message or QR image. The bot answers in the language you pick above.</p>
+    </div>
+    <button class="btn" type="button" id="autoBtn">Play the guided demo</button>
+  </div>
+  <div class="problem" aria-label="The problem">
+    <div class="pcell"><span class="pnum">About 4%</span>
+      <p>of Indians aged 15 to 59 have formal vocational training. About 30% learned informally and hold no proof of it.</p>
+      <a class="src" href="https://www.dataforindia.com/vocational-training/" target="_blank" rel="noopener">Source: PLFS 2023-24, via Data for India</a></div>
+    <div class="pcell"><span class="pnum">₹22,495 crore</span>
+      <p>reported lost to cyber fraud in 2025, across more than 24 lakh complaints on the national portal.</p>
+      <a class="src" href="https://www.freepressjournal.in/amp/mumbai/over-24-lakh-cyber-complaints-22495-crore-fraud-reported-in-2025" target="_blank" rel="noopener">Source: Free Press Journal, 18 Feb 2026</a></div>
+    <div class="pcell ans"><b>One chat, two fixes</b>
+      <p>Hunar-QR turns informal skill into a signed passport, and blocks the fake offers that prey on the people who hold one.</p></div>
+  </div>
+  <div class="notice"><span class="badge">Prototype</span>
+    <span id="modeNote">Voice transcription and vision scoring use sample outputs. Fraud rules, credential signing and QR codes run live in your browser.</span>
+    <button class="linkbtn" type="button" id="toHow">What runs live</button>
+  </div>
+
+  <div class="demo">
+    <section class="card controls" aria-labelledby="ctl-h">
+      <h2 id="ctl-h">Send something to the bot</h2>
+      <div class="seg" role="radiogroup" aria-label="Choose a flow">
+        <label class="seg-i"><input type="radio" name="flow" value="A" checked><span>Mint a Skill Passport</span></label>
+        <label class="seg-i"><input type="radio" name="flow" value="B"><span>Check a suspicious message</span></label>
+      </div>
+
+      <form id="formA" class="form" novalidate>
+        <div class="row">
+          <div class="fld"><label class="lbl" for="trade">Trade practised</label>
+            <select id="trade">
+              <optgroup label="⚡ Technical & Engineering Trades (Technicians)">
+                <option value="electrical" selected>Electrical Installation</option>
+                <option value="plumbing">Plumbing & Sanitation</option>
+                <option value="hvac">HVAC / AC Technician</option>
+                <option value="automobile">Automobile Repair</option>
+                <option value="solar">Solar Installation</option>
+              </optgroup>
+              <optgroup label="🧵 Creative & Craft Sector (Artisans)">
+                <option value="tailoring">Tailoring & Embroidery</option>
+                <option value="pottery">Pottery & Ceramics</option>
+                <option value="weaving">Handloom & Weaving</option>
+                <option value="carpentry">Carpentry & Woodwork</option>
+              </optgroup>
+              <optgroup label="🏗️ Construction & Infrastructure">
+                <option value="masonry">Masonry & Bricklaying</option>
+                <option value="welding">Welding & Fabrication</option>
+                <option value="painting">House Painting & Polishing</option>
+              </optgroup>
+            </select></div>
+          <div class="fld"><label class="lbl" for="mlang">Worker troubleshooting viva language</label>
+            <select id="mlang">
+              <option value="ta">Tamil</option>
+              <option value="hi">Hindi</option>
+              <option value="en">English</option>
+            </select></div>
+        </div>
+        <div class="row">
+          <div class="fld"><label class="lbl" for="lname">Learner name (sample)</label>
+            <input type="text" id="lname" value="Karthik M." autocomplete="off"></div>
+          <div class="fld"><span class="lbl" id="ltl">Learner type</span>
+            <div class="radios" role="radiogroup" aria-labelledby="ltl">
+              <label><input type="radio" name="ltype" value="school" checked> School student</label>
+              <label><input type="radio" name="ltype" value="apprentice"> Apprentice</label>
+            </div></div>
+        </div>
+        <div class="fld"><span class="lbl">Evidence photo</span>
+          <div class="evrow">
+            <img id="evPrev" alt="Evidence photo that will be sent">
+            <div class="ctl">
+              <input type="file" id="photo" accept="image/*" aria-label="Choose your own photo">
+              <button type="button" class="btn ghost small" id="usesample">Use sample photo</button>
+              <p class="hint" id="photoHint">Your photo stays in this browser and is hashed for the credential. The prototype does not analyse it, so rubric scores are sample values.</p>
+            </div>
+          </div>
+        </div>
+        <div><button class="btn" type="submit" id="sendA">Send to bot</button></div>
+      </form>
+
+      <form id="formB" class="form" hidden novalidate>
+        <div class="fld"><label class="lbl" for="fwd">Forwarded message</label>
+          <textarea id="fwd" rows="6"></textarea></div>
+        <div class="fld"><span class="lbl" id="smpl">Sample messages</span>
+          <div class="chips" role="group" aria-labelledby="smpl" id="chips"></div></div>
+        <div class="fld"><span class="lbl" id="qrl">Forward a QR image (optional)</span>
+          <div class="evrow">
+            <img id="qrPrev" alt="QR image that will be scanned" hidden>
+            <div class="ctl">
+              <input type="file" id="qrimg" accept="image/*" aria-labelledby="qrl">
+              <button type="button" class="btn ghost small" id="qrsample">Use a sample scam QR image</button>
+              <button type="button" class="btn ghost small" id="qrclear" hidden>Remove QR image</button>
+              <p class="hint" id="qrHint">A QR decoder reads the code in your browser and the bot checks what it contains. Nothing is uploaded.</p>
+            </div>
+          </div></div>
+        <p class="hint" id="textHint">The checks run live in your browser on whatever you type. Nothing is uploaded.</p>
+        <div class="status" id="statusB" role="status"></div>
+        <div><button class="btn" type="submit" id="sendB">Forward to bot</button></div>
+      </form>
+    </section>
+
+    <section class="card trace-card" aria-labelledby="tr-h">
+      <h2 id="tr-h">Engine trace</h2>
+      <p class="hint">Each step is marked <span class="tag live" style="margin-left:0">Live</span> when it runs in this page or <span class="tag sample" style="margin-left:0">Sample output</span> when a production service would supply it.</p>
+      <ol class="trace" id="trace"></ol>
+    </section>
+
+    <aside class="phone" aria-label="Demo chat with the Hunar-QR bot">
+      <div class="phone-head">
+        <svg class="logo" viewBox="0 0 48 48" aria-hidden="true"><rect width="48" height="48" fill="#ffffff"/><rect x="7" y="7" width="18" height="18" fill="#0f2f66"/><rect x="11" y="11" width="10" height="10" fill="#ffffff"/><rect x="13.5" y="13.5" width="5" height="5" fill="#ff9933"/><rect x="28" y="28" width="13" height="13" fill="#138808"/><rect x="29" y="9" width="4" height="4" fill="#0f2f66"/><rect x="9" y="30" width="4" height="4" fill="#0f2f66"/></svg>
+        <div><strong>Hunar-QR Bot</strong><small>Demo chat, not connected to WhatsApp</small></div>
+        <button class="tool" type="button" id="clear">Clear chat</button>
+      </div>
+      <div class="chat" id="chat" role="log" aria-live="polite" aria-label="Chat messages"></div>
+      <form class="composer" id="composer" hidden>
+        <div class="comp-row">
+          <input type="text" id="compText" placeholder="Type a message to the bot" autocomplete="off" aria-label="Message to the bot">
+          <button class="btn small" type="submit">Send</button>
+        </div>
+        <div class="comp-tools">
+          <button type="button" class="chip" id="compAadhaar">Use demo Aadhaar</button>
+          <button type="button" class="chip" id="compOtp">Use demo OTP</button>
+          <button type="button" class="chip" id="compPhoto">Send sample photo</button>
+          <button type="button" class="chip" id="compVoice">Send sample voice note</button>
+          <label class="chip" for="compFile">Attach image</label>
+          <input type="file" id="compFile" accept="image/*" class="sr">
+        </div>
+      </form>
+    </aside>
+  </div>
+</section>
+
+<!-- VERIFY -->
+<section id="tab-verify" role="tabpanel" aria-labelledby="t-verify" hidden>
+  <div class="head-row">
+    <h1>Employer verification</h1>
+    <p class="lede">An employer scans the QR on a learner's phone. This page checks the signature and shows the evidence behind the credential.</p>
+  </div>
+  <div class="vgrid">
+    <div class="vleft">
+      <section class="card" aria-labelledby="vq-h">
+        <h2 id="vq-h">Scan a Hunar-QR</h2>
+        <div class="form">
+          <div class="fld"><label class="lbl" for="passSel">Passport</label><select id="passSel"></select></div>
+          <div class="vqr">
+            <div class="qr" id="qrBox"></div>
+            <div class="fld" style="flex:1 1 180px;min-width:0"><label class="lbl" for="payload">QR payload</label>
+              <textarea id="payload" rows="5" class="mono" spellcheck="false"></textarea></div>
+          </div>
+          <p class="hint">In production the QR opens this page. Here it carries the credential ID and its signature. Edit one character of the payload to see verification fail.</p>
+          <div class="vbtns">
+            <button class="btn" type="button" id="vBtn">Verify signature</button>
+            <button class="btn ghost" type="button" id="tamperBtn" aria-pressed="false">Alter practical hours</button>
+          </div>
+        </div>
+      </section>
+      <section class="card" aria-labelledby="vr-h">
+        <h2 id="vr-h">Result</h2>
+        <div id="vres" role="status" aria-live="polite"></div>
+      </section>
+    </div>
+    <div id="passportFull"></div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="tab-how" role="tabpanel" aria-labelledby="t-how" hidden>
+  <div class="head-row">
+    <h1>How Hunar-QR works</h1>
+    <p class="lede">One chat on a phone the learner already has. Two engines behind it: one proves skills, the other blocks fake offers.</p>
+  </div>
+
+  <div class="sect" style="margin-top:0">
+    <h2>Dual-engine core</h2>
+    <div class="arch">
+      <div class="box"><b>Rural learner or master craftsman</b>, on WhatsApp: voice note, work photo or clip, forwarded links and UPI QR codes.</div>
+      <div class="arrow" aria-hidden="true">&darr;</div>
+      <div class="mods">
+        <div class="mod"><h3>Module 1: AI Skill Credentialer</h3>
+          <ul>
+            <li>Bhashini ASR transcribes the mentor's voice note and translates it.</li>
+            <li>A vision-language model checks the photo or clip against an NCVT/NCrF rubric.</li>
+            <li>Practical hours map to NCrF credit (30 notional hours = 1 credit).</li>
+          </ul></div>
+        <div class="mod"><h3>Module 2: Anti-Phishing Job Shield</h3>
+          <ul>
+            <li>Link checks: shorteners, look-alike .gov.in names, APK files, odd endings.</li>
+            <li>UPI parser: collect requests, fee wording, personal IDs using government names.</li>
+            <li>Reply in the learner's language, then route to zero-fee listings.</li>
+          </ul></div>
+      </div>
+      <div class="arrow" aria-hidden="true">&darr;</div>
+      <div class="outs">
+        <div class="out"><b>Signed Skill Passport.</b> W3C Verifiable Credential in a QR code, linked to APAAR or Skill India Digital Hub.</div>
+        <div class="out"><b>Voice warning and safe listings.</b> Verified openings from SIDH and ONEST that match the learner's skill tags.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sect">
+    <h2>What is real in this prototype</h2>
+    <p class="hint" id="howMode" hidden></p>
+    <div class="tw"><table class="tbl">
+      <thead><tr><th>Component</th><th>Status</th><th>In this page</th><th>In production</th></tr></thead>
+      <tbody>
+        <tr><td>Link, UPI and wording checks</td><td><span class="tag live" style="margin-left:0">Live</span></td><td>Rules run in your browser on any text you paste.</td><td>Same rules plus domain age, DNS and APK sandbox.</td></tr>
+        <tr><td>Credential signing and verification</td><td><span class="tag live" style="margin-left:0">Live</span></td><td>ECDSA P-256 signature from a demo issuer key made when the page loads.</td><td>Issuer key held in an HSM, DID published for verifiers.</td></tr>
+        <tr><td>Reading a forwarded QR image</td><td><span class="tag live" style="margin-left:0">Live</span></td><td>A QR decoder runs on the image in your browser.</td><td>Same decoder on the server before the fraud rules run.</td></tr>
+        <tr><td>QR code and evidence hash</td><td><span class="tag live" style="margin-left:0">Live</span></td><td>QR generated here. Your photo is hashed with SHA-256.</td><td>QR links to a hosted verification page.</td></tr>
+        <tr><td>Mentor voice transcription</td><td><span class="tag sample" style="margin-left:0">Sample output</span></td><td>Prepared Tamil, Hindi and English transcripts.</td><td>Bhashini ASR with voice liveness check.</td></tr>
+        <tr><td>Rubric scoring of the work</td><td><span class="tag sample" style="margin-left:0">Sample output</span></td><td>Fixed scores per trade.</td><td>Vision-language model against NCVT/NCrF checklists.</td></tr>
+        <tr><td>WhatsApp channel</td><td><span class="tag sample" style="margin-left:0">Sample output</span></td><td>Simulated chat.</td><td>WhatsApp Cloud API webhook with a FastAPI backend.</td></tr>
+        <tr><td>Verified job listings</td><td><span class="tag sample" style="margin-left:0">Sample output</span></td><td>Sample openings, no real employers.</td><td>Live SIDH and ONEST feed.</td></tr>
+        <tr><td>DigiLocker, APAAR and SIDH linking</td><td><span class="tag plan" style="margin-left:0">Planned</span></td><td>Demo IDs only.</td><td>Months 4 to 6 of the plan.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="sect">
+    <h2>Cost per verified Skill Passport</h2>
+    <div class="tw"><table class="tbl">
+      <thead><tr><th>Component</th><th class="num">Rupees</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>WhatsApp Cloud API and webhook hosting</td><td class="num">0.45</td><td>Per session</td></tr>
+        <tr><td>Bhashini ASR and TTS</td><td class="num">0.00</td><td>Public digital infrastructure</td></tr>
+        <tr><td>Vision-language inference and phishing scan</td><td class="num">0.75</td><td>Quantized open-weight model and rule engine</td></tr>
+        <tr><td>Credential signing and cloud storage</td><td class="num">0.20</td><td>Signature plus compressed media</td></tr>
+        <tr class="total"><td>Total</td><td class="num">1.40</td><td>Estimate from the SFIC proposal</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+
+  <div class="sect">
+    <h2>Pilot and 12-month plan</h2>
+    <ul class="plan">
+      <li><b>October 2026</b><span>VIT Chennai pilot with 15 to 20 campus technicians and artisans near Kelambakkam and Vandalur, through the UBA and NSS network.</span></li>
+      <li><b>Months 1 to 3</b><span>5 rural government high schools and 2 Government ITIs in Chengalpattu and Kanchipuram districts. 500+ credentials issued.</span></li>
+      <li><b>Months 4 to 6</b><span>Integrate the credential schema with DigiLocker, APAAR and ONEST, with guidance from IISc Bengaluru.</span></li>
+      <li><b>Months 7 to 12</b><span>Partner with Naan Mudhalvan (TNSDC) and District Cyber Crime Cells. Reach 1,000+ rural blocks.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- CRITERIA -->
+<section id="tab-crit" role="tabpanel" aria-labelledby="t-crit" hidden>
+  <div class="head-row">
+    <h1>Judging criteria</h1>
+    <p class="lede">Each SFIC criterion, and where to check it in this prototype.</p>
+  </div>
+  <div class="crit">
+    <article class="cc"><h3>Clarity of the problem</h3>
+      <p>Rural learners face two traps: skills nobody can verify, and fake offers that ask for money. The demo opens with sourced figures for both.</p>
+      <button class="btn ghost small" type="button" data-go="demo">See the problem</button></article>
+    <article class="cc"><h3>Originality</h3>
+      <p>Skill proof and fraud protection in one chat. The bot that mints a signed passport also reads forwarded QR codes and answers in Tamil, Hindi or English.</p>
+      <button class="btn ghost small" type="button" data-go="demo">Try both flows</button></article>
+    <article class="cc"><h3>Feasibility</h3>
+      <p>Signing, QR codes, QR reading and the fraud rules run in this page. Transcription, vision scoring and listings are marked as sample, with the production service named for each.</p>
+      <button class="btn ghost small" type="button" data-go="how">See what runs live</button></article>
+    <article class="cc"><h3>Cost</h3>
+      <p>₹1.40 per verified passport, from the proposal's cost table. Move the slider below to see the bill at your chosen scale.</p></article>
+    <article class="cc"><h3>Beneficiary impact</h3>
+      <p>School students on bagless-day internships and apprentices get proof of skill an employer can check in seconds. Families get a place to test an offer before paying.</p>
+      <button class="btn ghost small" type="button" data-go="verify">Open the employer view</button></article>
+    <article class="cc"><h3>Scalability</h3>
+      <p>Built on WhatsApp, Bhashini and the DigiLocker, APAAR and ONEST rails. The plan goes from a campus pilot to 1,000+ rural blocks in 12 months.</p>
+      <button class="btn ghost small" type="button" data-go="how">See the 12-month plan</button></article>
+  </div>
+  <div class="sect">
+    <h2>Cost at scale</h2>
+    <div class="card">
+      <div class="calc">
+        <div class="fld"><label class="lbl" for="nSlider">Skill Passports issued</label>
+          <div class="nval" id="nVal"></div>
+          <input type="range" id="nSlider" min="100" max="100000" step="100" value="500">
+          <div class="chips" id="nChips" style="margin-top:10px"></div></div>
+        <dl class="kv" id="calcOut"></dl>
+      </div>
+      <p class="hint" style="margin-top:12px">Estimates from the SFIC proposal's per-passport costs. Real WhatsApp pricing can change.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="tri" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="wrap foot-in">
+    <div class="foot-cols">
+      <div>
+        <div class="foot-title">Hunar-QR · National Skill Passport &amp; Job Shield Portal</div>
+        <p>Built for the Seva First Innovation Challenge screening (Level 3 Open, Track A). Designed following Guidelines for Indian Government Websites (GIGW) for citizen accessibility and familiarity.</p>
+        <p class="foot-disc">Disclaimer: This is a research prototype. All learners, mentors, credentials and listings shown are samples. Demo credentials are not valid for official employment.</p>
+      </div>
+      <div class="foot-helplines">
+        <div class="foot-title">National Citizen Helplines</div>
+        <div class="helpline-item">🚨 <b>1930</b> - National Cyber Crime Reporting Portal (<a href="https://cybercrime.gov.in" target="_blank" rel="noopener">cybercrime.gov.in</a>)</div>
+        <div class="helpline-item">🛠️ <b>1800-123-9626</b> - Skill India Digital Hub Toll-Free Helpline</div>
+        <div class="helpline-item">🇮🇳 <b>14443</b> - National Apprenticeship Promotion Scheme (NAPS)</div>
+      </div>
+    </div>
+    <div class="foot-links">
+      <a href="#main">Website Policies</a>
+      <span>|</span>
+      <a href="#main">Help &amp; FAQ</a>
+      <span>|</span>
+      <a href="#main">Accessibility Statement</a>
+      <span>|</span>
+      <a href="#main">Terms of Use</a>
+      <span>|</span>
+      <a href="https://www.skillindiadigital.gov.in" target="_blank" rel="noopener">Skill India Digital Hub</a>
+      <span>|</span>
+      <a href="https://cybercrime.gov.in" target="_blank" rel="noopener">Cyber Crime Portal (1930)</a>
+    </div>
+    <div class="foot-bottom">
+      <span>Portal Designed &amp; Developed for Seva First Innovation Challenge · GIGW Compliant Theme · Last Updated: 16 October 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js" onerror="(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';s.onload=function(){window.dispatchEvent(new Event('qr-ready'))};document.head.appendChild(s)})()"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js" onerror="(function(){var s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js';document.head.appendChild(s)})()"></script>
+
+<script id="logic">
+/* Pure logic: data, translations and the fraud-rule engine. No DOM access. */
+const HQ=(function(){
+  const LANGNAME={en:'English',ta:'Tamil',hi:'Hindi'};
+  const VOICE={en:'en-IN',ta:'ta-IN',hi:'hi-IN'};
+
+  const TRADES={
+    // ⚡ Technical & Engineering Trades
+    electrical:{name:'Electrical Installation (House wiring, appliance repair, inverter setups)',short:'Electrical Installation',learner:'Karthik M.',mentor:'S. Karuppasamy, master electrician',hours:12,level:3,
+      tags:['Domestic wiring','Relay control','Safe isolation'],
+      rubric:[['Safe isolation before work (MCB off, insulated tools)',95],['Conductor routing and ferrule use',88],['Terminal tightness and strip length',82],['Continuity test performed',90],['Dressing and labelling of cables',74,'Add cable labels so repairs are easier.']],
+      say:{en:'This student wired the relay cleanly in 10 minutes.',ta:'இந்த மாணவர் ரிலேவை பத்து நிமிடங்களில் நேர்த்தியாக வயரிங் செய்தார்.',hi:'इस छात्र ने दस मिनट में रिले की वायरिंग साफ़-सुथरी की।'}},
+    plumbing:{name:'Plumbing & Sanitation (Pipe threading, leak diagnostics, fixture installation)',short:'Plumbing & Sanitation',learner:'Saravanan P.',mentor:'M. Thangavel, master plumber',hours:24,level:3,
+      tags:['Pipe threading','Leak diagnostics','Fixture installation'],
+      rubric:[['Pipe cutting and de-burring accuracy',92],['Thread seal tape application and tightening',88],['Pressure test and leak diagnosis',85],['Waste water trap slope alignment',80],['Worksite cleanup and seal curing check',75,'Allow adequate curing time before applying full line pressure.']],
+      say:{en:'He aligned the pipe joints cleanly with zero leakage under test pressure.',ta:'சோதனை அழுத்தத்தில் கசிவு இல்லாமல் குழாய் இணைப்புகளை நேர்த்தியாக அமைத்தார்.',hi:'टेस्ट प्रेशर में बिना किसी रिसाव के उसने पाइप फिटिंग एकदम सही की।'}},
+    hvac:{name:'HVAC / AC Technician (Gas charging, compressor servicing, ducting)',short:'HVAC / AC Technician',learner:'Dinesh Kumar K.',mentor:'G. Venkatesh, HVAC specialist',hours:30,level:4,
+      tags:['Gas charging','Compressor servicing','Flaring and brazing'],
+      rubric:[['Copper tube flaring and swaging precision',90],['System vacuuming down to required microns',86],['Refrigerant weight charging accuracy',89],['Electrical terminal safety and capacitor check',84],['Airflow temperature delta verification',78,'Check suction pressure after 15 minutes of continuous running.']],
+      say:{en:'He flared the copper tubing accurately and achieved perfect cooling delta.',ta:'காப்பர் குழாய்களை துல்லியமாக விரித்து சரியான குளிர்ச்சியைப் பெற்றார்.',hi:'उसने कॉपर पाइपिंग की फ्लेयरिंग सही की और कूलिंग तापमान एकदम सटीक मिला।'}},
+    automobile:{name:'Automobile Repair (Two-wheeler servicing, engine tuning, wiring)',short:'Automobile Repair',learner:'Praveen Raj',mentor:'K. Munusamy, master mechanic',hours:35,level:3,
+      tags:['Two-wheeler service','Engine tuning','Harness wiring'],
+      rubric:[['Spark plug gap check and cleaning',94],['Carburetor/injector throttle adjustment',86],['Brake pad inspection and shoe clearance',90],['Battery voltage and charging circuit test',85],['Chain tensioning and lubrication',76,'Keep recommended chain slack of 25mm to avoid bearing wear.']],
+      say:{en:'He tuned the engine idle RPM and adjusted the brake clearances safely.',ta:'என்ஜின் ஆர்.பி.எம் மற்றும் பிரேக் இடைவெளியை பாதுகாப்பாக சீரமைத்தார்.',hi:'उसने इंजन का आरपीएम और ब्रेक का क्लीयरेंस पूरी सुरक्षा के साथ सेट किया।'}},
+    solar:{name:'Solar Installation (Panel mounting, controller, DC wiring)',short:'Solar Installation',learner:'Vignesh S.',mentor:'R. Durai, solar technician',hours:16,level:3,
+      tags:['Solar PV basics','Panel mounting','DC wiring safety'],
+      rubric:[['Panel tilt and shade check',88],['Mounting bracket tightness',92],['DC polarity and connector seating',85],['Charge controller connection order',80],['Earthing and safety awareness',72,'Revise the earthing steps with your mentor.']],
+      say:{en:'He mounted the solar panel and connected the controller correctly.',ta:'அவர் சோலார் பேனலை பொருத்தி கன்ட்ரோலரை சரியாக இணைத்தார்.',hi:'उसने सोलर पैनल लगाया और कंट्रोलर सही तरह से जोड़ा।'}},
+
+    // 🧵 Creative & Craft Sector
+    tailoring:{name:'Tailoring & Embroidery (Blouse stitching, alterations, zari work)',short:'Tailoring & Embroidery',learner:'Anitha R.',mentor:'Lakshmi Ammal, master tailor',hours:20,level:3,
+      tags:['Garment stitching','Seam finishing','Measurement'],
+      rubric:[['Measurement and marking accuracy',90],['Straight seams and even stitch length',86],['Seam finishing, no loose threads',78,'Trim loose threads at seam ends.'],['Machine safety and posture',94],['Overall fit and neatness',88]],
+      say:{en:'She cut and stitched this blouse herself and the seams are even.',ta:'இந்த ரவிக்கையை அவளே வெட்டி தைத்தாள், தையல்கள் சீராக உள்ளன.',hi:'इस ब्लाउज़ को उसने खुद काटा और सिला है, सिलाई बराबर है।'}},
+    pottery:{name:'Pottery & Ceramics (Clay throwing, glazing, kiln operations)',short:'Pottery & Ceramics',learner:'Meena K.',mentor:'Velu Udayar, master potter',hours:28,level:3,
+      tags:['Clay throwing','Glazing','Kiln firing'],
+      rubric:[['Clay wedging and bubble removal',92],['Wheel centering and wall thickness consistency',87],['Rim trimming and base foot finishing',84],['Glaze coating thickness and uniformity',86],['Kiln stacking and temperature control',76,'Allow slow cooling to prevent thermal shock cracks.']],
+      say:{en:'She centered the clay expertly on the wheel and maintained even wall thickness.',ta:'சக்கரத்தில் களிமண்ணை சரியாக மையப்படுத்தி சமமான தடிமனில் பாண்டம் செய்தார்.',hi:'उसने चाक पर मिट्टी को सही सेंटर किया और दीवार की मोटाई एक समान रखी।'}},
+    weaving:{name:'Handloom & Weaving (Warping, loom setting, pattern execution)',short:'Handloom & Weaving',learner:'Subashree N.',mentor:'T. Padmanabhan, master weaver',hours:32,level:3,
+      tags:['Warping','Loom setting','Pattern execution'],
+      rubric:[['Warp tension balance across width',91],['Reed drafting and heddle threading accuracy',89],['Shuttle throw and selvedge edge straightness',85],['Beat-up regularity and pick count consistency',88],['Border pattern motif symmetry',79,'Maintain consistent shuttle tension on border turns.']],
+      say:{en:'Her handloom selvedge was straight and the warp tension stayed uniform.',ta:'கைத்தறி கரை நேராகவும் பாவு இழுவிசை சமமாகவும் அமைந்தது.',hi:'हथकरघे पर किनारे एकदम सीधे रहे और ताने का खिंचाव बराबर बना रहा। repudiated'}},
+    carpentry:{name:'Carpentry & Woodwork (Furniture joinery, sanding, polishing)',short:'Carpentry & Woodwork',learner:'Aravind B.',mentor:'P. Arumugam Asari, master carpenter',hours:26,level:3,
+      tags:['Furniture joinery','Chisel work','Wood polishing'],
+      rubric:[['Marking gauge and square precision',93],['Mortise and tenon joint fit tightness',88],['Hand plane surface flattening',84],['Progressive grit sanding smoothness',86],['French polish / sealant coats application',77,'Apply thin sealer coats with adequate drying between coats.']],
+      say:{en:'The mortise and tenon joint fits snugly without gaps and the polish is smooth.',ta:'மர இழைப்பு மற்றும் இணைப்புகள் இடைவெளியின்றி துல்லியமாக உள்ளன.',hi:'जोड़ बिना किसी गैप के एकदम सही बैठा और पॉलिश की फिनिशिंग चिकनी है।'}},
+
+    // 🏗️ Construction & Infrastructure
+    masonry:{name:'Masonry & Bricklaying (Foundation work, plastering, tiling)',short:'Masonry & Bricklaying',learner:'Murugan C.',mentor:'K. Chinnasamy Mestri, master mason',hours:36,level:3,
+      tags:['Bricklaying','Plastering','Level & plumb'],
+      rubric:[['Plumb line and spirit level verticality',94],['Mortar mix consistency and joint thickness',87],['Corner bond arrangement and alignment',89],['Wall surface plaster flatness and sponge finish',82],['Curing protocol and joint raking',78,'Ensure proper water curing for 7 days minimum.']],
+      say:{en:'The brick course is perfectly plumb and mortar joints are uniform 10mm.',ta:'செங்கல் வரிசை தூக்குநூல் நேராகவும் கலவை இடைவெளி சீராகவும் உள்ளது.',hi:'ईंट की चिनाई साहुल में एकदम सीधी है और मसाले के जोड़ एक समान हैं।'}},
+    welding:{name:'Welding & Fabrication (Arc welding, structural alignment, gas cutting)',short:'Welding & Fabrication',learner:'Ajith Kumar',mentor:'S. Anthony, master fabricator',hours:30,level:3,
+      tags:['Arc welding','Joint fit-up','Gas cutting'],
+      rubric:[['Safety gear usage (welding helmet, leather apron)',96],['Bevel preparation and root gap setup',88],['Arc strike control and bead uniformity',85],['Slag removal and weld penetration check',84],['Distortion control and tack spacing',75,'Use alternate side stitch welds to prevent plate distortion.']],
+      say:{en:'He executed a uniform weld bead with deep penetration and no undercut.',ta:'சீரான வெல்டிங் தையலை ஆழமான பிடிப்புடன் குறைபாடின்றி அமைத்தார்.',hi:'उसने बिना किसी कटाव के एक समान वेल्ड बीड और पूरी गहराई तक जोड़ लगाया।'}},
+    painting:{name:'House Painting & Polishing (Wall preparation, texture painting, putty work)',short:'House Painting & Polishing',learner:'Deepak Sharma',mentor:'B. Ramanathan, master painter',hours:22,level:3,
+      tags:['Wall putty','Surface prep','Roller & spray finish'],
+      rubric:[['Surface scraping and primer application',91],['Two-coat putty application and sanding smoothness',89],['Masking tape boundary sharpness on edges',86],['Roller stroke consistency without overlap lap marks',84],['Coat thickness uniformity and drying intervals',78,'Maintain 4-hour drying interval between top coats.']],
+      say:{en:'The wall surface was puttied smooth with zero roller brush marks.',ta:'சுவர் புட்டி வேலை மென்மையாகவும் தூரிகை தடம் இல்லாமலும் முடிந்தது.',hi:'दीवार पर पुट्टी की फिनिशिंग चिकनी रही और रोलर के निशान नहीं दिखे।'}}
+  };
+
+  const LISTINGS={
+    // Technical
+    electrical:[['Apprentice wireman, domestic','Chengalpattu district','Domestic wiring'],['Solar rooftop helper','Kanchipuram district','Safe isolation'],['Maintenance electrician trainee','Chennai suburbs','Relay control']],
+    plumbing:[['Plumbing apprentice (residential)','Coimbatore district','Pipe threading'],['Sanitary fittings installer trainee','Chennai metro','Fixture installation'],['Pipeline maintenance assistant','Tiruchirappalli district','Leak diagnostics']],
+    hvac:[['AC service technician trainee','Chennai suburbs','Gas charging'],['Commercial chiller apprentice','Sriperumbudur industrial belt','Compressor servicing'],['HVAC duct installer assistant','Madurai district','Flaring and brazing']],
+    automobile:[['Two-wheeler service assistant','Salem district','Two-wheeler service'],['Auto electrical apprentice','Hosur automotive cluster','Harness wiring'],['Garage technician helper','Vellore district','Engine tuning']],
+    solar:[['Solar installer trainee','Chengalpattu district','Solar PV basics'],['Street-light maintenance apprentice','Kanchipuram district','DC wiring safety'],['Electrician helper','Chennai suburbs','Panel mounting']],
+
+    // Crafts
+    tailoring:[['Sewing operator trainee','Chennai suburbs','Garment stitching'],['Tailoring apprentice','Chengalpattu district','Seam finishing'],['Uniform stitching unit, women-led','Kanchipuram district','Measurement']],
+    pottery:[['Artisan pottery apprentice','Vilachery, Madurai','Clay throwing'],['Ceramic studio helper','Auroville craft cluster','Glazing'],['Terracotta craft unit trainee','Manamadurai cluster','Kiln firing']],
+    weaving:[['Handloom weaver apprentice','Kanchipuram silk cluster','Warping'],['Loom setting assistant','Salem textile park','Loom setting'],['Traditional weaving artisan unit','Arani cluster','Pattern execution']],
+    carpentry:[['Furniture joinery trainee','Chennai suburbs','Furniture joinery'],['Interior woodwork apprentice','Coimbatore furniture cluster','Wood polishing'],['Modular kitchen installer helper','Kanchipuram district','Chisel work']],
+
+    // Construction
+    masonry:[['Masonry & tile laying apprentice','Chennai construction cluster','Level & plumb'],['Brickwork assistant','Chengalpattu infrastructure project','Bricklaying'],['Plastering technician trainee','Tiruvallur district','Plastering']],
+    welding:[['Structural welder apprentice','Ennore industrial estate','Arc welding'],['Metal fabrication helper','Ambattur industrial estate','Joint fit-up'],['Gas cutting & fitting trainee','Ranipet SIPCOT','Gas cutting']],
+    painting:[['Interior wall finisher apprentice','Chennai metro','Wall putty'],['Commercial painting helper','Coimbatore suburbs','Roller & spray finish'],['Wood & metal polisher assistant','Kanchipuram district','Surface prep']]
+  };
+
+  const I18N={
+    en:{greet:"Vanakkam! I am the Hunar-QR bot. Send your work photo and your mentor's voice note to get a Skill Passport. Or forward any job or scholarship message and I will check it for fraud.",
+      evidence:"Received your work photo and the mentor's voice note. Checking now.",
+      mint:"Your Skill Passport is ready. Show this QR to any employer. They can scan it with a normal phone camera.",
+      danger:"Danger. Do not pay and do not open this link. Government scholarships and apprenticeships do not ask you to pay a fee to receive money or a job.",
+      warning:"Be careful. This message has warning signs. Do not pay or share your OTP. Check on the official portal first.",
+      low:"No strong warning signs, but this website is not on the verified list. Check the offer on the official portal before sharing any details.",
+      safe:"No warning signs found. This link goes to a verified government website. Still, never pay a fee to get a scholarship or a job.",
+      route:"Here are 3 zero-fee openings that match your skills.",
+      empty:"I could not find a link or a payment request in this message."},
+    ta:{greet:"வணக்கம்! நான் ஹுனர்-QR பாட். திறன் பாஸ்போர்ட் பெற உங்கள் வேலை புகைப்படத்தையும் வழிகாட்டியின் குரல் பதிவையும் அனுப்புங்கள். வேலை அல்லது உதவித்தொகை செய்தி வந்தால் எனக்கு ஃபார்வர்ட் செய்யுங்கள், மோசடியா என்று சரிபார்ப்பேன்.",
+      evidence:"உங்கள் வேலை புகைப்படமும் வழிகாட்டியின் குரல் பதிவும் கிடைத்தன. சரிபார்க்கிறேன்.",
+      mint:"உங்கள் திறன் பாஸ்போர்ட் தயார். இந்த QR-ஐ எந்த முதலாளியிடமும் காட்டுங்கள். சாதாரண போன் கேமராவில் ஸ்கேன் செய்யலாம்.",
+      danger:"ஆபத்து. பணம் செலுத்தாதீர்கள், இந்த இணைப்பைத் திறக்காதீர்கள். பணம் அல்லது வேலை பெற அரசு உதவித்தொகை, தொழிற்பயிற்சி திட்டங்கள் கட்டணம் கேட்பதில்லை.",
+      warning:"கவனம். இந்த செய்தியில் சந்தேக அறிகுறிகள் உள்ளன. பணம் செலுத்தவோ OTP பகிரவோ வேண்டாம். முதலில் அதிகாரப்பூர்வ இணையதளத்தில் சரிபார்க்கவும்.",
+      low:"வலுவான எச்சரிக்கை அறிகுறிகள் இல்லை. ஆனால் இந்த இணையதளம் சரிபார்க்கப்பட்ட பட்டியலில் இல்லை. விவரங்களை பகிரும் முன் அதிகாரப்பூர்வ தளத்தில் சரிபார்க்கவும்.",
+      safe:"எச்சரிக்கை அறிகுறிகள் எதுவும் இல்லை. இந்த இணைப்பு சரிபார்க்கப்பட்ட அரசு இணையதளத்திற்கு செல்கிறது. இருந்தாலும் உதவித்தொகை அல்லது வேலைக்கு கட்டணம் செலுத்த வேண்டாம்.",
+      route:"உங்கள் திறன்களுக்குப் பொருந்தும் கட்டணமில்லா 3 வாய்ப்புகள் இதோ.",
+      empty:"இந்த செய்தியில் இணைப்பு அல்லது பணம் கேட்கும் கோரிக்கை எதுவும் இல்லை."},
+    hi:{greet:"नमस्ते! मैं हुनर-QR बॉट हूँ। स्किल पासपोर्ट के लिए अपने काम की फ़ोटो और गुरु का वॉइस नोट भेजें। नौकरी या स्कॉलरशिप का कोई भी संदेश आए तो मुझे फ़ॉरवर्ड करें, उसकी धोखाधड़ी जाँच की जाएगी।",
+      evidence:"आपके काम की फ़ोटो और गुरु का वॉइस नोट मिल गया। जाँच हो रही है।",
+      mint:"आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
+      danger:"ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
+      warning:"सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
+      low:"कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
+      safe:"कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
+      route:"आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
+      empty:"इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"}
+  };
+
+  const SAMPLES=[
+    {label:'Fake grant and UPI fee',text:'PM Kaushal Yojana ₹5,000 Grant: Click bit.ly/pm-kaushal-claim or scan this UPI QR to pay ₹99 processing fee.\nUPI QR content: upi://pay?pa=pmkaushal.fee@okdemo&pn=PM%20Kaushal%20Fee&am=99&cu=INR&tn=Processing%20fee'},
+    {label:'Job offer with APK',text:'Congratulations! You are selected for a factory job, salary ₹18,000. Download your offer letter: http://tn-jobs-offer.xyz/offer-letter.apk and pay ₹499 verification fee within 2 hours to confirm joining.'},
+    {label:'Fake .gov.in link',text:'Last date today! Apply for the PM scholarship at https://scholarships-gov.in.apply-now.top/login and enter your Aadhaar number and OTP.'},
+    {label:'Unknown job site',text:'Apprenticeship openings for electricians. Details and application form: https://jobs-chengalpattu.com/apply'},
+    {label:'Official portal link',text:'Check your scholarship application status at https://scholarships.gov.in'}
+  ];
+
+  /* ---------- fraud rules ---------- */
+  const SHORTENERS=['bit.ly','tinyurl.com','cutt.ly','t.co','is.gd','rb.gy','shorturl.at','goo.gl','ow.ly','tiny.cc','s.id','rebrand.ly'];
+  const BAD_TLDS=['xyz','top','click','site','online','icu','live','cfd','shop','buzz','monster','work','link','vip','win','loan'];
+  const OFFICIAL=['digilocker.gov.in','scholarships.gov.in','skillindiadigital.gov.in','apprenticeshipindia.gov.in','india.gov.in','myscheme.gov.in','nsdcindia.org','ncvet.gov.in'];
+  const GOVISH=/(^|[^a-z])pm([^a-z]|kaushal|kisan|$)|kaushal|scholar|yojan|sarkar|govt|gov(?![a-z])|skillindia|nsdc|apaar|digilocker|mudhalvan/i;
+  const FEE=/\b(registration|processing|verification|security|joining|refundable|application|admission)\s*(fee|fees|charge|charges|deposit|amount)\b|\b(pay|send|transfer|deposit)\s*(rs\.?|₹|inr)\s*\d+/i;
+  const URGENT=/\b(urgent|urgently|today only|last date|limited seats?|hurry|expires?|within\s+\d+\s*(hours?|hrs?|minutes?|mins?))\b/i;
+  const LURE=/\b(congratulations|you (?:are|have been) (?:selected|shortlisted)|grant|free laptop|lottery|prize)\b/i;
+  const BLOCK=['pmkaushal.fee@okdemo','skill.grant99@ybl','hr.recruit2026@paytm'];
+  const CONSUMER=/@(okdemo|okaxis|okhdfcbank|oksbi|okicici|ybl|ibl|axl|paytm|apl|fbl|upi)$/i;
+
+  const inDomain=(host,d)=>host===d||host.endsWith('.'+d);
+  const clean=s=>s.replace(/[.,;:!?)\]}'"]+$/,'');
+
+  function extract(text){
+    const upis=[],urls=[];
+    const upiRe=/upi:\/\/[^\s]+/gi; let m;
+    while((m=upiRe.exec(text))) upis.push(clean(m[0]));
+    const rest=text.replace(upiRe,' ');
+    const re=/(?:https?:\/\/|www\.)[^\s<>"']+|[a-z0-9-]+(?:\.[a-z0-9-]+)*\.(?:com|in|org|net|co|io|ly|gl|me|info|xyz|top|click|site|online|icu|live|cfd|shop|buzz|link|vip|win|work|apk)(?:\/[^\s<>"']*)?/gi;
+    while((m=re.exec(rest))){
+      const before=rest[m.index-1];
+      if(before==='@'||/[\w.-]/.test(before||'')) continue;
+      const u=clean(m[0]); if(u&&!urls.includes(u)) urls.push(u);
+    }
+    return {urls,upis};
+  }
+  function parseUrl(raw){
+    const hasScheme=/^https?:\/\//i.test(raw);
+    try{
+      const u=new URL(hasScheme?raw:'http://'+raw);
+      return {raw,host:u.hostname.toLowerCase().replace(/\.$/,''),path:(u.pathname+u.search).toLowerCase(),scheme:hasScheme?u.protocol.replace(':',''):null,unicode:/[^\x00-\x7f]/.test(raw)};
+    }catch(e){return null;}
+  }
+
+  function analyze(text){
+    const t=String(text||'').trim();
+    const out={score:0,verdict:'empty',findings:[],urls:[],upis:[],hasOfficial:false,unknown:false};
+    if(!t) return out;
+    const add=(sev,title,why,pts)=>{out.findings.push({sev,title,why,pts:pts||0});out.score+=pts||0;};
+    const {urls,upis}=extract(t);
+
+    for(const raw of urls){
+      const p=parseUrl(raw); if(!p) continue;
+      const info={raw,host:p.host,flagged:false}; out.urls.push(info);
+      if(OFFICIAL.some(d=>inDomain(p.host,d))){
+        out.hasOfficial=true;
+        add('ok','Verified government address',p.host+' is on the verified list of portals.',0);
+        continue;
+      }
+      const n0=out.findings.length;
+      const tld=p.host.split('.').pop();
+      const govEnd=p.host.endsWith('.gov.in')||p.host.endsWith('.nic.in');
+      const looksGov=/gov\.in|nic\.in/.test(p.host)&&!govEnd;
+      if(SHORTENERS.some(d=>inDomain(p.host,d))){
+        add('med','Shortened link','A short link hides the real website. Government portals use their full .gov.in address.',25);
+        if(GOVISH.test(p.path)) add('med','Short link names a scheme','Scam messages often hide a link behind a scheme name such as "pm-kaushal".',10);
+      }
+      if(/\.apk(\?|$)/.test(p.path)) add('high','App file (.apk)','An .apk installs an app outside the Play Store. Fake job apps can read your OTP messages.',35);
+      if(looksGov) add('high','Fake-looking .gov.in address','The name contains "gov.in" but the address really ends with ".'+tld+'". Read an address from the right: the last part shows who owns it.',40);
+      else if(!govEnd&&!SHORTENERS.some(d=>inDomain(p.host,d))&&GOVISH.test(p.host)) add('med','Scheme name on a private website','The address uses a government scheme name but is not a .gov.in or .nic.in site.',20);
+      if(BAD_TLDS.includes(tld)) add('med','Unusual website ending (.'+tld+')','Cheap endings like this are common on scam sites.',15);
+      if(p.host.includes('xn--')||p.unicode) add('high','Look-alike characters','The address uses special characters that imitate normal letters.',35);
+      if(/^\d{1,3}(\.\d{1,3}){3}$/.test(p.host)) add('high','Raw IP address','Real portals use names, not number-only addresses.',30);
+      if(p.scheme==='http') add('low','Not a secure connection (http)','The site does not use https.',5);
+      if(govEnd) {out.unknown=true; add('info','Ends in .gov.in','This address is not on the prototype\'s short verified list. Open the portal by typing its address yourself.',0);}
+      else if(out.findings.length===n0){out.unknown=true; add('low','Website not on the verified list','Check this offer on skillindiadigital.gov.in or apprenticeshipindia.gov.in before sharing details.',10);}
+      info.flagged=out.findings.length>n0;
+    }
+
+    let feeFlag=false;
+    for(const raw of upis){
+      const m=/^upi:\/\/([a-z]+)\??(.*)$/i.exec(raw);
+      const kind=m?m[1].toLowerCase():'pay';
+      let p; try{p=new URLSearchParams(m?m[2]:'');}catch(e){p=new URLSearchParams('');}
+      const pa=(p.get('pa')||'').toLowerCase(), pn=p.get('pn')||'', tn=p.get('tn')||'';
+      const am=parseFloat(p.get('am')||''); const amt=isNaN(am)?null:am;
+      out.upis.push({raw,kind,pa,pn,am:amt,tn});
+      const feeWords=FEE.test(pn+' '+tn+' '+t);
+      if(amt>0&&feeWords){add('high','Asks you to pay ₹'+amt,'Real scholarships and job offers do not ask you to pay in order to receive them.',35);feeFlag=true;}
+      else if(amt>0) add('med','Fixed payment of ₹'+amt,'Check who you are paying before you approve any UPI request.',15);
+      if(kind==='collect') add('high','UPI collect request','A collect request pulls money from your account when you approve it. A real payout never needs your approval.',30);
+      if(GOVISH.test(pn)&&CONSUMER.test(pa)) add('high','Government name on a personal-style UPI ID','The payee name says "'+pn+'" but the UPI ID '+pa+' looks like an ordinary personal account. Government payments do not go to IDs like this.',40);
+      if(BLOCK.includes(pa)) add('high','UPI ID on the sample blocklist',pa+' matches a reported-fraud entry. In production this list syncs with cybercrime-reported IDs.',50);
+    }
+
+    if(!feeFlag&&FEE.test(t)) add('high','Asks for money as a fee','Genuine scholarships and job offers do not ask for a registration, processing or verification fee.',25);
+    if(URGENT.test(t)) add('med','Pressure to act fast','Scammers use deadlines so you do not stop to check.',10);
+    if(/\b(otp|pin|cvv|password)\b/i.test(t)&&/\b(share|send|enter|tell|give)\b/i.test(t)) add('high','Asks for OTP or PIN','Nobody who is helping you needs your OTP or PIN.',30);
+    if(LURE.test(t)) add('med','Too-good-to-be-true wording','Messages that say you were selected or won a grant without applying are a common trap.',10);
+
+    out.score=Math.min(100,out.score);
+    const sevRank={high:0,med:1,low:2,info:3,ok:4};
+    out.findings.sort((a,b)=>sevRank[a.sev]-sevRank[b.sev]);
+    if(out.score>=60) out.verdict='danger';
+    else if(out.score>=25) out.verdict='warning';
+    else if(out.hasOfficial&&!out.unknown&&out.score===0) out.verdict='safe';
+    else if(!out.urls.length&&!out.upis.length&&!out.findings.length) out.verdict='empty';
+    else out.verdict='low';
+    return out;
+  }
+
+  function stable(o){
+    if(Array.isArray(o)) return '['+o.map(stable).join(',')+']';
+    if(o&&typeof o==='object') return '{'+Object.keys(o).sort().map(k=>JSON.stringify(k)+':'+stable(o[k])).join(',')+'}';
+    return JSON.stringify(o);
+  }
+  return {LANGNAME,VOICE,TRADES,LISTINGS,I18N,SAMPLES,analyze,stable};
+})();
+</script>
+
+<script id="ui">
+const {LANGNAME,VOICE,TRADES,LISTINGS,I18N,SAMPLES,analyze,stable}=HQ;
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>[...r.querySelectorAll(s)];
+const FAST=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const sleep=ms=>new Promise(r=>setTimeout(r,FAST?40:ms));
+const enc=s=>new TextEncoder().encode(s);
+const S={lang:'en',flow:'A',running:false,registry:[],view:0,tamper:false,counter:417,pristine:true,photo:null,photoUrl:null,nameDirty:false,lastTrade:'electrical',cryptoErr:false,qrSrc:null,qrBlob:null,tour:false,tourId:0};
+
+function h(tag,props,...kids){
+  const e=document.createElement(tag);
+  if(props) for(const [k,v] of Object.entries(props)){
+    if(v===false||v==null) continue;
+    if(k==='class') e.className=v;
+    else if(k==='html') e.innerHTML=v;
+    else if(k==='style') e.style.cssText=v;
+    else if(k.startsWith('on')) e.addEventListener(k.slice(2),v);
+    else e.setAttribute(k,v===true?'':v);
+  }
+  for(const c of kids.flat(Infinity)){ if(c==null||c===false) continue; e.append(c.nodeType?c:document.createTextNode(c)); }
+  return e;
+}
+
+/* ---------- illustrations used as sample evidence photos ---------- */
+const EVID={
+ electrical:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150"><rect width="240" height="150" fill="#d5dbe4"/><rect x="12" y="66" width="216" height="12" fill="#8f9bad"/><rect x="22" y="28" width="34" height="76" fill="#f4f6f9" stroke="#8f9bad"/><rect x="28" y="36" width="22" height="14" fill="#c62828"/><rect x="72" y="28" width="34" height="76" fill="#f4f6f9" stroke="#8f9bad"/><rect x="78" y="36" width="22" height="14" fill="#c62828"/><rect x="126" y="24" width="52" height="84" fill="#1f4f9e"/><rect x="134" y="34" width="36" height="18" fill="#dbe7fb"/><text x="152" y="47" font-size="11" text-anchor="middle" fill="#14233c" font-family="monospace">K1</text><circle cx="140" cy="100" r="3" fill="#cfd6df"/><circle cx="152" cy="100" r="3" fill="#cfd6df"/><circle cx="164" cy="100" r="3" fill="#cfd6df"/><rect x="192" y="40" width="30" height="56" fill="#f4f6f9" stroke="#8f9bad"/><path d="M39 104 C39 138 138 138 140 104" stroke="#c62828" stroke-width="3" fill="none"/><path d="M89 104 C89 132 152 132 152 104" stroke="#f2b800" stroke-width="3" fill="none"/><path d="M45 104 C48 142 164 142 164 104" stroke="#1565c0" stroke-width="3" fill="none"/><path d="M95 104 C100 146 207 146 207 96" stroke="#222" stroke-width="3" fill="none"/></svg>',
+ plumbing:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150"><rect width="240" height="150" fill="#dbeafe"/><rect x="20" y="70" width="120" height="16" rx="3" fill="#0284c7"/><rect x="124" y="25" width="16" height="61" rx="3" fill="#0284c7"/><circle cx="132" cy="78" r="14" fill="#0369a1"/><circle cx="70" cy="78" r="18" fill="#e2e8f0" stroke="#0369a1" stroke-width="3"/><line x1="70" y1="78" x2="80" y2="68" stroke="#dc2626" stroke-width="2.5"/><rect x="170" y="60" width="45" height="36" rx="4" fill="#64748b"/><path d="M140 78 h30" stroke="#0284c7" stroke-width="12" fill="none"/></svg>',
+ hvac:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150"><rect width="240" height="150" fill="#e0f2fe"/><rect x="35" y="30" width="170" height="90" rx="8" fill="#f8fafc" stroke="#94a3b8" stroke-width="3"/><circle cx="95" cy="75" r="32" fill="#e2e8f0" stroke="#0284c7" stroke-width="2"/><circle cx="95" cy="75" r="8" fill="#0369a1"/><line x1="95" y1="45" x2="95" y2="105" stroke="#0284c7" stroke-width="3"/><line x1="65" y1="75" x2="125" y2="75" stroke="#0284c7" stroke-width="3"/><rect x="145" y="45" width="45" height="60" rx="4" fill="#cbd5e1"/><line x1="150" y1="58" x2="185" y2="58" stroke="#475569" stroke-width="2"/><line x1="150" y1="72" x2="185" y2="72" stroke="#475569" stroke-width="2"/><line x1="150" y1="86" x2="185" y2="86" stroke="#475569" stroke-width="2"/></svg>',
+ automobile:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150"><rect width="240" height="150" fill="#f1f5f9"/><circle cx="85" cy="75" r="42" fill="#1e293b"/><circle cx="85" cy="75" r="28" fill="#e2e8f0"/><circle cx="85" cy="75" r="10" fill="#475569"/><path d="M140 40 l45 70 l-18 10 l-45 -70 Z" fill="#94a3b8" stroke="#475569" stroke-width="2"/><circle cx="176" cy="115" r="12" fill="#64748b"/><circle cx="140" cy="40" r="12" fill="#64748b"/></svg>',
+ solar:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150"><rect width="240" height="150" fill="#cfe6f7"/><circle cx="200" cy="30" r="14" fill="#ffc83d"/><rect y="112" width="240" height="38" fill="#b9c9a8"/><g transform="skewX(-14)"><rect x="66" y="40" width="112" height="64" fill="#1c3f7a" stroke="#c9d3e3" stroke-width="3"/><path d="M94 40v64M122 40v64M150 40v64M66 62h112M66 83h112" stroke="#6f93d1" stroke-width="1.5"/></g><path d="M100 104 L92 138 M150 104 L158 138" stroke="#6b7280" stroke-width="5"/><rect x="190" y="96" width="26" height="30" fill="#e8ecf2" stroke="#6b7280"/><path d="M140 100 C160 118 180 112 190 110" stroke="#c62828" stroke-width="2.5" fill="none"/></svg>',
+ tailoring:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150"><rect width="240" height="150" fill="#eadfca"/><path d="M78 24 L104 16 Q120 36 136 16 L162 24 L200 52 L180 70 L168 60 L168 128 L72 128 L72 60 L60 70 L40 52 Z" fill="#a83a62"/><path d="M104 16 Q120 36 136 16" stroke="#f4d9e2" stroke-width="2" fill="none"/><path d="M72 62 L72 128 M168 62 L168 128 M72 126 L168 126" stroke="#fff" stroke-width="1.6" stroke-dasharray="4 3" fill="none"/><path d="M60 70 L72 60 M180 70 L168 60" stroke="#fff" stroke-width="1.6" stroke-dasharray="4 3" fill="none"/><rect x="10" y="136" width="220" height="9" fill="#f3c94a"/><path d="M20 136v5M40 136v5M60 136v5M80 136v5M100 136v5M120 136v5M140 136v5M160 136v5M180 136v5M200 136v5M220 136v5" stroke="#5b4300" stroke-width="1"/></svg>',
+ pottery:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150"><rect width="240" height="150" fill="#fed7aa"/><ellipse cx="120" cy="125" rx="75" ry="16" fill="#9a3412"/><path d="M85 125 C70 85 65 55 90 40 Q120 35 150 40 C175 55 170 85 155 125 Z" fill="#ea580c"/><ellipse cx="120" cy="40" rx="30" ry="8" fill="#c2410c"/><ellipse cx="120" cy="40" rx="22" ry="5" fill="#7c2d12"/></svg>',
+ weaving:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150"><rect width="240" height="150" fill="#fce7f3"/><rect x="30" y="20" width="180" height="110" rx="4" fill="#be185d"/><path d="M40 30 h160 M40 50 h160 M40 70 h160 M40 90 h160 M40 110 h160" stroke="#fbcfe8" stroke-width="4"/><path d="M60 25 v100 M90 25 v100 M120 25 v100 M150 25 v100 M180 25 v100" stroke="#f472b6" stroke-width="4"/><polygon points="20,75 50,65 50,85" fill="#f59e0b"/><polygon points="220,75 190,65 190,85" fill="#f59e0b"/></svg>',
+ carpentry:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150"><rect width="240" height="150" fill="#fef3c7"/><rect x="40" y="45" width="110" height="30" rx="2" fill="#b45309"/><rect x="120" y="75" width="30" height="50" rx="2" fill="#92400e"/><rect x="130" y="45" width="10" height="30" fill="#78350f"/><path d="M50 115 l60 -30 l15 15 l-60 30 Z" fill="#64748b"/><rect x="40" y="112" width="25" height="18" rx="2" fill="#d97706"/></svg>',
+ masonry:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150"><rect width="240" height="150" fill="#f1f5f9"/><rect x="30" y="30" width="180" height="90" fill="#e2e8f0"/><g fill="#dc2626" stroke="#f8fafc" stroke-width="3"><rect x="35" y="35" width="50" height="22"/><rect x="90" y="35" width="50" height="22"/><rect x="145" y="35" width="60" height="22"/><rect x="35" y="62" width="75" height="22"/><rect x="115" y="62" width="90" height="22"/><rect x="35" y="89" width="50" height="22"/><rect x="90" y="89" width="50" height="22"/><rect x="145" y="89" width="60" height="22"/></g><polygon points="175,130 195,105 210,125" fill="#0284c7"/></svg>',
+ welding:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150"><rect width="240" height="150" fill="#1e293b"/><rect x="30" y="55" width="85" height="40" fill="#64748b"/><rect x="125" y="55" width="85" height="40" fill="#64748b"/><path d="M115 45 v60" stroke="#f59e0b" stroke-width="6"/><circle cx="120" cy="75" r="14" fill="#fbbf24"/><circle cx="120" cy="75" r="6" fill="#fff"/></svg>',
+ painting:'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150"><rect width="240" height="150" fill="#fff"/><rect x="25" y="25" width="190" height="100" rx="4" fill="#fef2f2"/><path d="M25 25 h110 v100 h-110 Z" fill="#fee2e2"/><rect x="110" y="45" width="50" height="22" rx="4" fill="#ef4444"/><rect x="155" y="52" width="12" height="45" fill="#78716c"/><rect x="148" y="97" width="26" height="10" rx="2" fill="#d97706"/></svg>'
+};
+const evUri=t=>'data:image/svg+xml;utf8,'+encodeURIComponent(EVID[t]||EVID.electrical);
+
+/* ---------- crypto: demo issuer key, signing, verification ---------- */
+let KEYS=null;
+async function getKeys(){ if(!KEYS) KEYS=await crypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'},true,['sign','verify']); return KEYS; }
+const b64u=u8=>btoa(String.fromCharCode(...u8)).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+const unb64u=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';return Uint8Array.from(atob(s),c=>c.charCodeAt(0));};
+const hex=u8=>[...u8].map(b=>b.toString(16).padStart(2,'0')).join('');
+async function sha256(buf){ return new Uint8Array(await crypto.subtle.digest('SHA-256',buf)); }
+async function signCred(cred){ const k=await getKeys(); return new Uint8Array(await crypto.subtle.sign({name:'ECDSA',hash:'SHA-256'},k.privateKey,enc(stable(cred)))); }
+
+async function mintCredential(o){
+  const T=TRADES[o.trade];
+  const id='HQR-TN-26-'+String(S.counter++).padStart(6,'0');
+  const rubric=T.rubric.map(r=>({item:r[0],score:r[1],note:r[2]||null}));
+  const avg=Math.round(rubric.reduce((a,r)=>a+r.score,0)/rubric.length);
+  const credits=Math.round(T.hours/30*100)/100;
+  const linked=o.type==='school'?{scheme:'APAAR',id:'4821 7730 0417 (demo)'}:{scheme:'SIDH',id:'SIDH-TN-0042917 (demo)'};
+  const evBytes=o.file?await o.file.arrayBuffer():enc(EVID[o.trade]||EVID.electrical);
+  const evHash=hex(await sha256(evBytes));
+  const cred={
+    '@context':['https://www.w3.org/ns/credentials/v2'],
+    id:'urn:hunarqr:'+id,
+    type:['VerifiableCredential','HunarSkillPassport'],
+    issuer:'did:example:hunar-qr-demo-issuer',
+    validFrom:new Date().toISOString(),
+    credentialSubject:{
+      name:o.name, linkedId:linked, trade:T.name, skillTags:T.tags, indicativeLevel:T.level,
+      practicalHours:T.hours, ncrfCredits:credits, rubric, rubricAverage:avg,
+      mentor:{name:T.mentor,language:o.lang,endorsement:{original:T.say[o.lang],english:T.say.en},liveness:'passed (sample)'},
+      evidenceSha256:evHash
+    }
+  };
+  const sig=await signCred(cred);
+  const fp=hex((await sha256(sig)).slice(0,8)).replace(/(.{4})/g,'$1 ').trim();
+  const rec={id,cred,sig,fp,payload:'HQR1.'+id+'.'+b64u(sig),evidenceSrc:o.photoUrl||evUri(o.trade),trade:o.trade};
+  S.registry.push(rec);
+  return rec;
+}
+function tamperedCopy(cred){
+  const c=JSON.parse(JSON.stringify(cred));
+  c.credentialSubject.practicalHours=cred.credentialSubject.practicalHours*10;
+  return c;
+}
+async function verifyPayload(payload,cred){
+  if(API.base){
+    try{ return await api('/api/verify',{method:'POST',headers:JSONH,body:JSON.stringify({payload,credential:S.tamper?cred:null})}); }
+    catch(e){ return {valid:false,steps:[{ok:false,label:'Verification service',detail:e.message}]}; }
+  }
+  const steps=[]; const push=(ok,label,detail)=>steps.push({ok,label,detail});
+  const m=/^HQR1\.([A-Z0-9-]+)\.([A-Za-z0-9_-]+)$/.exec((payload||'').trim());
+  if(!m){ push(false,'Payload format','This is not a Hunar-QR payload.'); return {valid:false,steps}; }
+  push(true,'Payload format','Hunar-QR version 1, credential '+m[1]);
+  const rec=S.registry.find(r=>r.id===m[1]);
+  if(!rec){ push(false,'Credential lookup','No credential with this ID in the registry.'); return {valid:false,steps}; }
+  push(true,'Credential lookup','Found in the issuer registry.');
+  let ok=false;
+  try{ const k=await getKeys(); ok=await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},k.publicKey,unb64u(m[2]),enc(stable(cred))); }catch(e){ ok=false; }
+  push(ok,'Signature over the credential',ok?'ECDSA P-256 with SHA-256 matches the issuer key.':'The signature does not match the credential contents.');
+  return {valid:ok,steps};
+}
+
+/* ---------- QR ---------- */
+function qrSvg(payload){
+  if(typeof qrcode==='undefined') return null;
+  try{
+    const q=qrcode(0,'M'); q.addData(payload); q.make();
+    const n=q.getModuleCount(); let d='';
+    for(let r=0;r<n;r++) for(let c=0;c<n;c++) if(q.isDark(r,c)) d+='M'+(c+4)+','+(r+4)+'h1v1h-1z';
+    return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+(n+8)+' '+(n+8)+'" shape-rendering="crispEdges" role="img" aria-label="Hunar-QR code"><rect class="qb" width="'+(n+8)+'" height="'+(n+8)+'"/><path class="qf" d="'+d+'"/></svg>';
+  }catch(e){ return null; }
+}
+function qrVersion(payload){ try{ const q=qrcode(0,'M'); q.addData(payload); q.make(); return (q.getModuleCount()-17)/4; }catch(e){ return null; } }
+
+/* ---------- passport card ---------- */
+function passportNode(rec,o={}){
+  const compact=!!o.compact, cred=o.cred||rec.cred, s=cred.credentialSubject;
+  const svg=rec.server?null:qrSvg(rec.payload);
+  const qr=rec.server?h('div',{class:'qr'},h('img',{src:qrUrl(rec),alt:'Hunar-QR code',style:'display:block;width:100%;height:auto;border:1px solid var(--line-strong)'})):h('div',{class:'qr',html:svg||'<p class="qr-miss">QR library did not load.</p>'});
+  const issued=new Date(cred.validFrom).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+  const edited=!!o.tampered;
+  const kv=[
+    h('dt',{},'Learner'),h('dd',{},s.name),
+    h('dt',{},s.linkedId?'Identity Anchor':'Government ID'),h('dd',{},s.linkedId?(s.linkedId.scheme==='Aadhaar'?'🇮🇳 Aadhaar Verified · '+s.linkedId.id:s.linkedId.id):'Self-Attested (Unlinked)'),
+    h('dt',{},'Trade'),h('dd',{},s.trade),
+    h('dt',{},'Level'),h('dd',{},'NCrF/NSQF '+s.indicativeLevel+' (indicative)'),
+    h('dt',{},'Practical hours'),h('dd',{class:edited?'edited':''},String(s.practicalHours),edited?h('em',{},' (edited)'):null),
+    h('dt',{},'Credit'),h('dd',{},s.ncrfCredits.toFixed(2)+' (30 hours = 1)'),
+    h('dt',{},'Issued'),h('dd',{},issued)
+  ];
+  if(s.verification&&s.verification.challengeToken){
+    kv.push(h('dt',{},'Anti-Spoof Token'),h('dd',{},'#'+s.verification.challengeToken+' (Real-World Work)'));
+  }
+  const body=[
+    h('div',{class:'pp-title'},h('h3',{},'Hunar-QR Skill Passport'),h('span',{lang:'hi'},'हुनर पासपोर्ट')),
+    h('div',{class:'pp-main'},h('dl',{class:'kv'},kv),h('div',{},qr,h('div',{class:'mono',style:'margin-top:4px'},rec.id))),
+    h('div',{class:'skills'},s.skillTags.map(t=>h('span',{},t)))
+  ];
+  if(!compact){
+    body.push(h('div',{},h('div',{class:'sec-t'},'Work checked against rubric (sample scores)'),
+      s.rubric.map(r=>h('div',{class:'rb'},h('span',{},r.item),h('span',{class:'bar'},h('i',{style:'width:'+r.score+'%'})),h('b',{},String(r.score)),r.note?h('div',{class:'rb-note'},r.note):null)),
+      h('div',{class:'hint',style:'margin-top:4px'},'Average '+s.rubricAverage+' out of 100')));
+    const v=s.verification;
+    if(v&&v.viva&&v.viva.question){
+      const viva=v.viva, vlang=viva.language||'en';
+      body.push(h('div',{},
+        h('div',{class:'sec-t'},'Bharat Proof-of-Skill: Practical Viva (Token #'+(v.challengeToken||'')+')'),
+        h('div',{class:'say'},
+          h('div',{style:'font-weight:600;color:var(--primary);margin-bottom:4px'},'Q: '+viva.question),
+          h('div',{class:'o',lang:vlang},'Spoken: "'+viva.workerResponse+'"'),
+          viva.english&&viva.english!==viva.workerResponse?h('div',{class:'e'},'English: "'+viva.english+'"'):null,
+          h('div',{class:'hint'},'Voice liveness '+String(viva.liveness).replace(/_/g,' ')+' · Diagnostic reasoning verified')
+        )
+      ));
+    } else {
+      const m=s.mentor, lang=m.language;
+      body.push(h('div',{},h('div',{class:'sec-t'},'Mentor endorsement by '+m.name+' (sample)'),
+        h('div',{class:'say'},h('div',{class:'o',lang},m.endorsement.original),lang!=='en'?h('div',{class:'e'},'English: '+m.endorsement.english):null,h('div',{class:'hint'},'Voice liveness '+String(m.liveness).replace(/_/g,' ')+' · '+LANGNAME[lang]+' voice note'))));
+    }
+    body.push(h('div',{class:'pp-ev'},h('img',{src:rec.evidenceSrc,alt:'Evidence photo of the finished work'}),
+      h('div',{class:'mono'},h('div',{class:'sec-t'},'Evidence and signature'),'Evidence SHA-256 '+s.evidenceSha256.slice(0,24)+'…',h('br'),'Signature fingerprint '+rec.fp,h('br'),'Issuer '+cred.issuer)));
+  }
+  return h('article',{class:'pp'+(compact?' compact':'')},h('div',{class:'tri','aria-hidden':'true'},h('i'),h('i'),h('i')),
+    h('div',{class:'pp-demo'},(cred.assurance&&cred.assurance.level&&cred.assurance.level!=='demo')?'AI-assisted credential. Scores are advisory.':'Demo credential. Not valid for employment.'),h('div',{class:'pp-body'},body));
+}
+
+/* ---------- chat ---------- */
+const chat=$('#chat');
+const now=()=>new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+function msg(who,content,cls=''){ const m=h('div',{class:'msg '+who+' '+cls},content,h('div',{class:'meta'},now())); chat.append(m); chat.scrollTop=chat.scrollHeight; return m; }
+async function typing(ms=600){ const t=h('div',{class:'msg bot typing','aria-label':'Bot is typing'},h('span'),h('span'),h('span')); chat.append(t); chat.scrollTop=chat.scrollHeight; await sleep(ms); t.remove(); }
+const botText=k=>h('p',{lang:S.lang},I18N[S.lang][k]);
+function resetChat(){ chat.replaceChildren(); S.pristine=true; msg('bot',botText('greet')); }
+function voiceNode(lang){
+  let bars=''; for(let i=0;i<28;i++){ const v=6+Math.round(Math.abs(Math.sin(i*1.7)+Math.cos(i*.6))*7); bars+='<rect x="'+(i*5)+'" y="'+((24-v)/2)+'" width="3" height="'+v+'" fill="currentColor"/>'; }
+  return h('div',{class:'voice',html:'<svg viewBox="0 0 140 24" aria-hidden="true">'+bars+'</svg><span>0:15 · '+LANGNAME[lang]+' voice note</span>'});
+}
+function speak(text,lang){
+  try{
+    if(!('speechSynthesis' in window)) return false;
+    const base=lang.slice(0,2).toLowerCase();
+    const v=speechSynthesis.getVoices().find(x=>x.lang&&x.lang.toLowerCase().startsWith(base));
+    if(!v) return false;
+    const u=new SpeechSynthesisUtterance(text); u.voice=v; u.lang=v.lang; speechSynthesis.cancel(); speechSynthesis.speak(u); return true;
+  }catch(e){ return false; }
+}
+const ICON={
+  warn:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 1 21h22L12 2Z" fill="#fff"/><path d="M12 9v6M12 17.5v1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" fill="none"/></svg>',
+  ok:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="m7 12.5 3.2 3.2L17 9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>',
+  bad:'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#fff"/><path d="m8 8 8 8M16 8l-8 8" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>'
+};
+const VLABEL={danger:'Danger: likely scam',warning:'Be careful: warning signs',low:'No strong warning signs',safe:'Verified government address',empty:'Nothing to check'};
+const ADVICE={
+  danger:['Do not pay, open the link or install the file.','Do not share your OTP, PIN or Aadhaar number.','Report it at cybercrime.gov.in or call 1930.'],
+  warning:['Do not pay anything yet.','Open the official portal by typing its address yourself.','Ask your teacher or mentor before sharing details.'],
+  low:['Check the offer on skillindiadigital.gov.in or apprenticeshipindia.gov.in.','Never pay a fee to receive a job or scholarship.'],
+  safe:['Never pay a fee to receive a scholarship or job.'],
+  empty:['Forward a message that contains a link or a payment request.']
+};
+function alertNode(a){
+  const v=a.verdict, sev={high:'High',med:'Medium',low:'Low',info:'Note',ok:'Verified'};
+  const icon=v==='safe'?ICON.ok:ICON.warn;
+  const note=h('span',{class:'hint',role:'status'});
+  const vtext=I18N[S.lang][v];
+  return h('div',{class:'alertc '+v},
+    h('div',{class:'ah',html:icon+'<span></span>'}),
+    h('div',{class:'ab'},
+      v!=='empty'?h('div',{},h('div',{class:'mtxt'},h('span',{},'Risk score'),h('span',{},a.score+' of 100')),
+        h('div',{class:'meter',role:'img','aria-label':'Risk '+a.score+' out of 100'},h('b',{class:v,style:'width:'+a.score+'%'})),
+        h('div',{class:'mscale'},h('span',{},'Low'),h('span',{},'Careful'),h('span',{},'Danger'))):null,
+      a.findings.length?h('ul',{class:'finds'},a.findings.map(f=>h('li',{class:'find'},h('span',{class:'sev '+f.sev},sev[f.sev]),h('b',{},f.title),h('span',{class:'why'},f.why)))):null,
+      a.upis.length?h('div',{class:'mono'},a.upis.map(u=>h('div',{},'UPI '+u.kind+' → '+(u.pa||'unknown ID')+(u.pn?' · '+u.pn:'')+(u.am!=null?' · ₹'+u.am:'')))):null,
+      h('div',{class:'vwarn'},h('div',{class:'sec-t'},'Voice warning, '+LANGNAME[S.lang]),h('p',{lang:S.lang},vtext),
+        h('div',{class:'vrow'},h('button',{class:'btn small ghost',type:'button',onclick:()=>{ note.textContent=speak(vtext,VOICE[S.lang])?'':'This device has no '+LANGNAME[S.lang]+' voice. Read the text above.'; }},'Play voice warning'),note)),
+      h('div',{},h('div',{class:'sec-t'},'What to do'),h('ul',{class:'todo'},ADVICE[v].map(x=>h('li',{},x))))
+    )
+  ,null);
+}
+function setAlertHead(node,v){ node.querySelector('.ah span').textContent=VLABEL[v]; return node; }
+
+/* ---------- trace ---------- */
+const API={base:null,meta:null};
+function traceKind(flow,id,k){
+  if(!API.base||flow!=='A') return k;
+  const p=API.meta.providers;
+  if(id==='asr'||id==='live') return p.asr==='mock'?'sample':'live';
+  if(id==='vlm') return p.vision==='mock'?'sample':'live';
+  return k;
+}
+const TRACE_A=[
+  ['recv','Receive work photo with dynamic token and practical oral viva note','live'],
+  ['asr','Transcribe and translate practical viva response (Bhashini ASR)','sample'],
+  ['live','Voice liveness check and oral diagnostic reasoning verification','sample'],
+  ['vlm','Check work quality and challenge token against NCVT/NCrF rubric','sample'],
+  ['ncrf','Map practical hours to NCrF credit','live'],
+  ['sign','Sign the credential (W3C VC, ECDSA P-256)','live'],
+  ['qr','Generate the Hunar-QR','live']
+];
+const TRACE_B=[
+  ['recv','Pull out links and UPI payment requests, reading QR images too','live'],
+  ['url','Check links: shorteners, look-alike .gov.in, APK files','live'],
+  ['upi','Parse UPI payloads: collect requests, fee wording, payee ID','live'],
+  ['words','Check wording: fees, OTP requests, pressure','live'],
+  ['score','Score the risk and pick a verdict','live'],
+  ['voice','Prepare the voice warning in the chosen language','live'],
+  ['match','Match verified zero-fee openings','sample']
+];
+const CHECK='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="m2.2 6.3 2.4 2.4 5-5.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+const CROSS='<svg viewBox="0 0 12 12" aria-hidden="true"><path d="m3 3 6 6M9 3 3 9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" fill="none"/></svg>';
+function renderTrace(flow){
+  const list=$('#trace'); list.replaceChildren();
+  (flow==='A'?TRACE_A:TRACE_B).forEach(([id,label,kind0])=>{
+    const kind=traceKind(flow,id,kind0);
+    list.append(h('li',{class:'tr','data-state':'pending',id:'tr-'+id},h('span',{class:'st'}),
+      h('div',{},h('div',{class:'tl'},label,h('span',{class:'tag '+kind},kind==='live'?'Live':'Sample output')),h('div',{class:'det'},'Waiting'))));
+  });
+}
+function step(id,state,detail){
+  const li=$('#tr-'+id); if(!li) return;
+  li.dataset.state=state;
+  li.querySelector('.st').innerHTML=state==='done'?CHECK:state==='error'?CROSS:'';
+  li.querySelector('.det').textContent=detail||(state==='running'?'Working':'Waiting');
+}
+function setBusy(b){ S.running=b; $$('button[type=submit]').forEach(x=>x.disabled=b); }
+function focusPhone(){ if(matchMedia('(max-width:860px)').matches) $('.phone').scrollIntoView({behavior:FAST?'auto':'smooth',block:'start'}); }
+
+/* ---------- flow A: mint a Skill Passport ---------- */
+async function runA(){
+  if(S.running) return;
+  const trade=$('#trade').value, T=TRADES[trade], lang=$('#mlang').value;
+  const type=$('input[name=ltype]:checked').value, name=$('#lname').value.trim()||T.learner;
+  setBusy(true); S.pristine=false; renderTrace('A'); focusPhone();
+  try{
+    if(API.base){ await runAApi({trade,T,lang,type,name}); return; }
+    const evSrc=S.photoUrl||evUri(trade);
+    step('recv','running');
+    msg('user',h('img',{class:'ev',src:evSrc,alt:'Photo of finished work: '+T.short}));
+    await sleep(250); msg('user',voiceNode(lang)); await sleep(300);
+    step('recv','done',(S.photo?'Your photo':'Sample photo')+' and a 0:15 voice note');
+    await typing(450); msg('bot',botText('evidence'));
+
+    step('asr','running'); await sleep(700);
+    step('asr','done',LANGNAME[lang]+' detected. English: "'+T.say.en+'"');
+    msg('bot',h('div',{class:'tcard'},h('div',{class:'cap'},'Mentor voice note, '+LANGNAME[lang]),h('p',{lang},T.say[lang]),
+      lang!=='en'?h('div',{class:'cap'},'English'):null,lang!=='en'?h('p',{},T.say.en):null),'wide');
+
+    step('live','running'); await sleep(450); step('live','done','Live speech, no replay pattern found');
+    const avg=Math.round(T.rubric.reduce((a,r)=>a+r[1],0)/T.rubric.length);
+    step('vlm','running'); await sleep(800);
+    step('vlm','done',T.rubric.length+' of '+T.rubric.length+' rubric items at 70 or above, average '+avg+' (sample scores)');
+    const credits=Math.round(T.hours/30*100)/100;
+    step('ncrf','running'); await sleep(350);
+    step('ncrf','done',T.hours+' hours ÷ 30 = '+credits.toFixed(2)+' credit');
+
+    step('sign','running'); await sleep(300);
+    const rec=await mintCredential({trade,type,name,lang,file:S.photo,photoUrl:S.photoUrl});
+    step('sign','done','ECDSA P-256 signature, '+rec.sig.length+' bytes, fingerprint '+rec.fp);
+    step('qr','running'); await sleep(300);
+    const ver=qrVersion(rec.payload);
+    const card=passportNode(rec,{compact:true});
+    step('qr','done',rec.payload.length+' characters'+(ver?', QR version '+ver:''));
+
+    await typing(450);
+    msg('bot',[botText('mint'),card,h('button',{class:'btn small',type:'button',onclick:()=>{S.view=S.registry.indexOf(rec);setTab('verify');}},'Open verification page')],'wide');
+    S.view=S.registry.indexOf(rec); S.tamper=false; S.lastTrade=trade;
+    renderVerify(); runVerify();
+  }catch(e){
+    const cur=$('.tr[data-state="running"]'); if(cur) step(cur.id.slice(3),'error',S.cryptoErr&&!API.base?'Web Crypto is not available in this browser.':(API.base&&e&&e.message?e.message:'Something went wrong. Try again.'));
+  }finally{ setBusy(false); }
+}
+
+/* ---------- flow B: scam shield ---------- */
+async function runB(){
+  if(S.running) return;
+  const text=$('#fwd').value.trim(); const status=$('#statusB'); status.textContent='';
+  let qrText=null;
+  if(S.qrSrc){
+    try{ qrText=await decodeQr(S.qrSrc); }catch(e){ qrText=null; }
+    if(!qrText){ status.textContent='No QR code could be read in that image. Try a sharper, closer photo.'; return; }
+  }
+  if(!text&&!qrText){ status.textContent='Paste a message or add a QR image first.'; return; }
+  setBusy(true); S.pristine=false; renderTrace('B'); focusPhone();
+  try{
+    const full=[text,qrText?'QR code content: '+qrText:''].filter(Boolean).join('\n');
+    const a=API.base?await analyzeRemote(full):analyze(full), v=a.verdict;
+    step('recv','running');
+    msg('user',[S.qrSrc?h('img',{class:'ev',src:S.qrSrc,alt:'Forwarded QR code image'}):null,text?h('div',{class:'fwd-h'},'Forwarded'):null,text?h('div',{class:'fwd'},text):null]);
+    await sleep(350); step('recv','done',(qrText?'QR image decoded. ':'')+a.urls.length+' link(s), '+a.upis.length+' UPI request(s) found');
+    await typing(500);
+
+    step('url','running'); await sleep(450);
+    const fl=a.urls.filter(u=>u.flagged).length;
+    step('url','done',a.urls.length?fl+' of '+a.urls.length+' link(s) flagged':'No links found');
+    step('upi','running'); await sleep(450);
+    step('upi','done',a.upis.length?a.upis.map(u=>(u.kind+' to '+(u.pa||'unknown')+(u.am!=null?', ₹'+u.am:''))).join('; '):'No UPI request found');
+    step('words','running'); await sleep(350);
+    const wordTitles=a.findings.filter(f=>/fee|money|OTP|Pressure|too-good|Too-good/i.test(f.title)).length;
+    step('words','done',wordTitles+' wording signal(s)');
+    step('score','running'); await sleep(350); step('score','done','Risk '+a.score+' of 100, verdict: '+VLABEL[v]);
+    step('voice','running'); await sleep(300); step('voice','done',LANGNAME[S.lang]+' warning ready');
+
+    msg('bot',setAlertHead(alertNode(a),v),'wide');
+    const route=v==='danger'||v==='warning';
+    step('match','running'); await sleep(450);
+    if(route){
+      const tr=S.registry.find(r=>r.trade===S.lastTrade)?S.lastTrade:'electrical';
+      const L=LISTINGS[tr];
+      step('match','done','3 sample zero-fee openings for '+TRADES[tr].short+' skills');
+      await typing(450);
+      msg('bot',[botText('route'),L.map(l=>h('div',{class:'listing'},h('b',{},l[0]),h('div',{},l[1]),h('div',{class:'sm'},'Zero fee · matches '+l[2]+' · sample listing from SIDH and ONEST'))) ],'wide');
+    }else step('match','done','Not needed for this verdict');
+  }catch(e){
+    const cur=$('.tr[data-state="running"]'); if(cur) step(cur.id.slice(3),'error',API.base&&e&&e.message?e.message:'Something went wrong. Try again.');
+  }finally{ setBusy(false); }
+}
+
+/* ---------- verify tab ---------- */
+function renderVerify(){
+  const sel=$('#passSel'); sel.replaceChildren(...S.registry.map((r,i)=>h('option',{value:String(i),selected:i===S.view},r.cred.credentialSubject.name+' · '+TRADES[r.trade].short+' · '+r.id)));
+  const rec=S.registry[S.view];
+  if(!rec){ $('#passportFull').replaceChildren(h('div',{class:'card'},h('p',{},S.cryptoErr?'This browser blocks Web Crypto here, so credentials cannot be signed.':'No passport yet. Mint one in the demo.'))); return; }
+  $('#payload').value=rec.payload;
+  if(rec.server) $('#qrBox').innerHTML='<img src="'+qrUrl(rec)+'" alt="Hunar-QR code" style="display:block;width:100%;height:auto;border:1px solid var(--line-strong)">';
+  else{ const svg=qrSvg(rec.payload); $('#qrBox').innerHTML=svg||'<p class="qr-miss">QR library did not load. Use the payload text.</p>'; }
+  const cred=S.tamper?tamperedCopy(rec.cred):rec.cred;
+  $('#passportFull').replaceChildren(passportNode(rec,{cred,tampered:S.tamper}));
+  const hrs=rec.cred.credentialSubject.practicalHours;
+  $('#tamperBtn').textContent=S.tamper?'Undo the alteration':'Alter practical hours ('+hrs+' to '+hrs*10+')';
+  $('#tamperBtn').setAttribute('aria-pressed',String(S.tamper));
+}
+async function runVerify(){
+  const rec=S.registry[S.view]; const box=$('#vres');
+  if(!rec){ box.replaceChildren(); return; }
+  const cred=S.tamper?tamperedCopy(rec.cred):rec.cred;
+  const res=await verifyPayload($('#payload').value,cred);
+  box.replaceChildren(
+    h('div',{class:'verdict '+(res.valid?'ok':'bad'),html:(res.valid?ICON.ok:ICON.bad)+'<span></span>'}),
+    h('ol',{class:'trace vsteps'},res.steps.map(s=>h('li',{class:'tr','data-state':s.ok?'done':'error'},h('span',{class:'st',html:s.ok?CHECK:CROSS}),h('div',{},h('div',{class:'tl'},s.label),h('div',{class:'det'},s.detail)))))
+  );
+  box.querySelector('.verdict span').textContent=res.valid?'Verified: signature is valid':'Not valid: do not trust this credential';
+}
+
+/* ---------- tabs, text size, language ---------- */
+function setTab(name){
+  $$('.tab').forEach(t=>t.setAttribute('aria-selected',String(t.id==='t-'+name)));
+  $$('[role=tabpanel]').forEach(p=>p.hidden=p.id!=='tab-'+name);
+  if(name==='verify'){ renderVerify(); runVerify(); }
+  window.scrollTo({top:0,behavior:FAST?'auto':'smooth'});
+}
+$$('.tab').forEach(t=>t.addEventListener('click',()=>setTab(t.id.slice(2))));
+$('#toHow').addEventListener('click',()=>setTab('how'));
+$$('[data-scale]').forEach(b=>b.addEventListener('click',()=>{
+  document.documentElement.style.setProperty('--scale',b.dataset.scale);
+  $$('[data-scale]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+}));
+$$('[data-lang]').forEach(b=>b.addEventListener('click',()=>{
+  S.lang=b.dataset.lang; $$('[data-lang]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  if(S.pristine) resetChat();
+}));
+
+/* ---------- demo controls ---------- */
+function setFlow(f){ S.flow=f; $('#formA').hidden=f!=='A'; $('#formB').hidden=f!=='B'; renderTrace(f); }
+$$('input[name=flow]').forEach(r=>r.addEventListener('change',()=>setFlow(r.value)));
+$('#formA').addEventListener('submit',e=>{e.preventDefault();runA();});
+$('#formB').addEventListener('submit',e=>{e.preventDefault();runB();});
+$('#clear').addEventListener('click',()=>{ if(S.running) return; resetChat(); if(API.base) chatSend({reset:true,text:'hello'}); });
+function refreshPreview(){ $('#evPrev').src=S.photoUrl||evUri($('#trade').value); }
+$('#trade').addEventListener('change',()=>{ if(!S.nameDirty) $('#lname').value=TRADES[$('#trade').value].learner; refreshPreview(); });
+$('#lname').addEventListener('input',()=>{S.nameDirty=true;});
+$('#photo').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  if(S.photoUrl) URL.revokeObjectURL(S.photoUrl);
+  S.photo=f; S.photoUrl=URL.createObjectURL(f); refreshPreview();
+});
+$('#usesample').addEventListener('click',()=>{ if(S.photoUrl) URL.revokeObjectURL(S.photoUrl); S.photo=null; S.photoUrl=null; $('#photo').value=''; refreshPreview(); });
+const chips=$('#chips');
+SAMPLES.forEach(s=>chips.append(h('button',{class:'chip',type:'button',onclick:()=>{$('#fwd').value=s.text;$('#statusB').textContent='';}},s.label)));
+$('#fwd').value=SAMPLES[0].text;
+
+$('#passSel').addEventListener('change',e=>{S.view=+e.target.value;S.tamper=false;renderVerify();runVerify();});
+$('#vBtn').addEventListener('click',runVerify);
+$('#tamperBtn').addEventListener('click',()=>{S.tamper=!S.tamper;renderVerify();runVerify();});
+window.addEventListener('qr-ready',()=>{renderVerify();});
+
+/* ---------- QR image input ---------- */
+const SAMPLE_UPI='upi://pay?pa=pmkaushal.fee@okdemo&pn=PM%20Kaushal%20Fee&am=99&cu=INR&tn=Processing%20fee';
+function qrImageUri(payload,px){
+  const q=qrcode(0,'M'); q.addData(payload); q.make(); const n=q.getModuleCount(); let d='';
+  for(let r=0;r<n;r++) for(let c=0;c<n;c++) if(q.isDark(r,c)) d+='M'+(c+4)+','+(r+4)+'h1v1h-1z';
+  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="'+px+'" height="'+px+'" viewBox="0 0 '+(n+8)+' '+(n+8)+'" shape-rendering="crispEdges"><rect width="'+(n+8)+'" height="'+(n+8)+'" fill="#fff"/><path d="'+d+'" fill="#000"/></svg>';
+  return 'data:image/svg+xml;utf8,'+encodeURIComponent(svg);
+}
+function showQr(src){ S.qrSrc=src; const p=$('#qrPrev'); p.hidden=!src; if(src) p.src=src; $('#qrclear').hidden=!src; }
+async function decodeQr(src){
+  if(typeof jsQR==='undefined') throw new Error('QR reader not loaded');
+  const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('image'));i.src=src;});
+  const w0=img.naturalWidth||img.width, h0=img.naturalHeight||img.height;
+  const sc=Math.min(1,1000/Math.max(w0,h0));
+  const c=document.createElement('canvas'); c.width=Math.max(1,Math.round(w0*sc)); c.height=Math.max(1,Math.round(h0*sc));
+  const ctx=c.getContext('2d',{willReadFrequently:true}); ctx.fillStyle='#fff'; ctx.fillRect(0,0,c.width,c.height); ctx.drawImage(img,0,0,c.width,c.height);
+  const d=ctx.getImageData(0,0,c.width,c.height);
+  const r=jsQR(d.data,d.width,d.height,{inversionAttempts:'attemptBoth'});
+  return r?r.data:null;
+}
+$('#qrimg').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  if(S.qrBlob) URL.revokeObjectURL(S.qrBlob);
+  S.qrBlob=URL.createObjectURL(f); showQr(S.qrBlob);
+});
+$('#qrsample').addEventListener('click',()=>{
+  try{ showQr(qrImageUri(SAMPLE_UPI,360)); $('#statusB').textContent=''; }
+  catch(e){ $('#statusB').textContent='The QR library has not loaded yet. Try again in a moment.'; }
+});
+$('#qrclear').addEventListener('click',()=>{ if(S.qrBlob){URL.revokeObjectURL(S.qrBlob);S.qrBlob=null;} $('#qrimg').value=''; showQr(null); });
+
+/* ---------- guided demo ---------- */
+const TOUR_TEXT='PM Kaushal Yojana ₹5,000 Grant: Click bit.ly/pm-kaushal-claim or scan this QR to pay the ₹99 processing fee.';
+async function playTour(){
+  if(S.running||S.tour) return;
+  const id=++S.tourId; S.tour=true;
+  const bar=$('#tourbar'), cap=$('#tourcap'), total=5;
+  const say=(i,t)=>{ bar.hidden=false; cap.textContent='Step '+i+' of '+total+'. '+t; };
+  const alive=()=>S.tour&&S.tourId===id;
+  const wait=async ms=>{ await new Promise(r=>setTimeout(r,FAST?300:ms)); return alive(); };
+  $('#autoBtn').disabled=true;
+  try{
+    setTab('demo'); $('#usesample').click(); $('#qrclear').click();
+    $('input[name=flow][value=A]').checked=true; setFlow('A');
+    $('#trade').value='electrical'; $('#lname').value=TRADES.electrical.learner; $('#mlang').value='ta'; refreshPreview();
+    $('[data-lang=ta]').click(); resetChat();
+    say(1,"A Tamil-speaking mentor endorses a school student's relay wiring. The bot replies in Tamil.");
+    if(!await wait(1800)) return;
+    await runA(); if(!alive()) return;
+    say(2,'The passport is signed. An employer opens the QR and the signature checks out.');
+    if(!await wait(1200)) return;
+    setTab('verify'); if(!await wait(2600)) return;
+    say(3,'Tamper test: someone changes 12 practical hours to 120. The signature no longer matches.');
+    S.tamper=true; renderVerify(); await runVerify();
+    if(!await wait(3400)) return;
+    S.tamper=false; renderVerify(); await runVerify();
+    say(4,'Flow B: a fake scholarship message arrives with a QR code and a ₹99 fee.');
+    setTab('demo'); $('input[name=flow][value=B]').checked=true; setFlow('B');
+    $('#fwd').value=TOUR_TEXT; try{ showQr(qrImageUri(SAMPLE_UPI,360)); }catch(e){}
+    if(!await wait(2200)) return;
+    await runB(); if(!alive()) return;
+    say(5,'Danger caught in Tamil, with the reasons and three zero-fee openings. Try your own message now.');
+    await wait(4500);
+  }finally{ if(S.tourId===id) S.tour=false; bar.hidden=true; $('#autoBtn').disabled=false; }
+}
+$('#autoBtn').addEventListener('click',playTour);
+$('#tourStop').addEventListener('click',()=>{ S.tour=false; S.tourId++; });
+
+/* ---------- criteria tab ---------- */
+$$('[data-go]').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.go)));
+const inr=x=>'₹'+Math.round(x).toLocaleString('en-IN');
+function renderCalc(){
+  const n=+$('#nSlider').value;
+  $('#nVal').textContent=n.toLocaleString('en-IN');
+  const rows=[['WhatsApp and hosting',n*0.45],['Bhashini ASR and TTS',0],['Vision model and phishing scan',n*0.75],['Signing and storage',n*0.20]];
+  $('#calcOut').replaceChildren(...rows.flatMap(r=>[h('dt',{},r[0]),h('dd',{},inr(r[1]))]),h('dt',{},'Total at ₹1.40 each'),h('dd',{},inr(n*1.4)));
+}
+[['500','Pilot'],['5000','District'],['50000','State'],['100000','Large state']].forEach(([v,l])=>$('#nChips').append(h('button',{class:'chip',type:'button',onclick:()=>{$('#nSlider').value=v;renderCalc();}},l+' · '+(+v).toLocaleString('en-IN'))));
+$('#nSlider').addEventListener('input',renderCalc);
+renderCalc();
+
+/* ---------- backend mode: used when the page is served by, or pointed at, the Hunar-QR API ---------- */
+const JSONH={'content-type':'application/json'};
+async function api(path,opts){
+  const r=await fetch(API.base+path,opts); let j=null; try{ j=await r.json(); }catch(e){}
+  if(!r.ok){ const d=j&&j.detail; throw new Error(typeof d==='string'?d:(r.status===429?'Too many requests. Wait a minute and try again.':'Request failed ('+r.status+')')); }
+  return j;
+}
+async function detectApi(){
+  const cands=[]; let q=null;
+  try{ q=new URLSearchParams(location.search).get('api'); }catch(e){}
+  if(q) cands.push(q.replace(/\/+$/,''));
+  if(/^https?:$/.test(location.protocol)) cands.push('');
+  for(const base of cands){
+    try{
+      const ctl=new AbortController(); const tm=setTimeout(()=>ctl.abort(),2500);
+      const r=await fetch(base+'/api/meta',{signal:ctl.signal,cache:'no-store'}); clearTimeout(tm);
+      if(!r.ok) continue;
+      const m=await r.json();
+      if(m&&m.name==='Hunar-QR API'){ API.base=base||location.origin; API.meta=m; return true; }
+    }catch(e){}
+  }
+  return false;
+}
+async function fingerprintOf(sig){ const b=await sha256(unb64u(sig)); return hex(b.slice(0,8)).replace(/(.{4})/g,'$1 ').trim(); }
+async function toRec(d){
+  const sig=d.signature;
+  return {id:d.id,cred:d.credential,sig,fp:d.fingerprint||await fingerprintOf(sig),payload:d.verify_url,
+    evidenceSrc:API.base+'/v/'+d.id+'/evidence.jpg?s='+sig,trade:d.credential.credentialSubject.tradeId,server:true};
+}
+const qrUrl=rec=>API.base+'/v/'+rec.id+'/qr.png?s='+rec.sig;
+async function analyzeRemote(text){ return api('/api/analyze',{method:'POST',headers:JSONH,body:JSON.stringify({text})}); }
+function updateMode(){
+  const p=API.meta.providers, mk=x=>x==='mock'?' (sample)':'';
+  $('#modeNote').textContent='Connected to the Hunar-QR backend. Fraud checks, signing and verification run on the server. Speech: '+p.asr+mk(p.asr)+'. Photo scoring: '+p.vision+mk(p.vision)+'.';
+  const how=$('#howMode'); how.hidden=false;
+  how.textContent='This page is connected to a backend. The table describes the standalone page. With the backend, signing, verification and fraud checks run on the server. Providers in use: speech '+p.asr+', photo scoring '+p.vision+', voice '+p.tts+'.';
+  $('#photoHint').textContent='Your photo is sent to the backend. It is checked for darkness and blur, stripped of location data and stored with the passport so an employer can see it.'+(p.vision==='mock'?' Rubric scores are sample values while the photo scorer is the mock provider.':'');
+  $('#qrHint').textContent='A QR decoder reads the code in your browser, then the text inside it is sent to the backend for checking.';
+  $('#textHint').textContent='Your message is sent to the backend for checking. Only a hash and the verdict are kept, never the text.';
+  $('#composer').hidden=false; $('#compVoice').hidden=p.asr!=='mock';
+}
+async function runAApi(o){
+  const {trade,T,lang,type,name}=o;
+  step('recv','running');
+  msg('user',h('img',{class:'ev',src:S.photoUrl||evUri(trade),alt:'Photo of finished work: '+T.short}));
+  await sleep(250); msg('user',voiceNode(lang)); await sleep(300);
+  await typing(450); msg('bot',botText('evidence'));
+  const fd=new FormData();
+  fd.append('name',name); fd.append('trade',trade); fd.append('language',lang); fd.append('learner_type',type); fd.append('use_sample_voice','true');
+  if(S.photo) fd.append('photo',S.photo,S.photo.name||'photo.jpg'); else fd.append('use_sample_photo','true');
+  let res;
+  try{ res=await api('/api/passports',{method:'POST',body:fd}); }
+  catch(e){ step('recv','error',e.message); msg('bot',h('p',{},e.message)); return; }
+  const rec=await toRec(res); S.registry.push(rec);
+  const P=res.pipeline; step('recv','done',P[0].detail);
+  for(const p of P.slice(1)){
+    step(p.step,'running'); await sleep(380); step(p.step,'done',p.detail);
+    if(p.step==='asr'){
+      const m=res.credential.credentialSubject.mentor;
+      msg('bot',h('div',{class:'tcard'},h('div',{class:'cap'},'Mentor voice note, '+LANGNAME[m.language]),h('p',{lang:m.language},m.endorsement.original),
+        m.language!=='en'?h('div',{class:'cap'},'English'):null,m.language!=='en'?h('p',{},m.endorsement.english):null),'wide');
+    }
+  }
+  const card=passportNode(rec,{compact:true});
+  await typing(450);
+  msg('bot',[botText('mint'),card,h('button',{class:'btn small',type:'button',onclick:()=>{S.view=S.registry.indexOf(rec);setTab('verify');}},'Open verification page')],'wide');
+  S.view=S.registry.indexOf(rec); S.tamper=false; S.lastTrade=trade;
+  renderVerify(); runVerify();
+}
+/* free chat with the real bot: the same conversation engine WhatsApp uses */
+const SID=(function(){
+  const mk=()=>'w'+Math.random().toString(36).slice(2,12)+Date.now().toString(36);
+  try{ let v=sessionStorage.getItem('hq_sid'); if(!v){ v=mk(); sessionStorage.setItem('hq_sid',v); } return v; }catch(e){ return mk(); }
+})();
+async function openServerPassport(p){
+  try{
+    const d=await api('/api/passports/'+encodeURIComponent(p.id)+'?s='+encodeURIComponent(p.signature));
+    const rec=await toRec(d); S.registry.push(rec); S.view=S.registry.length-1; S.tamper=false; setTab('verify');
+  }catch(e){ msg('bot',h('p',{},e.message)); }
+}
+function renderBotMsg(m){
+  const kids=[];
+  if(m.media&&m.kind==='image') kids.push(h('img',{class:'ev',src:m.media,alt:'QR code for the passport'}));
+  if(m.media&&m.kind==='audio') kids.push(h('audio',{controls:true,src:m.media}));
+  if(m.text) kids.push(h('p',{style:'white-space:pre-wrap'},m.text));
+  if(m.buttons&&m.buttons.length) kids.push(h('div',{class:'chips'},m.buttons.map(b=>h('button',{class:'chip',type:'button',onclick:()=>chatSend({button_id:b.id,text:b.title},h('p',{},b.title))},b.title))));
+  if(m.meta&&m.meta.passport) kids.push(h('button',{class:'btn small',type:'button',onclick:()=>openServerPassport(m.meta.passport)},'Open verification page'));
+  msg('bot',kids,'wide');
+}
+async function chatSend(body,echo){
+  if(S.running) return; setBusy(true); S.pristine=false;
+  try{
+    if(echo) msg('user',echo);
+    await typing(350);
+    const r=await api('/api/chat',{method:'POST',headers:JSONH,body:JSON.stringify({session_id:SID,...body})});
+    r.messages.forEach(renderBotMsg);
+  }catch(e){ msg('bot',h('p',{},e.message||'Could not reach the bot.')); }
+  finally{ setBusy(false); }
+}
+$('#composer').addEventListener('submit',e=>{ e.preventDefault(); const v=$('#compText').value.trim(); if(!v) return; $('#compText').value=''; chatSend({text:v},h('p',{},v)); });
+$('#compAadhaar').addEventListener('click',()=>chatSend({text:'9842 5612 3414'},h('p',{},'9842 5612 3414')));
+$('#compOtp').addEventListener('click',()=>chatSend({text:'123456'},h('p',{},'123456')));
+$('#compPhoto').addEventListener('click',()=>chatSend({sample:'photo'},h('p',{},'Sample photo of finished work')));
+$('#compVoice').addEventListener('click',()=>chatSend({sample:'voice'},voiceNode(S.lang)));
+$('#compFile').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return; e.target.value='';
+  const rd=new FileReader();
+  rd.onload=()=>{ const url=URL.createObjectURL(f); chatSend({image_b64:String(rd.result).split(',')[1]||''},h('img',{class:'ev',src:url,alt:'Image you sent'})); };
+  rd.readAsDataURL(f);
+});
+
+/* ---------- boot ---------- */
+(async function init(){
+  refreshPreview(); resetChat(); renderTrace('A');
+  if(await detectApi()){
+    updateMode(); renderTrace(S.flow);
+    try{ S.registry.push(await toRec(await api('/api/demo-passport'))); }catch(e){}
+  }else{
+    try{
+      await mintCredential({trade:'electrical',type:'school',name:TRADES.electrical.learner,lang:'ta',file:null,photoUrl:null});
+    }catch(e){ S.cryptoErr=true; }
+  }
+  renderVerify(); runVerify();
+  const hash=(location.hash||'').replace('#','');
+  if(['demo','verify','how','crit'].includes(hash)) setTab(hash);
+})();
+</script>
+
+</body>
+</html>
