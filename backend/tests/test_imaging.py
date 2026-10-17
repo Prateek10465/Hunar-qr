@@ -88,3 +88,11 @@ def test_no_qr_returns_none():
 
 def test_qr_svg_is_svg():
     assert imaging.qr_svg("hello").lstrip().startswith("<svg")
+
+
+def test_photo_without_face_is_rejected():
+    img = np.zeros((400, 400, 3), dtype=np.uint8) + 120
+    cv2.rectangle(img, (50, 50), (350, 350), (20, 20, 20), 4)
+    with pytest.raises(ImageRejected) as e:
+        imaging.normalize_image(_png(img))
+    assert e.value.code == "no_face"

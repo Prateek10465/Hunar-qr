@@ -6,19 +6,36 @@ Built for the Seva First Innovation Challenge (Level 3 Open, Track A).
 > Not an official Government of India service. The government-style palette is a design choice for familiarity; it carries no emblem and no official endorsement.
 
 ## What it does
-- **Skill Passport**: a worker answers a few questions in Tamil, Hindi or English, sends a photo of their work and a voice note. The backend checks the photo, scores it against a trade rubric, and issues a signed credential with a QR code. An employer scans it and sees the verification page.
+- **Skill Passport**: a worker answers a few questions in any of India's 22 scheduled languages (Tamil, Hindi, Telugu, Bengali, Marathi, Gujarati, Kannada, Malayalam, Punjabi, Odia, Assamese, Urdu, Sanskrit, etc.) or English, verifies their Aadhaar identity, sends a live selfie with their workpiece and an optional demonstration video. The backend validates physical presence and craftsmanship, and issues a tamper-evident signed credential with a QR code. An employer scans it and sees the verification page.
 - **Job Shield**: forward any job message or QR code. The bot flags fee demands, shortened links, look-alike domains and blocklisted UPI IDs, and replies in the worker's language.
 
 ## Quick start
+
+### On Windows (PowerShell)
+From the repository root (`hunar-qr`):
+```powershell
+# Option A: Activate venv and run
+.\.venv\Scripts\Activate.ps1
+python -m uvicorn app.main:create_app --factory --app-dir backend --port 8000 --reload
+
+# Option B: Run directly using the virtual environment python
+.\.venv\Scripts\python.exe -m uvicorn app.main:create_app --factory --app-dir backend --port 8000 --reload
+```
+
+### On macOS / Linux (or with Make)
 ```bash
 make install          # venv, Python deps, e2e deps
-make run              # http://localhost:8000  (demo UI + API)
+make run              # http://localhost:8000 (demo UI + API)
 make test             # backend tests
-make e2e              # jsdom tests, standalone and against a live server
-# or
+# or manually:
+source .venv/bin/activate
+python -m uvicorn app.main:create_app --factory --app-dir backend --port 8000 --reload
+```
+Or with Docker:
+```bash
 cp .env.example .env && docker compose up --build
 ```
-Open http://localhost:8000, use the **Chat** tab to talk to the real bot, and the **Verify** tab to scan a passport.
+Open **http://localhost:8000** in your browser. Use the **Chat** tab to interact with the bot, and the **Verify** tab to scan and verify passports.
 
 ## Status: what is verified and what is not
 | Area | State |
@@ -40,7 +57,7 @@ web/       demo page, served at / by the backend, also works standalone
 e2e/       jsdom end-to-end tests
 docs/      ARCHITECTURE, API, SECURITY, WHATSAPP_SETUP, DEMO_SCRIPT
 ```
-Run the server with `uvicorn app.main:create_app --factory` (there is no module-level `app`).
+Run the server with `python -m uvicorn app.main:create_app --factory --app-dir backend --port 8000` (or `cd backend && python -m uvicorn app.main:create_app --factory`). Note that `--factory` is required because `create_app` is an application factory.
 
 ## Going beyond the demo
 1. Set `ENABLE_DEMO_API=false` and a real `PUBLIC_BASE_URL`.

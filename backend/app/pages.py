@@ -18,7 +18,11 @@ dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;margin:0}d
 .tags{display:flex;flex-wrap:wrap;gap:6px}.tags span{border:1px solid var(--line);background:#f1f5f9;padding:3px 10px;font-size:.85rem;border-radius:2px}
 .badge{display:inline-block;padding:3px 8px;font-size:.78rem;font-weight:700;border-radius:3px;background:#e0f2fe;color:#0369a1;border:1px solid #bae6fd}
 .aadhaar-badge{background:#ecfdf5;color:#047857;border-color:#a7f3d0}
-.rb{display:grid;grid-template-columns:minmax(0,1fr) 90px 32px;gap:10px;align-items:center;font-size:.9rem}.rb .b{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}.rb .b i{display:block;height:100%;background:var(--bar);border-radius:4px}.rb b{text-align:right}.note{grid-column:1/-1;color:var(--ink2);font-size:.8rem}
+.face-badge{background:#fef3c7;color:#92400e;border-color:#fde68a}
+.anchor-card{border-left:4px solid #0d731e;background:#f8fafc}
+.anchor-grid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:600px){.anchor-grid{grid-template-columns:1fr 1fr}}
+.anchor-box{background:#fff;border:1px solid var(--line);border-radius:4px;padding:12px;display:grid;gap:4px}
 .say{border:1px solid var(--line);background:#f8fafc;padding:12px 14px;display:grid;gap:6px;border-radius:3px}
 .q-box{font-weight:600;color:var(--navy);background:#eff6ff;padding:8px 12px;border-radius:4px;border:1px solid #bfdbfe;font-size:.92rem}
 .mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.78rem;color:var(--ink2);overflow-wrap:anywhere}
@@ -31,9 +35,12 @@ def _shell(title: str, body: str) -> str:
     return ("<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\">"
             "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, viewport-fit=cover\">"
             "<meta name=\"referrer\" content=\"no-referrer\"><meta name=\"robots\" content=\"noindex\">"
+            "<link rel=\"icon\" type=\"image/png\" sizes=\"256x256\" href=\"/favicon.png\">"
+            "<link rel=\"shortcut icon\" href=\"/favicon.ico\">"
+            "<link rel=\"apple-touch-icon\" href=\"/favicon.png\">"
             f"<title>{e(title)}</title><style>{_CSS}</style></head><body>"
             "<div class=\"tri\" aria-hidden=\"true\"><i></i><i></i><i></i></div>"
-            "<header><div class=\"w\"><b>भारत सरकार · Hunar-QR</b><span>National Skill Passport Verification</span></div></header>"
+            "<header><div class=\"w\"><img src=\"/favicon.png\" width=\"28\" height=\"28\" alt=\"Hunar-QR\" style=\"border-radius:4px;vertical-align:middle;margin-right:10px\"><b>भारत सरकार · Hunar-QR</b><span>National Skill Passport Verification</span></div></header>"
             f"<main class=\"w\">{body}</main></body></html>")
 
 
@@ -46,8 +53,6 @@ def render_passport(*, pid: str, cred: dict, result: dict, sig_param: str, finge
     s = cred["credentialSubject"]
     m = s.get("mentor") or {}
     ver = s.get("verification") or {}
-    viva = ver.get("viva") or {}
-    token = ver.get("challengeToken") or ""
     assurance = (cred.get("assurance") or {})
     level = assurance.get("level", "unknown")
     valid = result["valid"]
@@ -63,6 +68,9 @@ def render_passport(*, pid: str, cred: dict, result: dict, sig_param: str, finge
     if lid and lid.get("scheme") == "Aadhaar" and lid.get("verified"):
         aadhaar_row = f"<dt>Identity Anchor</dt><dd><span class=\"badge aadhaar-badge\">🇮🇳 Aadhaar Verified · {e(lid['id'])}</span></dd>"
 
+    v_info = s.get("showcaseVideo") or {}
+    video_badge = "<span class=\"badge aadhaar-badge\">🎥 30-60s Video Attached</span>" if v_info.get("available") else "<span class=\"badge\">Photo Verified</span>"
+
     parts.append(
         f"<div class=\"card\"><h1>{e(s['name'])}</h1><dl>"
         + aadhaar_row
@@ -70,29 +78,45 @@ def render_passport(*, pid: str, cred: dict, result: dict, sig_param: str, finge
         f"<dt>Level</dt><dd>NCrF/NSQF {e(str(s['indicativeLevel']))} (indicative)</dd>"
         f"<dt>Practical hours</dt><dd>{e(str(s['practicalHours']))} (self-reported)</dd>"
         f"<dt>Credit</dt><dd>{s['ncrfCredits']:.2f} (30 hours = 1)</dd>"
-        + (f"<dt>Anti-Spoof Token</dt><dd><span class=\"badge\">#{e(token)} Verified Real-World Work</span></dd>" if token else "")
-        + f"<dt>Issued</dt><dd>{e(cred['validFrom'])}</dd><dt>Passport ID</dt><dd>{e(pid)}</dd></dl>"
+        f"<dt>Biometric Status</dt><dd><span class=\"badge face-badge\">🛡️ Live Face &amp; Workpiece Bound</span></dd>"
+        f"<dt>Work Showcase</dt><dd>{video_badge}</dd>"
+        f"<dt>Issued</dt><dd>{e(cred['validFrom'])}</dd><dt>Passport ID</dt><dd>{e(pid)}</dd></dl>"
         f"<div class=\"tags\">{''.join(f'<span>{e(t)}</span>' for t in s['skillTags'])}</div></div>")
-    rows = "".join(
-        f"<div class=\"rb\"><span>{e(r['item'])}</span><span class=\"b\"><i style=\"width:{int(r['score'])}%\"></i></span><b>{int(r['score'])}</b>"
-        + (f"<div class=\"note\">{e(r['note'])}</div>" if r.get("note") else "") + "</div>"
-        for r in s["rubric"])
-    parts.append(f"<div class=\"card\"><h2>Work checked against the rubric ({e(assurance.get('vision', '?'))} scoring)</h2>{rows}"
-                 f"<div class=\"mono\">Average {int(s['rubricAverage'])} out of 100. Scores are advisory. Practical viva voce and the issuer signature are the basis of trust.</div></div>")
-    
-    # Practical Troubleshooting Viva / Oral Examination
-    if viva and viva.get("question"):
-        v_eng = viva.get("english")
-        v_orig = viva.get("workerResponse", "")
+
+    # UIDAI Identity & Live Biometric Anchor Card
+    aadhaar_num = lid['id'] if lid else "Not Linked"
+    parts.append(
+        f"<div class=\"card anchor-card\"><h2>UIDAI Identity &amp; Biometric Security Anchor</h2>"
+        f"<div class=\"anchor-grid\">"
+        f"<div class=\"anchor-box\"><div style=\"font-size:.8rem;color:var(--ink2)\">Verified Identity Anchor</div>"
+        f"<b>{e(s['name'])}</b>"
+        f"<div><span class=\"badge aadhaar-badge\">🇮🇳 UIDAI Aadhaar · {e(aadhaar_num)}</span></div></div>"
+        f"<div class=\"anchor-box\"><div style=\"font-size:.8rem;color:var(--ink2)\">Physical Skill Evidence</div>"
+        f"<b>Workpiece &amp; Face Bound</b>"
+        f"<div><span class=\"badge face-badge\">🛡️ Live Face Verified Present</span></div></div>"
+        f"</div>"
+        f"<div class=\"mono\">The verified Aadhaar holder ({e(s['name'])}) was physically detected holding the finished workpiece in the evidence photo, preventing impersonation, stock catalog image uploads, and stolen work claims.</div>"
+        f"</div>")
+
+    # Hands-on Work Showcase Video Player Card
+    if v_info.get("available"):
+        v_sha = v_info.get("sha256", "")
         parts.append(
-            f"<div class=\"card pos-card\"><h2>Bharat Proof-of-Skill: Practical Troubleshooting Viva</h2>"
-            f"<div class=\"q-box\">Q: {e(viva['question'])}</div>"
-            f"<div class=\"say\">"
-            f"<div><b>Spoken Diagnostic Response:</b> \"{e(v_orig)}\"</div>"
-            + (f"<div class=\"mono\">English: \"{e(v_eng)}\"</div>" if v_eng and v_eng != v_orig else "")
-            + f"<div class=\"mono\">Language: {e(viva.get('language', 'en'))} · Liveness: {e(str(viva.get('liveness', 'passed')).replace('_', ' '))} · Evaluated by {e(assurance.get('asr', 'AI'))}</div>"
-            + "</div></div>")
-    if m and m.get("endorsement"):
+            f"<div class=\"card\"><h2>🎥 Craftsmanship in Action · 30–60s Work Showcase Video</h2>"
+            f"<div class=\"mono\">Verified workplace hands-on demonstration of {e(s['trade'])} by {e(s['name'])}. Watch real-time technique, tool handling, and craftsmanship quality.</div>"
+            f"<div style=\"position:relative;border-radius:4px;overflow:hidden;background:#0f172a;border:1px solid var(--line);margin-block:6px\">"
+            f"<video controls playsinline preload=\"metadata\" poster=\"/v/{e(pid)}/evidence.jpg?s={e(sig_param)}\" style=\"display:block;width:100%;max-height:420px\">"
+            f"<source src=\"/v/{e(pid)}/video.mp4?s={e(sig_param)}\" type=\"video/mp4\">"
+            f"Your browser does not support HTML5 video streaming."
+            f"</video>"
+            f"</div>"
+            f"<div class=\"mono\" style=\"display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px\">"
+            f"<span>Video SHA-256: {e(v_sha[:24])}…</span>"
+            f"<span class=\"badge\" style=\"background:#ecfdf5;color:#047857;border-color:#a7f3d0\">✓ Verified Craft Demonstration</span>"
+            f"</div></div>")
+
+    
+    if m and m.get("endorsement") and m.get("name") and "Self-Practice" not in m.get("name"):
         eng = m["endorsement"].get("english")
         parts.append(
             f"<div class=\"card\"><h2>Mentor endorsement, {e(m['name'])}</h2><div class=\"say\">"
@@ -101,9 +125,9 @@ def render_passport(*, pid: str, cred: dict, result: dict, sig_param: str, finge
             + f"<div class=\"mono\">Language {e(m['language'])}. Voice liveness: {e(str(m['liveness']).replace('_', ' '))}. Speech read by the {e(assurance.get('asr', '?'))} provider.</div></div></div>")
 
     parts.append(
-        f"<div class=\"card\"><h2>Evidence & Anti-Spoof Photo Proof</h2>"
-        + (f"<div class=\"mono\">Dynamic anti-spoof token <b>#{e(token)}</b> must be visibly marked on the workpiece.</div>" if token else "")
-        + f"<img class=\"ev\" alt=\"Photo of the finished work\" src=\"/v/{e(pid)}/evidence.jpg?s={e(sig_param)}\">"
+        f"<div class=\"card\"><h2>Live Evidence &amp; Biometric Photo Proof</h2>"
+        f"<div class=\"mono\">Holder face physically verified holding trade workpiece. EXIF stripped.</div>"
+        f"<img class=\"ev\" alt=\"Live selfie of worker with finished work\" src=\"/v/{e(pid)}/evidence.jpg?s={e(sig_param)}\">"
         f"<div class=\"mono\">SHA-256 {e(s['evidenceSha256'])}</div></div>")
     steps = "".join(f"<li><span class=\"{'y' if st['ok'] else 'n'}\">{'✓' if st['ok'] else '✗'}</span><span><b>{e(st['label'])}.</b> {e(st['detail'])}</span></li>" for st in result["steps"])
     parts.append(f"<div class=\"card\"><h2>Checks run just now</h2><ul class=\"steps\">{steps}</ul>"

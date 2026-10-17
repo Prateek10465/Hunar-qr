@@ -114,10 +114,24 @@ def test_mint_with_uploaded_photo(client):
 
 @pytest.mark.parametrize("over,code", [
     ({"trade": "unknown_trade"}, 422), ({"language": "fr"}, 422), ({"name": "A"}, 422), ({"hours": "0"}, 422),
-    ({"hours": "501"}, 422), ({"learner_type": "alien"}, 422), ({"use_sample_photo": "false"}, 422),
-    ({"use_sample_voice": "false"}, 422)])
+    ({"hours": "501"}, 422), ({"learner_type": "alien"}, 422), ({"use_sample_photo": "false"}, 422)])
 def test_mint_validation(client, over, code):
     assert mint(client, **over).status_code == code
+
+
+def test_mint_with_showcase_video(client):
+    r = client.post("/api/passports", data={"name": "Karthik M.", "trade": "electrical", "language": "en",
+                                           "use_sample_photo": "true", "use_sample_video": "true"})
+    assert r.status_code == 200, r.text
+    rec = r.json()
+    assert rec["credential"]["credentialSubject"]["showcaseVideo"]["available"] is True
+    sig = rec["signature"]
+    v_resp = client.get(f"/v/{rec['id']}/video.mp4?s={sig}")
+    assert v_resp.status_code == 200
+    assert v_resp.headers["content-type"] == "video/mp4"
+    page_resp = client.get(f"/v/{rec['id']}?s={sig}")
+    assert "<video" in page_resp.text
+    assert "media-src 'self'" in page_resp.headers["content-security-policy"]
 
 
 def test_mint_rejects_bad_photos(client):
@@ -299,8 +313,8 @@ def test_chat_endpoint_runs_the_full_passport_flow(client):
     say(text="12")
     say(button_id="consent:yes")
     r = say(sample="photo")
-    assert r["state"] == "VOICE"
-    r = say(sample="voice")
+    assert r["state"] == "VIDEO"
+    r = say(sample="video")
     img = r["messages"][0]
     assert img["kind"] == "image" and img["media"].startswith("data:image/png;base64,")
     pid = img["meta"]["passport"]["id"]

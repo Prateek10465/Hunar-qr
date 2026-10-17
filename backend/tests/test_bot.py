@@ -36,7 +36,7 @@ def passports(bot):
 # ------------------------------------------------------------------ language and menu
 def test_new_user_gets_language_buttons_then_menu(chat):
     out = chat.say("hello")
-    assert out[0].kind == "buttons" and [b[0] for b in out[0].buttons] == ["lang:en", "lang:ta", "lang:hi"]
+    assert out[0].kind == "buttons" and [b[0] for b in out[0].buttons][:3] == ["lang:en", "lang:ta", "lang:hi"]
     out = chat.say(button="lang:ta")
     assert out[0].kind == "buttons" and "ஹுனர்" in out[0].text and chat.state == "MENU"
     assert [b[0] for b in out[0].buttons] == ["menu:passport", "menu:check"]
@@ -45,6 +45,23 @@ def test_new_user_gets_language_buttons_then_menu(chat):
 def test_language_can_be_chosen_by_typing(chat):
     chat.say("hi")
     assert "हुनर" in chat.say("3")[0].text
+
+
+def test_other_scheduled_languages_receive_messages_in_that_language(chat):
+    # Test Telugu (4)
+    chat.say("hi")
+    out = chat.say("4")
+    assert "హునర్" in out[0].text and chat.state == "MENU"
+    next_msg = chat.say("1")
+    assert "పేరు" in next_msg[0].text and chat.state == "NAME"
+
+    # Test Bengali (5)
+    chat2 = Chat(chat.bot, key="user-bn")
+    chat2.say("hi")
+    out = chat2.say("5")
+    assert "হুনর" in out[0].text and chat2.state == "MENU"
+    next_msg = chat2.say("1")
+    assert "নাম" in next_msg[0].text and chat2.state == "NAME"
 
 
 def test_greeting_returns_to_menu_and_menu_option_two(chat):
@@ -58,9 +75,9 @@ def test_greeting_returns_to_menu_and_menu_option_two(chat):
 def test_full_passport_flow_in_english(chat, bot, settings):
     fill_until_photo(chat)
     out = chat.say(image=PHOTO)
-    assert chat.state == "VOICE" and "voice note" in out[0].text
+    assert chat.state == "VIDEO" and "video" in out[0].text.lower()
     assert (settings.data_dir / "tmp" / f"{chat.key}.jpg").exists()
-    out = chat.say(audio=b"voice-bytes")
+    out = chat.say(video=imaging.sample_video("electrical"))
     assert len(out) == 1 and out[0].kind == "image" and out[0].media[:4] == b"\x89PNG"
     assert "Verify link: http://testserver/v/HQR-TN-" in out[0].text and "DEMO credential" in out[0].text
     assert imaging.decode_qr(out[0].media) == out[0].meta["passport"]["verify_url"]
@@ -69,17 +86,28 @@ def test_full_passport_flow_in_english(chat, bot, settings):
     rec = bot.store.get_passport(out[0].meta["passport"]["id"])
     s = rec["credential"]["credentialSubject"]
     assert (s["name"], s["practicalHours"], s["tradeId"]) == ("Karthik M.", 12, "electrical")
-    assert s["verification"]["type"] == "bharat-proof-of-skill"
+    assert s["verification"]["type"] in ("aadhaar-biometric-anchor", "bharat-proof-of-skill")
+    assert s["showcaseVideo"]["available"] is True
     assert rec["owner_hash"] == chat.key
+
+
+def test_passport_flow_skipping_video(chat, bot):
+    fill_until_photo(chat)
+    chat.say(image=PHOTO)
+    assert chat.state == "VIDEO"
+    out = chat.say(button="video:skip")
+    assert len(out) == 1 and out[0].kind == "image"
+    rec = bot.store.get_passport(out[0].meta["passport"]["id"])
+    assert rec["credential"]["credentialSubject"]["showcaseVideo"]["available"] is False
 
 
 def test_full_passport_flow_in_tamil_uses_tamil_endorsement(chat, bot):
     fill_until_photo(chat, lang="ta")
     chat.say(image=PHOTO)
-    out = chat.say(audio=b"v")
+    out = chat.say(button="video:skip")
     assert "திறன் பாஸ்போர்ட்" in out[0].text
     cred = bot.store.get_passport(out[0].meta["passport"]["id"])["credential"]
-    assert cred["credentialSubject"]["verification"]["type"] == "bharat-proof-of-skill"
+    assert cred["credentialSubject"]["verification"]["type"] in ("aadhaar-biometric-anchor", "bharat-proof-of-skill")
 
 
 def test_trade_can_be_picked_by_number_or_name(chat):
@@ -177,7 +205,7 @@ def test_audio_where_a_photo_is_expected_and_photo_where_audio_is_expected(chat)
     fill_until_photo(chat)
     assert chat.say(audio=b"v")[0].text == "Please send a photo."
     chat.say(image=PHOTO)
-    assert chat.say(image=PHOTO)[0].text == "Please send a voice note."
+    assert "video" in chat.say(image=PHOTO)[0].text.lower()
 
 
 class FailingVision:
@@ -217,7 +245,7 @@ def test_speech_failure_lets_the_mentor_resend(settings):
     fill_until_photo(chat)
     chat.say(image=PHOTO)
     assert "Something went wrong" in chat.say(audio=b"v")[0].text
-    assert chat.state == "VOICE" and (settings.data_dir / "tmp" / f"{chat.key}.jpg").exists() and passports(bot) == 0
+    assert chat.state == "VIDEO" and (settings.data_dir / "tmp" / f"{chat.key}.jpg").exists() and passports(bot) == 0
 
 
 class LiveASR:
@@ -244,7 +272,7 @@ def test_conversation_state_survives_a_restart(chat, settings):
     fill_until_photo(chat)
     again = Chat(build_bot(settings), key=chat.key)
     assert again.state == "PHOTO"
-    assert "voice note" in again.say(image=PHOTO)[0].text
+    assert "video" in again.say(image=PHOTO)[0].text.lower()
 
 
 def test_users_do_not_share_state(bot):
@@ -333,29 +361,38 @@ def test_bot_never_goes_silent_on_internal_errors(settings, monkeypatch):
     assert "Something went wrong" in out[0].text
 
 
-def test_bharat_pos_verification_flow_with_dynamic_challenge_token_and_viva(chat, bot):
+def test_live_face_workpiece_verification_flow_anchored_to_aadhaar(chat, bot):
     start(chat)
     chat.say("1")
     chat.say("Suresh Kumar")
     chat.say(button="trade:plumbing")
     chat.say("45")    # Directly asks hours (learning-by-doing, no mentor)
     out = chat.say(button="consent:yes")
-    # Step 1: dynamic token check
-    assert "token #" in out[0].text.lower()
-    token = "".join(ch for ch in out[0].text if ch.isdigit())
-    assert len(token) == 3
-    # Step 2: photo upload generates practical troubleshooting viva question
+    # Step 1: asks for live selfie with workpiece
+    assert "selfie" in out[0].text.lower() or "face" in out[0].text.lower()
+    # Step 2: photo upload verifies face and anchors skill to Aadhaar
     out = chat.say(image=PHOTO)
-    assert "viva" in out[0].text.lower() and ("suction" in out[0].text.lower() or "pump" in out[0].text.lower())
-    # Step 3: worker answers oral viva with troubleshooting voice note
-    out = chat.say(audio=b"plumber-troubleshooting-voice")
+    assert "face" in out[0].text.lower() or "verified" in out[0].text.lower()
+    assert chat.state == "VIDEO"
+    # Step 3: worker completes passport creation with button or video
+    out = chat.say(button="video:skip")
     assert "Verify link:" in out[0].text
     rec = bot.store.get_passport(out[0].meta["passport"]["id"])
     ver = rec["credential"]["credentialSubject"]["verification"]
-    assert ver["type"] == "bharat-proof-of-skill"
-    assert ver["challengeToken"] == token
-    assert "pump" in ver["viva"]["question"].lower() or "suction" in ver["viva"]["question"].lower()
+    assert ver["type"] in ("aadhaar-biometric-anchor", "bharat-proof-of-skill")
+    assert ver["faceVerified"] is True
     assert ver["trustAnchor"]["verified"] is True
+
+
+def test_bot_rejects_photo_without_face(chat):
+    fill_until_photo(chat)
+    # Workpiece image without a face
+    img = np.zeros((400, 400, 3), dtype=np.uint8) + 120
+    cv2.rectangle(img, (50, 50), (350, 350), (20, 20, 20), 4)
+    raw = cv2.imencode(".png", img)[1].tobytes()
+    out = chat.say(image=raw)
+    assert "face" in out[0].text.lower()
+    assert chat.state == "PHOTO"
 
 
 def test_trade_directly_asks_hours_without_mentor(chat):

@@ -18,7 +18,7 @@ Employer ─► /v/{id}?s=sig ─► hosted verification page
 |---|---|
 | main.py | `create_app()`: routes, rate limits, security headers, static web |
 | bot.py | Conversation flow shared by WhatsApp and the web chat. LANG → MENU; passport: NAME → TRADE → MENTOR → HOURS → CONSENT → PHOTO → VOICE |
-| passports.py | Mint pipeline (receive, ASR, liveness, vision, rubric, sign, QR) and verification |
+| passports.py | Mint pipeline (receive, Aadhaar anchor, live face verification, craftsmanship check, sign, QR) and verification |
 | credentials.py | Canonical JSON, ECDSA P-256 sign/verify (raw r‖s), DID document |
 | providers.py | Pluggable ASR, vision and TTS. Mock by default |
 | fraud.py | Rule-based scam scoring. Port of the browser engine |

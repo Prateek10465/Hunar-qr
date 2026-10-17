@@ -84,9 +84,11 @@ class Chat:
         from app.bot import Inbound
         self.bot, self.key, self.channel, self.Inbound = bot, key, channel, Inbound
 
-    def say(self, text="", *, button="", image=None, audio=None):
+    def say(self, text="", *, button="", image=None, audio=None, video=None):
         if image is not None:
             m = self.Inbound("image", media=image, mime="image/png")
+        elif video is not None:
+            m = self.Inbound("video", media=video, mime="video/mp4")
         elif audio is not None:
             m = self.Inbound("audio", media=audio, mime="audio/ogg")
         elif button:

@@ -5,8 +5,9 @@ const { JSDOM, VirtualConsole } = require('jsdom');
 const qrgen = require('qrcode-generator'), jsQR = require('jsqr');
 
 const PORT = +process.env.PORT || 8765, BASE = `http://127.0.0.1:${PORT}`;
-const PY = process.env.PYTHON || 'python3';
 const ROOT = path.join(__dirname, '..');
+const venvPy = process.platform === 'win32' ? path.join(ROOT, '.venv', 'Scripts', 'python.exe') : path.join(ROOT, '.venv', 'bin', 'python');
+const PY = process.env.PYTHON || (fs.existsSync(venvPy) ? venvPy : 'python3');
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 let failed = 0;
 const ok = (c, m) => { if (!c) failed++; console.log((c ? 'PASS ' : 'FAIL ') + m); };

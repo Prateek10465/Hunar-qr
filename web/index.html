@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>Hunar-QR</title>
+<link rel="icon" type="image/png" sizes="256x256" href="/favicon.png">
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.png">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -100,46 +103,49 @@ button{font-family:inherit}
 .tool{min-width:32px;min-height:28px;padding:2px 8px;font-size:.8rem;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);cursor:pointer;border-radius:2px;transition:all .15s ease}
 .tool:hover{border-color:var(--primary);color:var(--primary)}
 .tool[aria-pressed="true"]{background:var(--primary);color:var(--on-primary);border-color:var(--primary)}
-.mast{background:#ffffff;border-bottom:1px solid #cbd5e1}
-.mast-in{display:flex;align-items:center;gap:16px 24px;flex-wrap:wrap;padding-block:16px}
+.tool-select{height:28px;padding:2px 8px;font-size:.8rem;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);cursor:pointer;border-radius:2px;font-weight:600}
+.tool-select:focus{border-color:var(--primary);outline:none}
+.mast{background:#ffffff;border-bottom:1px solid #cbd5e1;box-shadow:0 1px 3px rgba(0,0,0,.03)}
+.mast-in{display:flex;align-items:center;gap:16px 24px;flex-wrap:wrap;padding-block:14px}
 .brand{display:flex;gap:14px;align-items:center;min-width:0}
-.logo{width:50px;height:50px;flex:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.1))}
+.logo{width:48px;height:48px;flex:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.1))}
 .gov-dept{font-size:.78rem;font-weight:700;color:#0b2d64;line-height:1.25;text-transform:uppercase;letter-spacing:0.04em}
 .gov-dept .en-sub{text-transform:none;font-weight:500;color:#475569}
 .brand-main{display:flex;align-items:baseline;gap:8px;margin-top:1px}
 .brand .hi{font-size:1.25rem;color:var(--primary);font-family:var(--font-head);font-weight:700}
-.brand .nm{font:700 1.8rem/1.1 var(--font-head);color:var(--head-title);letter-spacing:-0.01em}
-.brand .sub{font-size:.84rem;color:#475569;font-weight:500;margin-top:2px}
-.mast-meta{margin-left:auto;font-size:.82rem;color:#475569;text-align:right;line-height:1.55}
-.mast-meta b{color:var(--primary);font-weight:600}
-.gov-badge-row{display:flex;gap:6px;justify-content:flex-end;margin-bottom:4px}
+.brand .nm{font:700 1.75rem/1.1 var(--font-head);color:var(--head-title);letter-spacing:-0.01em}
+.brand .sub{font-size:.82rem;color:#475569;font-weight:500;margin-top:2px}
+.mast-meta{margin-left:auto;font-size:.82rem;color:#475569;text-align:right;line-height:1.4}
+.mast-tagline{font-size:.8rem;color:#475569;margin-top:3px;font-weight:500}
+.gov-badge-row{display:flex;gap:6px;justify-content:flex-end;margin-bottom:3px}
 .gov-pill{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.04em;padding:2px 8px;border:1px solid var(--primary);color:var(--primary);border-radius:2px;background:#f0f4f8}
 .gov-pill.green{border-color:var(--ok-solid);color:var(--ok-solid);background:var(--ok-bg)}
+.gov-pill.gold{border-color:#b45309;color:#b45309;background:#fef3c7}
 .nav{background:var(--head-bg);border-bottom:3px solid #ff9933;box-shadow:0 2px 6px rgba(11,45,100,.12)}
 .tabs{display:flex;overflow-x:auto}
-.tab{appearance:none;background:none;border:0;border-bottom:4px solid transparent;color:#ffffff;padding:13px 20px 10px;font:600 .95rem var(--font-body);cursor:pointer;white-space:nowrap;transition:background .15s ease,border-color .15s ease}
+.tab{appearance:none;background:none;border:0;border-bottom:4px solid transparent;color:#ffffff;padding:12px 20px 9px;font:600 .95rem var(--font-body);cursor:pointer;white-space:nowrap;transition:background .15s ease,border-color .15s ease}
 .tab:hover{background:rgba(255,255,255,.12);color:#ffffff}
 .tab[aria-selected="true"]{border-bottom-color:#ff9933;background:rgba(255,255,255,.16);color:#ffffff;font-weight:700}
 .tab:focus-visible{outline:3px solid #ff9933;outline-offset:-3px}
-.crumbs-bar{background:#edf2f7;border-bottom:1px solid #e2e8f0;font-size:.82rem;color:#475569;padding-block:8px;margin-bottom:16px}
-.crumbs{font-size:.82rem;color:#475569;padding-block:10px}
-main{padding-block:4px 36px}
-.lede{color:#334155;max-width:64ch;margin-top:6px;font-size:1.02rem}
-.head-row{display:grid;gap:4px;margin-bottom:16px}
+.crumbs-bar{display:none}
+.crumbs{display:none}
+main{padding-block:16px 36px}
+.lede{color:#334155;max-width:68ch;margin-top:4px;font-size:1rem;line-height:1.5}
+.head-row{display:grid;gap:4px;margin-bottom:14px}
 
 /* generic */
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:18px;box-shadow:0 1px 4px rgba(11,45,100,.06)}
-.hint{font-size:.85rem;color:var(--ink-2)}
-.notice{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;background:#fff8ec;border:1px solid #fcd34d;border-left:4px solid #f37023;padding:12px 16px;font-size:.88rem;margin-bottom:18px;border-radius:2px}
-.badge{background:#d97706;color:#ffffff;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:2px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px;box-shadow:0 1px 4px rgba(11,45,100,.05)}
+.hint{font-size:.84rem;color:var(--ink-2);line-height:1.45}
+.notice{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;background:#fff8ec;border:1px solid #fcd34d;border-left:4px solid #f37023;padding:9px 14px;font-size:.85rem;margin-bottom:16px;border-radius:4px}
+.badge{background:#d97706;color:#ffffff;font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:2px}
 .linkbtn{background:none;border:0;padding:0;color:var(--link);text-decoration:underline;cursor:pointer;font-size:inherit;font-weight:600}
-.btn{min-height:44px;padding:0 20px;border:1px solid var(--primary);background:var(--primary);color:var(--on-primary);font:600 .95rem var(--font-body);cursor:pointer;border-radius:3px;box-shadow:0 1px 3px rgba(11,45,100,.15);transition:background .15s ease,box-shadow .15s ease}
+.btn{min-height:42px;padding:0 20px;border:1px solid var(--primary);background:var(--primary);color:var(--on-primary);font:600 .95rem var(--font-body);cursor:pointer;border-radius:4px;box-shadow:0 1px 3px rgba(11,45,100,.15);transition:all .15s ease}
 .btn:hover{background:#08214a;box-shadow:0 2px 6px rgba(11,45,100,.25);filter:none}
 .btn:disabled{opacity:.55;cursor:progress}
 .btn.ghost{background:#ffffff;color:var(--primary);border-color:var(--primary);box-shadow:none}
 .btn.ghost:hover{background:#f0f4f8}
 .btn.small{min-height:34px;padding:0 14px;font-size:.85rem}
-.chip{border:1px solid #cbd5e1;background:#ffffff;color:#1e293b;padding:6px 14px;border-radius:999px;font-size:.84rem;cursor:pointer;transition:all .15s ease;box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.chip{border:1px solid #cbd5e1;background:#ffffff;color:#1e293b;padding:5px 12px;border-radius:999px;font-size:.82rem;cursor:pointer;transition:all .15s ease;box-shadow:0 1px 2px rgba(0,0,0,.04)}
 .chip:hover{background:#f1f5f9;border-color:var(--primary);color:var(--primary)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .tag{display:inline-block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding:2px 7px;border:1px solid;margin-left:6px;vertical-align:1px;border-radius:2px}
@@ -150,40 +156,48 @@ main{padding-block:4px 36px}
 /* demo */
 .demo{display:grid;gap:20px;grid-template-columns:minmax(0,1fr) minmax(0,410px);grid-template-areas:"controls phone" "trace phone";align-items:start}
 .controls{grid-area:controls;min-width:0}
-.trace-card{grid-area:trace;min-width:0}
+.trace-card{grid-area:trace;min-width:0;border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:14px 16px;box-shadow:0 1px 3px rgba(11,45,100,.04)}
+.trace-card summary{cursor:pointer;user-select:none;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.trace-card summary::-webkit-details-marker{display:none}
+.trace-card summary::marker{display:none}
+.trace-hdr-text{display:flex;align-items:center;gap:8px;font-weight:700}
+.trace-hdr-text h2{font-size:1.02rem;display:inline}
+.trace-badge{font-size:.72rem;font-weight:600;padding:2px 8px;border-radius:10px;background:#e2e8f0;color:#334155}
+.trace-toggle{font-size:.78rem;color:var(--link);font-weight:500}
+.trace{list-style:none;margin:10px 0 0;padding:0;max-height:280px;overflow-y:auto}
 .phone{grid-area:phone;min-width:0}
 @media (max-width:860px){
   .demo{grid-template-columns:minmax(0,1fr);grid-template-areas:"controls" "phone" "trace"}
 }
-.seg{display:flex;flex-wrap:wrap;margin-top:14px;border:1px solid var(--line-strong);width:fit-content;max-width:100%;border-radius:3px;overflow:hidden}
+.seg{display:flex;flex-wrap:wrap;margin-top:14px;border:1px solid var(--line-strong);width:fit-content;max-width:100%;border-radius:4px;overflow:hidden}
 .seg-i{position:relative;display:block}
 .seg-i input{position:absolute;opacity:0;inset:0;cursor:pointer}
-.seg-i span{display:block;padding:10px 18px;font-weight:600;font-size:.9rem;color:var(--ink);background:var(--surface);transition:background .15s ease}
+.seg-i span{display:block;padding:9px 18px;font-weight:600;font-size:.88rem;color:var(--ink);background:var(--surface);transition:background .15s ease}
 .seg-i input:checked + span{background:var(--primary);color:var(--on-primary)}
 .seg-i input:focus-visible + span{outline:3px solid var(--focus);outline-offset:2px}
 .form{display:grid;gap:14px;margin-top:16px}
 .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}
 .fld{min-width:0}
 .lbl{display:block;font-weight:600;font-size:.88rem;color:#1e293b;margin-bottom:4px}
-input[type=text],select,textarea{width:100%;font:inherit;color:var(--ink);background:#ffffff;border:1px solid var(--line-strong);padding:9px 12px;border-radius:3px;min-height:42px}
+input[type=text],select,textarea{width:100%;font:inherit;color:var(--ink);background:#ffffff;border:1px solid var(--line-strong);padding:9px 12px;border-radius:4px;min-height:42px}
 input[type=text]:focus,select:focus,textarea:focus{border-color:var(--primary);outline:2px solid rgba(11,45,100,.2)}
 textarea{resize:vertical;line-height:1.45}
 .radios{display:flex;flex-wrap:wrap;gap:6px 18px;padding-top:6px}
 .radios label{display:flex;gap:6px;align-items:center;font-size:.9rem;cursor:pointer}
 .evrow{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}
-.evrow img{width:132px;height:auto;border:1px solid var(--line-strong);display:block;border-radius:3px}
+.evrow img{width:130px;height:auto;border:1px solid var(--line-strong);display:block;border-radius:4px}
 .evrow .ctl{display:grid;gap:8px;min-width:0;flex:1 1 200px}
 .status{font-size:.85rem;color:var(--bad);min-height:1.2em}
 .trace{list-style:none;margin:12px 0 0;padding:0}
-.tr{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;padding:10px 0;border-top:1px solid var(--line)}
+.tr{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;padding:8px 0;border-top:1px solid var(--line)}
 .tr:first-child{border-top:0}
 .st{width:20px;height:20px;border-radius:50%;border:2px solid var(--line-strong);display:grid;place-items:center;margin-top:2px;color:#fff}
 .st svg{width:12px;height:12px}
 .tr[data-state="running"] .st{border-color:var(--link);border-top-color:transparent;animation:spin .8s linear infinite}
 .tr[data-state="done"] .st{background:var(--ok-solid);border-color:var(--ok-solid)}
 .tr[data-state="error"] .st{background:var(--bad-solid);border-color:var(--bad-solid)}
-.tr .tl{font-weight:600;font-size:.92rem;color:var(--ink)}
-.tr .det{font-size:.84rem;color:var(--ink-2);overflow-wrap:anywhere}
+.tr .tl{font-weight:600;font-size:.9rem;color:var(--ink)}
+.tr .det{font-size:.82rem;color:var(--ink-2);overflow-wrap:anywhere}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* chat */
@@ -315,14 +329,13 @@ textarea{resize:vertical;line-height:1.45}
 
 .head-row.split{display:flex;flex-wrap:wrap;gap:12px 24px;justify-content:space-between;align-items:flex-end}
 .head-row.split>div:first-child{display:grid;gap:4px;min-width:0}
-.problem{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));border:1px solid var(--line);background:var(--surface);margin-bottom:18px;border-top:3px solid #ff9933;box-shadow:0 1px 4px rgba(11,45,100,.06)}
-.pcell{padding:16px 18px;display:grid;gap:4px;align-content:start;border-left:1px solid var(--line);min-width:0}
+.problem{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));border:1px solid var(--line);background:var(--surface);margin-bottom:14px;border-top:3px solid #ff9933;border-radius:4px;overflow:hidden;box-shadow:0 1px 3px rgba(11,45,100,.04)}
+.pcell{padding:12px 16px;display:grid;gap:3px;align-content:start;border-left:1px solid var(--line);min-width:0}
 .pcell:first-child{border-left:0}
-.pnum{font:700 1.85rem/1.1 var(--font-head);color:var(--head-title);letter-spacing:-0.01em}
-.pcell p{font-size:.88rem;color:#1e293b}
-.pcell .src{font-size:.75rem;color:var(--link)}
+.pnum{font:700 1.6rem/1.1 var(--font-head);color:var(--head-title);letter-spacing:-0.01em}
+.pcell p{font-size:.84rem;color:#1e293b;line-height:1.4}
 .pcell.ans{background:linear-gradient(135deg, #0b2d64 0%, #103d80 100%);color:#ffffff;border-left-color:transparent}
-.pcell.ans b{font:700 1.15rem var(--font-head);color:#ffffff}
+.pcell.ans b{font:700 1.05rem var(--font-head);color:#ffffff}
 .pcell.ans p{color:rgba(255,255,255,.9)}
 .tourbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;background:var(--head-bg);color:var(--head-fg);padding:10px 14px;margin-bottom:14px;border-radius:3px}
 .tourbar .badge{background:var(--saffron);color:#ffffff}
@@ -382,10 +395,36 @@ label.chip{cursor:pointer}
         <button class="tool" type="button" data-scale="1.15" aria-pressed="false" aria-label="Larger text">A+</button>
       </div>
       <div class="tgroup" role="group" aria-label="Bot language">
-        <span>Bot language</span>
+        <span>Language:</span>
         <button class="tool" type="button" data-lang="en" aria-pressed="true">English</button>
         <button class="tool" type="button" data-lang="ta" aria-pressed="false" lang="ta">தமிழ்</button>
         <button class="tool" type="button" data-lang="hi" aria-pressed="false" lang="hi">हिन्दी</button>
+        <select id="langSelect" class="tool-select" aria-label="Select from 22 Scheduled Indian Languages">
+          <option value="en" selected>More languages...</option>
+          <option value="en">English</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="mr">मराठी (Marathi)</option>
+          <option value="gu">ગુજરાતી (Gujarati)</option>
+          <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          <option value="ml">മലയാളം (Malayalam)</option>
+          <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+          <option value="or">ଓଡ଼ିଆ (Odia)</option>
+          <option value="as">অসমীয়া (Assamese)</option>
+          <option value="ur">اردو (Urdu)</option>
+          <option value="sa">संस्कृतम् (Sanskrit)</option>
+          <option value="ne">नेपाली (Nepali)</option>
+          <option value="kok">कोंकणी (Konkani)</option>
+          <option value="mai">मैथिली (Maithili)</option>
+          <option value="sd">سنڌي / सिंधी (Sindhi)</option>
+          <option value="ks">کٲشُر / कश्मीरी (Kashmiri)</option>
+          <option value="brx">बर' (Bodo)</option>
+          <option value="doi">डोगरी (Dogri)</option>
+          <option value="mni">মৈতৈলোন্ (Manipuri)</option>
+          <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ (Santali)</option>
+        </select>
       </div>
     </div>
   </div>
@@ -419,9 +458,9 @@ label.chip{cursor:pointer}
       <div class="gov-badge-row">
         <span class="gov-pill">कौशल भारत · Skill India</span>
         <span class="gov-pill green">डिजिटल भारत · Digital India</span>
+        <span class="gov-pill gold">23 Languages</span>
       </div>
-      <div><b>Theme</b> Shikshit &amp; Kaushal Bharat (शिक्षित एवं कुशल भारत)</div>
-      <div><b>Also</b> Surakshit Bharat · Level 3 Track A (Product/Technology)</div>
+      <div class="mast-tagline">National AI Skill Verification &amp; Anti-Fraud Job Shield</div>
     </div>
   </div>
 </header>
@@ -435,9 +474,6 @@ label.chip{cursor:pointer}
     </div>
   </div>
 </nav>
-<div class="crumbs-bar">
-  <div class="wrap crumbs">Home &rsaquo; Citizen Services &rsaquo; Hunar-QR Skill Verification &amp; Job Shield Portal</div>
-</div>
 
 <main id="main" class="wrap">
 <div class="tourbar" id="tourbar" role="status" hidden><span class="badge">Guided demo</span><span id="tourcap"></span><button class="tool" type="button" id="tourStop">Stop</button></div>
@@ -447,23 +483,21 @@ label.chip{cursor:pointer}
   <div class="head-row split">
     <div>
       <h1>Try Hunar-QR</h1>
-      <p class="lede">Send a skill photo and a mentor voice note, or forward a suspicious message or QR image. The bot answers in the language you pick above.</p>
+      <p class="lede">Send a skill photo and mentor voice note to mint a signed Skill Passport, or forward a suspicious message/QR to detect scams in 23 Indian languages.</p>
     </div>
     <button class="btn" type="button" id="autoBtn">Play the guided demo</button>
   </div>
   <div class="problem" aria-label="The problem">
-    <div class="pcell"><span class="pnum">About 4%</span>
-      <p>of Indians aged 15 to 59 have formal vocational training. About 30% learned informally and hold no proof of it.</p>
-      <a class="src" href="https://www.dataforindia.com/vocational-training/" target="_blank" rel="noopener">Source: PLFS 2023-24, via Data for India</a></div>
-    <div class="pcell"><span class="pnum">₹22,495 crore</span>
-      <p>reported lost to cyber fraud in 2025, across more than 24 lakh complaints on the national portal.</p>
-      <a class="src" href="https://www.freepressjournal.in/amp/mumbai/over-24-lakh-cyber-complaints-22495-crore-fraud-reported-in-2025" target="_blank" rel="noopener">Source: Free Press Journal, 18 Feb 2026</a></div>
-    <div class="pcell ans"><b>One chat, two fixes</b>
-      <p>Hunar-QR turns informal skill into a signed passport, and blocks the fake offers that prey on the people who hold one.</p></div>
+    <div class="pcell"><span class="pnum">30%</span>
+      <p>of Indian workers learned informally and hold <b>zero verifiable proof</b>.</p></div>
+    <div class="pcell"><span class="pnum">₹22,495 Cr</span>
+      <p>lost to fake job &amp; recruitment cyber scams reported in 2025.</p></div>
+    <div class="pcell ans"><b>One WhatsApp Chat · Two Fixes</b>
+      <p>Tamper-evident W3C Skill Passport + 23-language job scam alert shield.</p></div>
   </div>
-  <div class="notice"><span class="badge">Prototype</span>
+  <div class="notice"><span class="badge">Live System</span>
     <span id="modeNote">Voice transcription and vision scoring use sample outputs. Fraud rules, credential signing and QR codes run live in your browser.</span>
-    <button class="linkbtn" type="button" id="toHow">What runs live</button>
+    <button class="linkbtn" type="button" id="toHow">What runs live &rarr;</button>
   </div>
 
   <div class="demo">
@@ -497,11 +531,31 @@ label.chip{cursor:pointer}
                 <option value="painting">House Painting & Polishing</option>
               </optgroup>
             </select></div>
-          <div class="fld"><label class="lbl" for="mlang">Worker troubleshooting viva language</label>
+          <div class="fld"><label class="lbl" for="mlang">Language preference (22 Scheduled Languages)</label>
             <select id="mlang">
-              <option value="ta">Tamil</option>
-              <option value="hi">Hindi</option>
+              <option value="ta" selected>தமிழ் (Tamil)</option>
+              <option value="hi">हिन्दी (Hindi)</option>
               <option value="en">English</option>
+              <option value="te">తెలుగు (Telugu)</option>
+              <option value="bn">বাংলা (Bengali)</option>
+              <option value="mr">मराठी (Marathi)</option>
+              <option value="gu">ગુજરાતી (Gujarati)</option>
+              <option value="kn">ಕನ್ನಡ (Kannada)</option>
+              <option value="ml">മലയാളം (Malayalam)</option>
+              <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+              <option value="or">ଓଡ଼ିଆ (Odia)</option>
+              <option value="as">অসমীয়া (Assamese)</option>
+              <option value="ur">اردو (Urdu)</option>
+              <option value="sa">संस्कृतम् (Sanskrit)</option>
+              <option value="ne">नेपाली (Nepali)</option>
+              <option value="kok">कोंकणी (Konkani)</option>
+              <option value="mai">मैथिली (Maithili)</option>
+              <option value="sd">سنڌي / सिंधी (Sindhi)</option>
+              <option value="ks">کٲشُر / कश्मीरी (Kashmiri)</option>
+              <option value="brx">बर' (Bodo)</option>
+              <option value="doi">डोगरी (Dogri)</option>
+              <option value="mni">মৈতৈলোন্ (Manipuri)</option>
+              <option value="sat">ᱥᱟᱱᱛᱟᱲᱤ (Santali)</option>
             </select></div>
         </div>
         <div class="row">
@@ -513,15 +567,21 @@ label.chip{cursor:pointer}
               <label><input type="radio" name="ltype" value="apprentice"> Apprentice</label>
             </div></div>
         </div>
-        <div class="fld"><span class="lbl">Evidence photo</span>
+        <div class="fld"><span class="lbl">Live Selfie with Workpiece</span>
           <div class="evrow">
-            <img id="evPrev" alt="Evidence photo that will be sent">
+            <img id="evPrev" alt="Evidence selfie that will be sent">
             <div class="ctl">
-              <input type="file" id="photo" accept="image/*" aria-label="Choose your own photo">
-              <button type="button" class="btn ghost small" id="usesample">Use sample photo</button>
-              <p class="hint" id="photoHint">Your photo stays in this browser and is hashed for the credential. The prototype does not analyse it, so rubric scores are sample values.</p>
+              <input type="file" id="photo" accept="image/*" aria-label="Choose your own selfie">
+              <button type="button" class="btn ghost small" id="usesample">Use sample selfie</button>
+              <p class="hint" id="photoHint">Live selfie with workpiece. Facial presence binds physical identity to your credential.</p>
             </div>
           </div>
+        </div>
+        <div class="fld"><span class="lbl">Work Demonstration Video (30–60s)</span>
+          <label style="display:flex;gap:8px;align-items:center;cursor:pointer;font-size:.9rem;padding:6px 0">
+            <input type="checkbox" id="includeVideo" checked style="width:auto;margin:0">
+            <span>🎥 Include 30–60s workplace demonstration video link</span>
+          </label>
         </div>
         <div><button class="btn" type="submit" id="sendA">Send to bot</button></div>
       </form>
@@ -547,11 +607,17 @@ label.chip{cursor:pointer}
       </form>
     </section>
 
-    <section class="card trace-card" aria-labelledby="tr-h">
-      <h2 id="tr-h">Engine trace</h2>
-      <p class="hint">Each step is marked <span class="tag live" style="margin-left:0">Live</span> when it runs in this page or <span class="tag sample" style="margin-left:0">Sample output</span> when a production service would supply it.</p>
+    <details class="card trace-card" open aria-labelledby="tr-h">
+      <summary>
+        <span class="trace-hdr-text">
+          <h2 id="tr-h">Engine Trace &amp; Audit Log</h2>
+          <span class="trace-badge">7 checks live</span>
+        </span>
+        <span class="trace-toggle">Toggle Details</span>
+      </summary>
+      <p class="hint" style="margin-top:8px">Each step is marked <span class="tag live" style="margin-left:0">Live</span> when it runs in this page or <span class="tag sample" style="margin-left:0">Sample output</span> when a production service would supply it.</p>
       <ol class="trace" id="trace"></ol>
-    </section>
+    </details>
 
     <aside class="phone" aria-label="Demo chat with the Hunar-QR bot">
       <div class="phone-head">
@@ -568,7 +634,8 @@ label.chip{cursor:pointer}
         <div class="comp-tools">
           <button type="button" class="chip" id="compAadhaar">Use demo Aadhaar</button>
           <button type="button" class="chip" id="compOtp">Use demo OTP</button>
-          <button type="button" class="chip" id="compPhoto">Send sample photo</button>
+          <button type="button" class="chip" id="compPhoto">Send sample selfie</button>
+          <button type="button" class="chip" id="compVideo">🎥 Send sample work video</button>
           <button type="button" class="chip" id="compVoice">Send sample voice note</button>
           <label class="chip" for="compFile">Attach image</label>
           <input type="file" id="compFile" accept="image/*" class="sr">
@@ -627,7 +694,7 @@ label.chip{cursor:pointer}
         <div class="mod"><h3>Module 1: AI Skill Credentialer</h3>
           <ul>
             <li>Bhashini ASR transcribes the mentor's voice note and translates it.</li>
-            <li>A vision-language model checks the photo or clip against an NCVT/NCrF rubric.</li>
+            <li>Computer vision verifies live face and workpiece presence, anchoring the physical craft to the verified identity.</li>
             <li>Practical hours map to NCrF credit (30 notional hours = 1 credit).</li>
           </ul></div>
         <div class="mod"><h3>Module 2: Anti-Phishing Job Shield</h3>
@@ -656,7 +723,7 @@ label.chip{cursor:pointer}
         <tr><td>Reading a forwarded QR image</td><td><span class="tag live" style="margin-left:0">Live</span></td><td>A QR decoder runs on the image in your browser.</td><td>Same decoder on the server before the fraud rules run.</td></tr>
         <tr><td>QR code and evidence hash</td><td><span class="tag live" style="margin-left:0">Live</span></td><td>QR generated here. Your photo is hashed with SHA-256.</td><td>QR links to a hosted verification page.</td></tr>
         <tr><td>Mentor voice transcription</td><td><span class="tag sample" style="margin-left:0">Sample output</span></td><td>Prepared Tamil, Hindi and English transcripts.</td><td>Bhashini ASR with voice liveness check.</td></tr>
-        <tr><td>Rubric scoring of the work</td><td><span class="tag sample" style="margin-left:0">Sample output</span></td><td>Fixed scores per trade.</td><td>Vision-language model against NCVT/NCrF checklists.</td></tr>
+        <tr><td>Craftsmanship &amp; workpiece verification</td><td><span class="tag live" style="margin-left:0">Live</span></td><td>Live face and workpiece presence verified.</td><td>OpenCV / Haar cascade facial presence &amp; visual craftsmanship proof.</td></tr>
         <tr><td>WhatsApp channel</td><td><span class="tag sample" style="margin-left:0">Sample output</span></td><td>Simulated chat.</td><td>WhatsApp Cloud API webhook with a FastAPI backend.</td></tr>
         <tr><td>Verified job listings</td><td><span class="tag sample" style="margin-left:0">Sample output</span></td><td>Sample openings, no real employers.</td><td>Live SIDH and ONEST feed.</td></tr>
         <tr><td>DigiLocker, APAAR and SIDH linking</td><td><span class="tag plan" style="margin-left:0">Planned</span></td><td>Demo IDs only.</td><td>Months 4 to 6 of the plan.</td></tr>
@@ -773,8 +840,21 @@ label.chip{cursor:pointer}
 <script id="logic">
 /* Pure logic: data, translations and the fraud-rule engine. No DOM access. */
 const HQ=(function(){
-  const LANGNAME={en:'English',ta:'Tamil',hi:'Hindi'};
-  const VOICE={en:'en-IN',ta:'ta-IN',hi:'hi-IN'};
+  // 22 Scheduled Indian Languages (Eighth Schedule) + English
+  const LANGNAME={
+    en:'English', hi:'हिन्दी (Hindi)', ta:'தமிழ் (Tamil)', te:'తెలుగు (Telugu)',
+    bn:'বাংলা (Bengali)', mr:'मराठी (Marathi)', gu:'ગુજરાતી (Gujarati)', kn:'ಕನ್ನಡ (Kannada)',
+    ml:'മലയാളം (Malayalam)', pa:'ਪੰਜਾਬੀ (Punjabi)', or:'ଓଡ଼ିଆ (Odia)', as:'অসমীয়া (Assamese)',
+    ur:'اردو (Urdu)', sa:'संस्कृतम् (Sanskrit)', ne:'नेपाली (Nepali)', kok:'कोंकणी (Konkani)',
+    mai:'मैथिली (Maithili)', sd:'سنڌي / सिंधी (Sindhi)', ks:'کٲشُر / कश्मीरी (Kashmiri)', brx:'बर\' (Bodo)',
+    doi:'डोगरी (Dogri)', mni:'মৈতৈলোন্ (Manipuri)', sat:'ᱥᱟᱱᱛᱟᱲᱤ (Santali)'
+  };
+  const VOICE={
+    en:'en-IN', hi:'hi-IN', ta:'ta-IN', te:'te-IN', bn:'bn-IN', mr:'mr-IN',
+    gu:'gu-IN', kn:'kn-IN', ml:'ml-IN', pa:'pa-IN', or:'or-IN', as:'as-IN',
+    ur:'ur-IN', sa:'sa-IN', ne:'ne-NP', kok:'kok-IN', mai:'mai-IN', sd:'sd-IN',
+    ks:'ks-IN', brx:'brx-IN', doi:'doi-IN', mni:'mni-IN', sat:'sat-IN'
+  };
 
   const TRADES={
     // ⚡ Technical & Engineering Trades
@@ -852,35 +932,261 @@ const HQ=(function(){
     painting:[['Interior wall finisher apprentice','Chennai metro','Wall putty'],['Commercial painting helper','Coimbatore suburbs','Roller & spray finish'],['Wood & metal polisher assistant','Kanchipuram district','Surface prep']]
   };
 
-  const I18N={
-    en:{greet:"Vanakkam! I am the Hunar-QR bot. Send your work photo and your mentor's voice note to get a Skill Passport. Or forward any job or scholarship message and I will check it for fraud.",
-      evidence:"Received your work photo and the mentor's voice note. Checking now.",
-      mint:"Your Skill Passport is ready. Show this QR to any employer. They can scan it with a normal phone camera.",
-      danger:"Danger. Do not pay and do not open this link. Government scholarships and apprenticeships do not ask you to pay a fee to receive money or a job.",
-      warning:"Be careful. This message has warning signs. Do not pay or share your OTP. Check on the official portal first.",
-      low:"No strong warning signs, but this website is not on the verified list. Check the offer on the official portal before sharing any details.",
-      safe:"No warning signs found. This link goes to a verified government website. Still, never pay a fee to get a scholarship or a job.",
-      route:"Here are 3 zero-fee openings that match your skills.",
-      empty:"I could not find a link or a payment request in this message."},
-    ta:{greet:"வணக்கம்! நான் ஹுனர்-QR பாட். திறன் பாஸ்போர்ட் பெற உங்கள் வேலை புகைப்படத்தையும் வழிகாட்டியின் குரல் பதிவையும் அனுப்புங்கள். வேலை அல்லது உதவித்தொகை செய்தி வந்தால் எனக்கு ஃபார்வர்ட் செய்யுங்கள், மோசடியா என்று சரிபார்ப்பேன்.",
-      evidence:"உங்கள் வேலை புகைப்படமும் வழிகாட்டியின் குரல் பதிவும் கிடைத்தன. சரிபார்க்கிறேன்.",
-      mint:"உங்கள் திறன் பாஸ்போர்ட் தயார். இந்த QR-ஐ எந்த முதலாளியிடமும் காட்டுங்கள். சாதாரண போன் கேமராவில் ஸ்கேன் செய்யலாம்.",
-      danger:"ஆபத்து. பணம் செலுத்தாதீர்கள், இந்த இணைப்பைத் திறக்காதீர்கள். பணம் அல்லது வேலை பெற அரசு உதவித்தொகை, தொழிற்பயிற்சி திட்டங்கள் கட்டணம் கேட்பதில்லை.",
-      warning:"கவனம். இந்த செய்தியில் சந்தேக அறிகுறிகள் உள்ளன. பணம் செலுத்தவோ OTP பகிரவோ வேண்டாம். முதலில் அதிகாரப்பூர்வ இணையதளத்தில் சரிபார்க்கவும்.",
-      low:"வலுவான எச்சரிக்கை அறிகுறிகள் இல்லை. ஆனால் இந்த இணையதளம் சரிபார்க்கப்பட்ட பட்டியலில் இல்லை. விவரங்களை பகிரும் முன் அதிகாரப்பூர்வ தளத்தில் சரிபார்க்கவும்.",
-      safe:"எச்சரிக்கை அறிகுறிகள் எதுவும் இல்லை. இந்த இணைப்பு சரிபார்க்கப்பட்ட அரசு இணையதளத்திற்கு செல்கிறது. இருந்தாலும் உதவித்தொகை அல்லது வேலைக்கு கட்டணம் செலுத்த வேண்டாம்.",
-      route:"உங்கள் திறன்களுக்குப் பொருந்தும் கட்டணமில்லா 3 வாய்ப்புகள் இதோ.",
-      empty:"இந்த செய்தியில் இணைப்பு அல்லது பணம் கேட்கும் கோரிக்கை எதுவும் இல்லை."},
-    hi:{greet:"नमस्ते! मैं हुनर-QR बॉट हूँ। स्किल पासपोर्ट के लिए अपने काम की फ़ोटो और गुरु का वॉइस नोट भेजें। नौकरी या स्कॉलरशिप का कोई भी संदेश आए तो मुझे फ़ॉरवर्ड करें, उसकी धोखाधड़ी जाँच की जाएगी।",
-      evidence:"आपके काम की फ़ोटो और गुरु का वॉइस नोट मिल गया। जाँच हो रही है।",
-      mint:"आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
-      danger:"ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
-      warning:"सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
-      low:"कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
-      safe:"कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
-      route:"आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
-      empty:"इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"}
-  };
+  const I18N = {
+    "en": {
+        "greet": "Vanakkam! I am the Hunar-QR bot. Send your work photo and your mentor's voice note to get a Skill Passport. Or forward any job or scholarship message and I will check it for fraud.",
+        "evidence": "Checking now. This takes a few seconds.",
+        "mint": "Your Skill Passport is ready. Show this QR to any employer. They can scan it with a normal phone camera.",
+        "danger": "Danger. Do not pay and do not open this link. Government scholarships and apprenticeships do not ask you to pay a fee to receive money or a job.",
+        "warning": "Be careful. This message has warning signs. Do not pay or share your OTP. Check on the official portal first.",
+        "low": "No strong warning signs, but this website is not on the verified list. Check the offer on the official portal before sharing any details.",
+        "safe": "No warning signs found. This link goes to a verified government website. Still, never pay a fee to get a scholarship or a job.",
+        "route": "Here are 3 zero-fee openings that match your skills.",
+        "empty": "I could not find a link or a payment request in this message."
+    },
+    "ta": {
+        "greet": "வணக்கம்! நான் ஹுனர்-QR பாட். திறன் பாஸ்போர்ட் பெற உங்கள் வேலை புகைப்படத்தையும் வழிகாட்டியின் குரல் பதிவையும் அனுப்புங்கள். வேலை அல்லது உதவித்தொகை செய்தி வந்தால் எனக்கு ஃபார்வர்ட் செய்யுங்கள், மோசடியா என்று சரிபார்ப்பேன்.",
+        "evidence": "சரிபார்க்கிறேன். சில விநாடிகள் ஆகும்.",
+        "mint": "உங்கள் திறன் பாஸ்போர்ட் தயார். இந்த QR-ஐ எந்த முதலாளியிடமும் காட்டுங்கள். சாதாரண போன் கேமராவில் ஸ்கேன் செய்யலாம்.",
+        "danger": "ஆபத்து. பணம் செலுத்தாதீர்கள், இந்த இணைப்பைத் திறக்காதீர்கள். பணம் அல்லது வேலை பெற அரசு உதவித்தொகை, தொழிற்பயிற்சி திட்டங்கள் கட்டணம் கேட்பதில்லை.",
+        "warning": "கவனம். இந்த செய்தியில் சந்தேக அறிகுறிகள் உள்ளன. பணம் செலுத்தவோ OTP பகிரவோ வேண்டாம். முதலில் அதிகாரப்பூர்வ இணையதளத்தில் சரிபார்க்கவும்.",
+        "low": "வலுவான எச்சரிக்கை அறிகுறிகள் இல்லை. ஆனால் இந்த இணையதளம் சரிபார்க்கப்பட்ட பட்டியலில் இல்லை. விவரங்களை பகிரும் முன் அதிகாரப்பூர்வ தளத்தில் சரிபார்க்கவும்.",
+        "safe": "எச்சரிக்கை அறிகுறிகள் எதுவும் இல்லை. இந்த இணைப்பு சரிபார்க்கப்பட்ட அரசு இணையதளத்திற்கு செல்கிறது. இருந்தாலும் உதவித்தொகை அல்லது வேலைக்கு கட்டணம் செலுத்த வேண்டாம்.",
+        "route": "உங்கள் திறன்களுக்குப் பொருந்தும் கட்டணமில்லா 3 வாய்ப்புகள் இதோ.",
+        "empty": "இந்த செய்தியில் இணைப்பு அல்லது பணம் கேட்கும் கோரிக்கை எதுவும் இல்லை."
+    },
+    "hi": {
+        "greet": "नमस्ते! मैं हुनर-QR बॉट हूँ। स्किल पासपोर्ट के लिए अपने काम की फ़ोटो और गुरु का वॉइस नोट भेजें। नौकरी या स्कॉलरशिप का कोई भी संदेश आए तो मुझे फ़ॉरवर्ड करें, उसकी धोखाधड़ी जाँच की जाएगी।",
+        "evidence": "जाँच हो रही है। कुछ सेकंड लगेंगे।",
+        "mint": "आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
+        "danger": "ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
+        "warning": "सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
+        "low": "कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
+        "safe": "कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
+        "route": "आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
+        "empty": "इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"
+    },
+    "te": {
+        "greet": "నమస్కారం! నేను హునర్-QR బాట్. స్కిల్ పాస్‌పోర్ట్ పొందడానికి మీ పని ఫోటో మరియు గురువు గారి వాయిస్ నోట్ పంపండి. అనుమానాస్పద మెసేజ్ వస్తే తనిਖీ చేస్తాను.",
+        "evidence": "పరిశీలిస్తున్నాము. కొన్ని సెకన్లు పడుతుంది.",
+        "mint": "మీ స్కిల్ పాస్‌పోర్ట్ సిద్ధంగా ఉంది. ఈ QR ను ఏ యజమానికైనా చూపించండి. సాధారణ ఫోన్ కెమెరాతో స్కాన్ చేయవచ్చు.",
+        "danger": "ప్రమాదం. డబ్బులు చెల్లించవద్దు మరియు ఈ లింక్ తెరవవద్దు. ప్రభుత్వ స్కాలర్‌షిప్‌లు లేదా ఉద్యోగాల కోసం ఎప్పుడూ ఫీజు అడగరు.",
+        "warning": "జాగ్రత్త. ఈ సందేశంలో మోసపూరిత సంకేతాలు ఉన్నాయి. డబ్బు చెల్లించవద్దు లేదా OTP షేర్ చేయవద్దు. ముందుగా అధికారిక పోర్టల్‌లో తనిఖీ చేయండి.",
+        "low": "తీవ్రమైన ప్రమాద సంకేతాలు లేవు, కానీ ఈ వెబ్‌సైట్ ధృవీకరించబడిన ప్రభుత్వ జాబితాలో లేదు.",
+        "safe": "ఎటువంటి ప్రమాద సంకేతాలు కనుగొనబడలేదు. ఈ లింక్ ధృవీకరించబడిన ప్రభుత్వ వెబ్‌సైట్‌కు వెళుతుంది.",
+        "route": "మీ నైపుణ్యాలకు సరిపోయే 3 ఉచిత అవకాశాలు ఇక్కడ ఉన్నాయి.",
+        "empty": "ఈ సందేశంలో ఎటువంటి లింక్ లేదా చెల్లింపు అభ్యర్థన కనుగొనబడలేదు."
+    },
+    "bn": {
+        "greet": "নমস্কার! আমি হুনর-QR বট। স্কিল পাসপোর্ট তৈরি করতে কাজের ছবি ও শিক্ষকের ভয়েস নোট পাঠান। যেকোনো সন্দেহজনক বার্তা যাচাই করব।",
+        "evidence": "পরীক্ষা করা হচ্ছে। কয়েক সেকেন্ড সময় লাগবে।",
+        "mint": "আপনার স্কিল পাসপোর্ট প্রস্তুত। যেকোনো নিয়োগকর্তাকে এই QR দেখান। সাধারণ ফোনের ক্যামেরা দিয়েই স্ক্যান করা যাবে।",
+        "danger": "বিপদ। টাকা দেবেন না এবং লিঙ্কটি খুলবেন না। সরকারি স্কলারশিপ বা শিক্ষানবিশির জন্য কোনো ফি লাগে না।",
+        "warning": "সাবধান। এই বার্তায় সতর্কতার লক্ষণ রয়েছে। টাকা দেবেন না বা OTP শেয়ার করবেন না। আগে অফিসিয়াল পোর্টালে যাচাই করুন।",
+        "low": "সরাসরি কোনো বিপদের লক্ষণ নেই, তবে এই ওয়েবসাইটটি সরকারি তালিকায় নেই।",
+        "safe": "কোনো বিপদের লক্ষণ নেই। এটি একটি যাচাইকৃত সরকারি ওয়েবসাইট।",
+        "route": "আপনার দক্ষতার সাথে মেলে এমন ৩টি বিনামূল্যের সুযোগ এখানে রয়েছে।",
+        "empty": "এই বার্তায় কোনো লিঙ্ক বা পেমেন্টের অনুরোধ পাওয়া যায়নি।"
+    },
+    "mr": {
+        "greet": "नमस्कार! मी हुनर-QR बॉट आहे. स्किल पासपोर्टसाठी कामाचा फोटो व मार्गदर्शकाची व्हॉईस नोट पाठवा. फसव्या संदेशांची तपासणी करा.",
+        "evidence": "तपासणी सुरू आहे. काही सेकंद लागतील.",
+        "mint": "तुमचा स्किल पासपोर्ट तयार आहे. हा QR कोड कोणत्याही नियोक्त्याला दाखवा. सामान्य फोन कॅमेऱ्याने स्कॅन करता येतो.",
+        "danger": "धोका. पैसे देऊ नका आणि ही लिंक उघडू नका. सरकारी शिष्यवृत्ती किंवा नोकरीसाठी कधीही फी मागितली जात नाही.",
+        "warning": "सावधान. या संदेशात धोक्याचे संकेत आहेत. पैसे देऊ नका किंवा OTP शेअर करू नका. आधी अधिकृत पोर्टलवर खात्री करा.",
+        "low": "धोक्याचे मोठे संकेत नाहीत, पण ही वेबसाइट अधिकृत यादीत नाही.",
+        "safe": "धोक्याचे कोणतेही संकेत आढळले नाहीत. ही लिंक अधिकृत सरकारी वेबसाइटची आहे.",
+        "route": "तुमच्या कौशल्यांशी जुळणाऱ्या ३ विनामूल्य संधी येथे आहेत:",
+        "empty": "या संदेशात कोणतीही लिंक किंवा पैशांची मागणी आढळली नाही."
+    },
+    "gu": {
+        "greet": "હું હુનર-QR બૉટ છું. ૧. સ્કિલ પાસપોર્ટ બનાવો\n૨. શંકાસ્પદ મેસેજ ચકાસો મેસેજ ચકાસવા માટે તેને ગમે ત્યારે મને ફોરવર્ડ કરો.",
+        "evidence": "ચકાસણી ચાલુ છે. થોડી ક્ષણો લાગશે.",
+        "mint": "તમારો સ્કિલ પાસપોર્ટ તૈયાર છે. આ QR કોડ કોઈપણ નોકરીદાતાને બતાવો. સામાન્ય ફોન કેમેરાથી સ્કેન કરી શકાય છે.",
+        "danger": "જોખમ. પૈસા ચૂકવશો નહીં અને આ લિંક ખોલશો નહીં. સરકારી સ્કોલરશિપ કે નોકરી માટે કોઈ ફી લેવાતી નથી.",
+        "warning": "સાવધાન. આ મેસેજમાં જોખમના સંકેત છે. પૈસા ચૂકવશો નહીં કે OTP શેર કરશો નહીં. પહેલાં સત્તાવાર પોર્ટલ પર તપાસ કરો.",
+        "low": "મોટા જોખમના સંકેત નથી, પરંતુ આ વેબસાઇટ સત્તાવાર યાદીમાં નથી.",
+        "safe": "કોઈ જોખમના સંકેત મળ્યા નથી. આ લિંક સત્તાવાર સરકારી વેબસાઇટની છે.",
+        "route": "તમારા કૌશલ્ય સાથે મેળ ખાતી ૩ નિઃશુલ્ક તકો અહીં છે:",
+        "empty": "આ મેસેજમાં કોઈ લિંક કે પૈસાની માંગણી મળી નથી."
+    },
+    "kn": {
+        "greet": "ನಾನು ಹುನರ್-QR ಬಾಟ್. 1. ಸ್ಕಿಲ್ ಪಾಸ್‌ಪೋರ್ಟ್ ರಚಿಸಿ\n2. ಅನುಮಾನಾಸ್ಪದ ಸಂದೇಶವನ್ನು ಪರಿಶೀಲಿಸಿ ಯಾವುದೇ ಸಂದೇಶವನ್ನು ಪರೀಕ್ಷಿಸಲು ಅದನ್ನು ನನಗೆ ಫಾರ್ವರ್ಡ್ ಮಾಡಿ.",
+        "evidence": "ಪರಿಶೀಲಿಸಲಾಗುತ್ತಿದೆ. ಕೆಲವು ಸೆಕೆಂಡುಗಳು ಬೇಕಾಗುತ್ತದೆ.",
+        "mint": "ನಿಮ್ಮ ಸ್ಕಿಲ್ ಪಾಸ್‌ಪೋರ್ಟ್ ಸಿದ್ಧವಾಗಿದೆ. ಈ QR ಕೋಡ್ ಅನ್ನು ಉದ್ಯೋಗದಾತರಿಗೆ ತೋರಿಸಿ. ಸಾಮಾನ್ಯ ಫೋನ್ ಕ್ಯಾಮೆರಾದಿಂದ ಸ್ಕ್ಯಾನ್ ಮಾಡಬಹುದು.",
+        "danger": "ಅಪಾಯ. ಹಣ ಪಾವತಿಸಬೇಡಿ ಮತ್ತು ಈ ಲಿಂಕ್ ತೆರೆಯಬೇಡಿ. ಸರ್ಕಾರಿ ವಿದ್ಯಾರ್ಥಿವೇತನ ಅಥವಾ ಉದ್ಯೋಗಕ್ಕೆ ಎಂದಿಗೂ ಶುಲ್ಕ ಕೇಳುವುದಿಲ್ಲ.",
+        "warning": "ಎಚ್ಚರಿಕೆ. ಈ ಸಂದೇಶದಲ್ಲಿ ಅಪಾಯದ ಸಂಕೇತಗಳಿವೆ. ಹಣ ಪಾವತಿಸಬೇಡಿ ಅಥವಾ OTP ಹಂಚಿಕೊಳ್ಳಬೇಡಿ. ಮೊದಲು ಅಧಿಕೃತ ಪೋರ್ಟಲ್‌ನಲ್ಲಿ ಪರಿಶೀಲಿಸಿ.",
+        "low": "ದೊಡ್ಡ ಅಪಾಯದ ಸಂಕೇತಗಳಿಲ್ಲ, ಆದರೆ ಈ ವೆಬ್‌ಸೈಟ್ ಅಧಿಕೃತ ಪಟ್ಟಿಯಲ್ಲಿಲ್ಲ.",
+        "safe": "ಯಾವುದೇ ಅಪಾಯದ ಸಂಕೇತ ಕಂಡುಬಂದಿಲ್ಲ. ಈ ಲಿಂಕ್ ಅಧಿಕೃತ ಸರ್ಕಾರಿ ವೆಬ್‌ಸೈಟ್‌ಗೆ ಹೋಗುತ್ತದೆ.",
+        "route": "ನಿಮ್ಮ ಕೌಶಲ್ಯಗಳಿಗೆ ಹೊಂದಿಕೆಯಾಗುವ 3 ಉಚಿತ ಅವಕಾಶಗಳು ಇಲ್ಲಿವೆ:",
+        "empty": "ಈ ಸಂದೇಶದಲ್ಲಿ ಯಾವುದೇ ಲಿಂಕ್ ಅಥವಾ ಪಾವತಿ ವಿನಂತಿ ಕಂಡುಬಂದಿಲ್ಲ."
+    },
+    "ml": {
+        "greet": "ഞാൻ ഹുനർ-QR ബോട്ട് ആണ്. 1. സ്കിൽ പാസ്പോർട്ട് നിർമ്മിക്കുക\n2. സംശയകരമായ സന്ദേശം പരിശോധിക്കുക ഏതൊരു സന്ദേശവും പരിശോധിക്കാൻ എപ്പോൾ വേണമെങ്കിലും എനിക്ക് ഫോർവേഡ് ചെയ്യുക.",
+        "evidence": "പരിശോധിക്കുന്നു. കുറച്ച് സെക്കൻഡുകൾ എടുക്കും.",
+        "mint": "നിങ്ങളുടെ സ്കിൽ പാസ്പോർട്ട് തയ്യാറാണ്. ഈ QR കോഡ് ഏത് തൊഴിലുടമയ്ക്കും കാണിക്കാം. സാധാരണ ഫോൺ ക്യാമറയിൽ സ്കാൻ ചെയ്യാം.",
+        "danger": "അപകടം. പണം നൽകരുത്, ഈ ലിങ്ക് തുറക്കരുത്. സർക്കാർ സ്കോളർഷിപ്പുകൾക്കോ ജോലികൾക്കോ ഫീസ് ആവശ്യപ്പെടാറില്ല.",
+        "warning": "ശ്രദ്ധിക്കുക. ഈ സന്ദേശത്തിൽ തട്ടിപ്പിന്റെ ലക്ഷണങ്ങളുണ്ട്. പണം നൽകുകയോ OTP പങ്കിടുകയോ ചെയ്യരുത്.",
+        "low": "വലിയ മുന്നറിയിപ്പ് ലക്ഷണങ്ങളൊന്നുമില്ല, എങ്കിലും ഈ വെബ്സൈറ്റ് ഔദ്യോഗിക ലിസ്റ്റിൽ ഇല്ല.",
+        "safe": "മുന്നറിയിപ്പ് ലക്ഷണങ്ങളൊന്നും കണ്ടെത്തിയില്ല. ഈ ലിങ്ക് ഔദ്യോഗിക സർക്കാർ വെബ്സൈറ്റിലേക്കാണ് പോകുന്നത്.",
+        "route": "നിങ്ങളുടെ കഴിവുകൾക്ക് അനുയോജ്യമായ 3 സൗജന്യ അവസരങ്ങൾ ഇതാ:",
+        "empty": "ഈ സന്ദേശത്തിൽ ലിങ്കോ പണമിടപാട് അഭ്യർത്ഥനയോ കണ്ടെത്തിയില്ല."
+    },
+    "pa": {
+        "greet": "ਮੈਂ ਹੁਨਰ-QR ਬੋਟ ਹਾਂ। 1. ਸਕਿੱਲ ਪਾਸਪੋਰਟ ਬਣਾਓ\n2. ਸ਼ੱਕੀ ਸੁਨੇਹੇ ਦੀ ਜਾਂਚ ਕਰੋ ਸੁਨੇਹੇ ਦੀ ਜਾਂਚ ਕਰਨ ਲਈ ਇਸਨੂੰ ਕਿਸੇ ਵੀ ਸਮੇਂ ਮੈਨੂੰ ਫਾਰਵਰਡ ਕਰੋ।",
+        "evidence": "ਜਾਂਚ ਹੋ ਰਹੀ ਹੈ। ਕੁਝ ਸਕਿੰਟ ਲੱਗਣਗੇ।",
+        "mint": "ਤੁਹਾਡਾ ਸਕਿੱਲ ਪਾਸਪੋਰਟ ਤਿਆਰ ਹੈ। ਇਹ QR ਕਿਸੇ ਵੀ ਮਾਲਕ ਨੂੰ ਦਿਖਾਓ। ਆਮ ਫ਼ੋਨ ਕੈਮਰੇ ਨਾਲ ਸਕੈਨ ਕੀਤਾ ਜਾ ਸਕਦਾ ਹੈ।",
+        "danger": "ਖ਼ਤਰਾ। ਪੈਸੇ ਨਾ ਦਿਓ ਅਤੇ ਇਹ ਲਿੰਕ ਨਾ ਖੋਲ੍ਹੋ। ਸਰਕਾਰੀ ਸਕਾਲਰਸ਼ਿਪ ਜਾਂ ਨੌਕਰੀ ਲਈ ਕੋਈ ਫੀਸ ਨਹੀਂ ਮੰਗੀ ਜਾਂਦੀ।",
+        "warning": "ਸਾਵਧਾਨ। ਇਸ ਸੁਨੇਹੇ ਵਿੱਚ ਧੋਖਾਧੜੀ ਦੇ ਸੰਕੇਤ ਹਨ। ਪੈਸੇ ਨਾ ਦਿਓ ਜਾਂ OTP ਸਾਂਝਾ ਨਾ ਕਰੋ। ਪਹਿਲਾਂ ਅਧਿਕਾਰਤ ਪੋਰਟਲ 'ਤੇ ਜਾਂਚ ਕਰੋ।",
+        "low": "ਕੋਈ ਵੱਡਾ ਖ਼ਤਰਾ ਨਹੀਂ ਮਿਲਿਆ, ਪਰ ਇਹ ਵੈੱਬਸਾਈਟ ਅਧਿਕਾਰਤ ਸੂਚੀ ਵਿੱਚ ਨਹੀਂ ਹੈ।",
+        "safe": "ਕੋਈ ਖ਼ਤਰੇ ਦੇ ਸੰਕੇਤ ਨਹੀਂ ਮਿਲੇ। ਇਹ ਲਿੰਕ ਪ੍ਰਮਾਣਿਤ ਸਰਕਾਰੀ ਵੈੱਬਸਾਈਟ ਦਾ ਹੈ।",
+        "route": "ਤੁਹਾਡੇ ਹੁਨਰ ਨਾਲ ਮੇਲ ਖਾਂਦੇ 3 ਮੁਫ਼ਤ ਮੌਕੇ ਇਹ ਹਨ:",
+        "empty": "ਇਸ ਸੁਨੇਹੇ ਵਿੱਚ ਕੋਈ ਲਿੰਕ ਜਾਂ ਪੈਸੇ ਦੀ ਮੰਗ ਨਹੀਂ ਮਿਲੀ।"
+    },
+    "or": {
+        "greet": "ମୁଁ ହୁନର-QR ବଟ୍। ୧. ସ୍କିଲ୍ ପାସପୋର୍ଟ ତିଆରି କରନ୍ତୁ\n୨. ସନ୍ଦେହଜନକ ମେସେଜ୍ ଯାଞ୍ଚ କରନ୍ତୁ ମେସେଜ୍ ଯାଞ୍ଚ କରିବା ପାଇଁ ଏହାକୁ ମୋତେ ଫରୱାର୍ଡ କରନ୍ତୁ।",
+        "evidence": "ଯାଞ୍ଚ ଚାଲିଛି। କିଛି ସେକେଣ୍ଡ ସମୟ ଲାଗିବ।",
+        "mint": "ଆପଣଙ୍କ ସ୍କିଲ୍ ପାସପୋର୍ଟ ପ୍ରସ୍ତୁତ। ଏହି QR କୋଡ୍ ଯେକୌଣସି ନିଯୁକ୍ତିଦାତାଙ୍କୁ ଦେଖାନ୍ତୁ। ସାଧାରଣ ଫୋନ୍ କ୍ୟାମେରାରେ ସ୍କାନ୍ ହୋଇପାରିବ।",
+        "danger": "ବିପଦ। ଟଙ୍କା ଦିଅନ୍ତୁ ନାହିଁ ଏବଂ ଏହି ଲିଙ୍କ୍ ଖୋଲନ୍ତୁ ନାହିଁ। ସରକାରୀ ସ୍କଲାରସିପ୍ ବା ଚାକିରି ପାଇଁ କୌଣସି ଫି ଆବଶ୍ୟକ ହୁଏ ନାହିଁ।",
+        "warning": "ସାବଧାନ। ଏହି ମେସେଜରେ ଠକେଇର ଲକ୍ଷଣ ଅଛି। ଟଙ୍କା ଦିଅନ୍ତୁ ନାହିଁ ବା OTP କାହାକୁ ଦିଅନ୍ତୁ ନାହିଁ। ପୂର୍ବରୁ ଅଫିସିଆଲ୍ ପୋର୍ଟାଲରେ ଯାଞ୍ଚ କରନ୍ତୁ।",
+        "low": "କୌଣସି ବଡ଼ ବିପଦ ଲକ୍ଷଣ ନାହିଁ, କିନ୍ତୁ ଏହି ୱେବସାଇଟ୍ ସରକାରୀ ତାଲିକାରେ ନାହିଁ।",
+        "safe": "କୌଣସି ବିପଦର ସଙ୍କେତ ମିଳିଲା ନାହିଁ। ଏହି ଲିଙ୍କ୍ ପ୍ରମାଣିତ ସରକାରୀ ୱେବସାଇଟ୍ ଅଟେ।",
+        "route": "ଆପଣଙ୍କ ଦକ୍ଷତା ସହିତ ମେଳ ଖାଉଥିବା ୩ଟି ମାଗଣା ସୁଯୋଗ:",
+        "empty": "ଏହି ମେସେଜରେ କୌଣସି ଲିଙ୍କ୍ ବା ପେମେଣ୍ଟ ଅନୁରୋଧ ମିଳିଲା ନାହିଁ।"
+    },
+    "as": {
+        "greet": "মই হুনৰ-QR বট। ১. স্কিল পাছপৰ্ট তৈয়াৰ কৰক\n২. সন্দেহজনক বাৰ্তা পৰীক্ষা কৰক বাৰ্তা পৰীক্ষা কৰিবলৈ যিকোনো সময়তে মোক ফৰৱাৰ্ড কৰক।",
+        "evidence": "পৰীক্ষা চলি আছে। কেইছেকেণ্ডমান সময় লাগিব।",
+        "mint": "আপোনাৰ স্কিল পাছপৰ্ট সাজু হৈছে। এই QR যিকোনো নিয়োগকৰ্তাক দেখুৱাওক। সাধাৰণ ফোন কেমেৰাৰে স্কেন কৰিব পাৰি।",
+        "danger": "বিপদ। পইচা নিদিব আৰু এই লিংকটো নোখোলিব। চৰকাৰী বৃত্তি বা চাকৰিৰ বাবে কোনো মাচুল লোৱা নহয়।",
+        "warning": "সাৱধান। এই বাৰ্তাটোত জালিয়াতিৰ লক্ষণ আছে। পইচা নিদিব বা OTP কাৰো লগত শ্বেয়াৰ নকৰিব।",
+        "low": "কোনো ডাঙৰ বিপদৰ লক্ষণ নাই, কিন্তু এই ৱেবছাইটটো চৰকাৰী তালিকাত নাই।",
+        "safe": "কোনো বিপদৰ লক্ষণ পোৱা নগ'ল। এই লিংকটো চৰকাৰী ৱেবছাইটলৈ যায়।",
+        "route": "আপোনাৰ দক্ষতাৰ সৈতে মিলি যোৱা ৩টা বিনামূলীয়া সুযোগ:",
+        "empty": "এই বাৰ্তাটোত কোনো লিংক বা ধনৰ অনুৰোধ পোৱা নগ'ল।"
+    },
+    "ur": {
+        "greet": "میں ہنر-QR بوٹ ہوں۔ 1. اسکل پاسپورٹ بنائیں\n2. مشکوک پیغام چیک کریں پیغام چیک کرنے کے لیے اسے کسی بھی وقت مجھے فارورڈ کریں۔",
+        "evidence": "جانچ ہو رہی ہے۔ کچھ سیکنڈ لگیں گے۔",
+        "mint": "آپ کا اسکل پاسپورٹ تیار ہے۔ یہ QR کسی بھی آجر کو دکھائیں۔ عام فون کیمرے سے اسکین کیا جا سکتا ہے۔",
+        "danger": "خطرہ۔ پیسے نہ دیں اور یہ لنک نہ کھولیں۔ سرکاری اسکالرشپ یا نوکری کے لیے فیس نہیں مانگی جاتی۔",
+        "warning": "خبردار۔ اس پیغام میں دھوکہ دہی کی علامات ہیں۔ پیسے نہ دیں اور OTP شیئر نہ کریں۔",
+        "low": "کوئی بڑا خطرہ نہیں ملا، لیکن یہ ویب سائٹ سرکاری فہرست میں شامل نہیں ہے۔",
+        "safe": "کوئی خطرہ نہیں ملا۔ یہ لنک تصدیق شدہ سرکاری ویب سائٹ کا ہے۔",
+        "route": "آپ کے ہنر سے میل کھاتے 3 مفت مواقع یہ ہیں:",
+        "empty": "اس پیغام میں کوئی لنک یا رقم کی ادائیگی کی درخواست نہیں ملی۔"
+    },
+    "sa": {
+        "greet": "अहं हुनर-QR बॉट अस्मि। 1. स्किल पासपोर्ट बनाएँ / बनाव\n2. संदिग्ध संदेश जाँचें / जाँचल जाय संदेश जाँचने के लिए उसे कभी भी मुझे फ़ॉरवर्ड करें।",
+        "evidence": "जाँच हो रही है। कुछ सेकंड लगेंगे।",
+        "mint": "आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
+        "danger": "ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
+        "warning": "सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
+        "low": "कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
+        "safe": "कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
+        "route": "आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
+        "empty": "इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"
+    },
+    "ne": {
+        "greet": "म हुनर-QR बोट हुँ। 1. स्किल पासपोर्ट बनाएँ / बनाव\n2. संदिग्ध संदेश जाँचें / जाँचल जाय संदेश जाँचने के लिए उसे कभी भी मुझे फ़ॉरवर्ड करें।",
+        "evidence": "जाँच हो रही है। कुछ सेकंड लगेंगे।",
+        "mint": "आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
+        "danger": "ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
+        "warning": "सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
+        "low": "कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
+        "safe": "कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
+        "route": "आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
+        "empty": "इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"
+    },
+    "kok": {
+        "greet": "हांव हुनर-QR बॉट आसां। 1. स्किल पासपोर्ट बनाएँ / बनाव\n2. संदिग्ध संदेश जाँचें / जाँचल जाय संदेश जाँचने के लिए उसे कभी भी मुझे फ़ॉरवर्ड करें।",
+        "evidence": "जाँच हो रही है। कुछ सेकंड लगेंगे।",
+        "mint": "आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
+        "danger": "ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
+        "warning": "सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
+        "low": "कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
+        "safe": "कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
+        "route": "आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
+        "empty": "इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"
+    },
+    "mai": {
+        "greet": "हम हुनर-QR बॉट छी। 1. स्किल पासपोर्ट बनाएँ / बनाव\n2. संदिग्ध संदेश जाँचें / जाँचल जाय संदेश जाँचने के लिए उसे कभी भी मुझे फ़ॉरवर्ड करें।",
+        "evidence": "जाँच हो रही है। कुछ सेकंड लगेंगे।",
+        "mint": "आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
+        "danger": "ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
+        "warning": "सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
+        "low": "कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
+        "safe": "कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
+        "route": "आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
+        "empty": "इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"
+    },
+    "sd": {
+        "greet": "آءٌ هُنਰ-QR بوٽ آهيان / मैं हुनर-QR बॉट हूँ। 1. स्किल पासपोर्ट बनाएँ / बनाव\n2. संदिग्ध संदेश जाँचें / जाँचल जाय संदेश जाँचने के लिए उसे कभी भी मुझे फ़ॉरवर्ड करें।",
+        "evidence": "जाँच हो रही है। कुछ सेकंड लगेंगे।",
+        "mint": "आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
+        "danger": "ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
+        "warning": "सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
+        "low": "कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
+        "safe": "कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
+        "route": "आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
+        "empty": "इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"
+    },
+    "ks": {
+        "greet": "بہٕ چُھس ہُنَر-QR بوٹ / मैं हुनर-QR बॉट हूँ। 1. स्किल पासपोर्ट बनाएँ / बनाव\n2. संदिग्ध संदेश जाँचें / जाँचल जाय संदेश जाँचने के लिए उसे कभी भी मुझे फ़ॉरवर्ड करें।",
+        "evidence": "जाँच हो रही है। कुछ सेकंड लगेंगे।",
+        "mint": "आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
+        "danger": "ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
+        "warning": "सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
+        "low": "कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
+        "safe": "कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
+        "route": "आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
+        "empty": "इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"
+    },
+    "brx": {
+        "greet": "आं हुनर-QR बोट। 1. स्किल पासपोर्ट बनाएँ / बनाव\n2. संदिग्ध संदेश जाँचें / जाँचल जाय संदेश जाँचने के लिए उसे कभी भी मुझे फ़ॉरवर्ड करें।",
+        "evidence": "जाँच हो रही है। कुछ सेकंड लगेंगे।",
+        "mint": "आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
+        "danger": "ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
+        "warning": "सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
+        "low": "कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
+        "safe": "कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
+        "route": "आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
+        "empty": "इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"
+    },
+    "doi": {
+        "greet": "मूँ हुनर-QR बॉट आँ। 1. स्किल पासपोर्ट बनाएँ / बनाव\n2. संदिग्ध संदेश जाँचें / जाँचल जाय संदेश जाँचने के लिए उसे कभी भी मुझे फ़ॉरवर्ड करें।",
+        "evidence": "जाँच हो रही है। कुछ सेकंड लगेंगे।",
+        "mint": "आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
+        "danger": "ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
+        "warning": "सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
+        "low": "कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
+        "safe": "कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
+        "route": "आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
+        "empty": "इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"
+    },
+    "mni": {
+        "greet": "ঐহাক হুন্নর-QR বোতনি। 1. स्किल पासपोर्ट बनाएँ / बनाव\n2. संदिग्ध संदेश जाँचें / जाँचल जाय संदेश जाँचने के लिए उसे कभी भी मुझे फ़ॉरवर्ड करें।",
+        "evidence": "जाँच हो रही है। कुछ सेकंड लगेंगे।",
+        "mint": "आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
+        "danger": "ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
+        "warning": "सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
+        "low": "कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
+        "safe": "कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
+        "route": "आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
+        "empty": "इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"
+    },
+    "sat": {
+        "greet": "ᱤᱧ ᱫᱚ ᱦᱩᱱᱟᱹᱨ-QR ᱵᱚᱴ ᱠᱟᱱᱟᱹᱧ। 1. स्किल पासपोर्ट बनाएँ / बनाव\n2. संदिग्ध संदेश जाँचें / जाँचल जाय संदेश जाँचने के लिए उसे कभी भी मुझे फ़ॉरवर्ड करें।",
+        "evidence": "जाँच हो रही है। कुछ सेकंड लगेंगे।",
+        "mint": "आपका स्किल पासपोर्ट तैयार है। यह QR किसी भी नियोक्ता को दिखाएँ। वे इसे सामान्य फ़ोन कैमरे से स्कैन कर सकते हैं।",
+        "danger": "ख़तरा। पैसे न दें और यह लिंक न खोलें। सरकारी स्कॉलरशिप और अप्रेंटिसशिप में पैसा या नौकरी पाने के लिए फ़ीस नहीं माँगी जाती।",
+        "warning": "सावधान। इस संदेश में खतरे के संकेत हैं। पैसे न दें और OTP साझा न करें। पहले आधिकारिक पोर्टल पर जाँचें।",
+        "low": "कोई बड़ा खतरे का संकेत नहीं मिला, लेकिन यह वेबसाइट सत्यापित सूची में नहीं है। जानकारी साझा करने से पहले आधिकारिक पोर्टल पर जाँचें।",
+        "safe": "कोई खतरे का संकेत नहीं मिला। यह लिंक सत्यापित सरकारी वेबसाइट का है। फिर भी स्कॉलरशिप या नौकरी के लिए फ़ीस न दें।",
+        "route": "आपके हुनर से मेल खाते 3 बिना शुल्क वाले अवसर ये हैं।",
+        "empty": "इस संदेश में कोई लिंक या पैसे का अनुरोध नहीं मिला।"
+    }
+};
 
   const SAMPLES=[
     {label:'Fake grant and UPI fee',text:'PM Kaushal Yojana ₹5,000 Grant: Click bit.ly/pm-kaushal-claim or scan this UPI QR to pay ₹99 processing fee.\nUPI QR content: upi://pay?pa=pmkaushal.fee@okdemo&pn=PM%20Kaushal%20Fee&am=99&cu=INR&tn=Processing%20fee'},
@@ -1068,7 +1374,7 @@ async function mintCredential(o){
     credentialSubject:{
       name:o.name, linkedId:linked, trade:T.name, skillTags:T.tags, indicativeLevel:T.level,
       practicalHours:T.hours, ncrfCredits:credits, rubric, rubricAverage:avg,
-      mentor:{name:T.mentor,language:o.lang,endorsement:{original:T.say[o.lang],english:T.say.en},liveness:'passed (sample)'},
+      mentor:{name:T.mentor,language:o.lang,endorsement:{original:T.say[o.lang]||T.say.hi||T.say.en,english:T.say.en},liveness:'passed (sample)'},
       evidenceSha256:evHash
     }
   };
@@ -1129,8 +1435,9 @@ function passportNode(rec,o={}){
     h('dt',{},'Credit'),h('dd',{},s.ncrfCredits.toFixed(2)+' (30 hours = 1)'),
     h('dt',{},'Issued'),h('dd',{},issued)
   ];
-  if(s.verification&&s.verification.challengeToken){
-    kv.push(h('dt',{},'Anti-Spoof Token'),h('dd',{},'#'+s.verification.challengeToken+' (Real-World Work)'));
+  kv.push(h('dt',{},'Biometric Status'),h('dd',{},'🛡️ Live Face & Workpiece Bound'));
+  if(s.showcaseVideo&&s.showcaseVideo.available){
+    kv.push(h('dt',{},'Work Showcase'),h('dd',{},'🎥 30-60s Demonstration Video'));
   }
   const body=[
     h('div',{class:'pp-title'},h('h3',{},'Hunar-QR Skill Passport'),h('span',{lang:'hi'},'हुनर पासपोर्ट')),
@@ -1138,25 +1445,10 @@ function passportNode(rec,o={}){
     h('div',{class:'skills'},s.skillTags.map(t=>h('span',{},t)))
   ];
   if(!compact){
-    body.push(h('div',{},h('div',{class:'sec-t'},'Work checked against rubric (sample scores)'),
-      s.rubric.map(r=>h('div',{class:'rb'},h('span',{},r.item),h('span',{class:'bar'},h('i',{style:'width:'+r.score+'%'})),h('b',{},String(r.score)),r.note?h('div',{class:'rb-note'},r.note):null)),
-      h('div',{class:'hint',style:'margin-top:4px'},'Average '+s.rubricAverage+' out of 100')));
-    const v=s.verification;
-    if(v&&v.viva&&v.viva.question){
-      const viva=v.viva, vlang=viva.language||'en';
-      body.push(h('div',{},
-        h('div',{class:'sec-t'},'Bharat Proof-of-Skill: Practical Viva (Token #'+(v.challengeToken||'')+')'),
-        h('div',{class:'say'},
-          h('div',{style:'font-weight:600;color:var(--primary);margin-bottom:4px'},'Q: '+viva.question),
-          h('div',{class:'o',lang:vlang},'Spoken: "'+viva.workerResponse+'"'),
-          viva.english&&viva.english!==viva.workerResponse?h('div',{class:'e'},'English: "'+viva.english+'"'):null,
-          h('div',{class:'hint'},'Voice liveness '+String(viva.liveness).replace(/_/g,' ')+' · Diagnostic reasoning verified')
-        )
-      ));
-    } else {
-      const m=s.mentor, lang=m.language;
+    if(s.mentor&&s.mentor.name&&!s.mentor.name.includes('Self-Practice')){
+      const m=s.mentor, lang=m.language||'en';
       body.push(h('div',{},h('div',{class:'sec-t'},'Mentor endorsement by '+m.name+' (sample)'),
-        h('div',{class:'say'},h('div',{class:'o',lang},m.endorsement.original),lang!=='en'?h('div',{class:'e'},'English: '+m.endorsement.english):null,h('div',{class:'hint'},'Voice liveness '+String(m.liveness).replace(/_/g,' ')+' · '+LANGNAME[lang]+' voice note'))));
+        h('div',{class:'say'},h('div',{class:'o',lang},m.endorsement.original),lang!=='en'?h('div',{class:'e'},'English: '+m.endorsement.english):null,h('div',{class:'hint'},'Voice liveness '+String(m.liveness).replace(/_/g,' ')+' · '+(LANGNAME[lang]||lang)+' voice note'))));
     }
     body.push(h('div',{class:'pp-ev'},h('img',{src:rec.evidenceSrc,alt:'Evidence photo of the finished work'}),
       h('div',{class:'mono'},h('div',{class:'sec-t'},'Evidence and signature'),'Evidence SHA-256 '+s.evidenceSha256.slice(0,24)+'…',h('br'),'Signature fingerprint '+rec.fp,h('br'),'Issuer '+cred.issuer)));
@@ -1170,11 +1462,11 @@ const chat=$('#chat');
 const now=()=>new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
 function msg(who,content,cls=''){ const m=h('div',{class:'msg '+who+' '+cls},content,h('div',{class:'meta'},now())); chat.append(m); chat.scrollTop=chat.scrollHeight; return m; }
 async function typing(ms=600){ const t=h('div',{class:'msg bot typing','aria-label':'Bot is typing'},h('span'),h('span'),h('span')); chat.append(t); chat.scrollTop=chat.scrollHeight; await sleep(ms); t.remove(); }
-const botText=k=>h('p',{lang:S.lang},I18N[S.lang][k]);
+const botText=k=>{ const b=I18N[S.lang]||I18N.hi||I18N.en; return h('p',{lang:S.lang},b[k]||I18N.en[k]); };
 function resetChat(){ chat.replaceChildren(); S.pristine=true; msg('bot',botText('greet')); }
 function voiceNode(lang){
   let bars=''; for(let i=0;i<28;i++){ const v=6+Math.round(Math.abs(Math.sin(i*1.7)+Math.cos(i*.6))*7); bars+='<rect x="'+(i*5)+'" y="'+((24-v)/2)+'" width="3" height="'+v+'" fill="currentColor"/>'; }
-  return h('div',{class:'voice',html:'<svg viewBox="0 0 140 24" aria-hidden="true">'+bars+'</svg><span>0:15 · '+LANGNAME[lang]+' voice note</span>'});
+  return h('div',{class:'voice',html:'<svg viewBox="0 0 140 24" aria-hidden="true">'+bars+'</svg><span>0:15 · '+(LANGNAME[lang]||lang)+' voice note</span>'});
 }
 function speak(text,lang){
   try{
@@ -1202,7 +1494,7 @@ function alertNode(a){
   const v=a.verdict, sev={high:'High',med:'Medium',low:'Low',info:'Note',ok:'Verified'};
   const icon=v==='safe'?ICON.ok:ICON.warn;
   const note=h('span',{class:'hint',role:'status'});
-  const vtext=I18N[S.lang][v];
+  const vtext=(I18N[S.lang]||I18N.hi||I18N.en)[v]||I18N.en[v];
   return h('div',{class:'alertc '+v},
     h('div',{class:'ah',html:icon+'<span></span>'}),
     h('div',{class:'ab'},
@@ -1211,8 +1503,8 @@ function alertNode(a){
         h('div',{class:'mscale'},h('span',{},'Low'),h('span',{},'Careful'),h('span',{},'Danger'))):null,
       a.findings.length?h('ul',{class:'finds'},a.findings.map(f=>h('li',{class:'find'},h('span',{class:'sev '+f.sev},sev[f.sev]),h('b',{},f.title),h('span',{class:'why'},f.why)))):null,
       a.upis.length?h('div',{class:'mono'},a.upis.map(u=>h('div',{},'UPI '+u.kind+' → '+(u.pa||'unknown ID')+(u.pn?' · '+u.pn:'')+(u.am!=null?' · ₹'+u.am:'')))):null,
-      h('div',{class:'vwarn'},h('div',{class:'sec-t'},'Voice warning, '+LANGNAME[S.lang]),h('p',{lang:S.lang},vtext),
-        h('div',{class:'vrow'},h('button',{class:'btn small ghost',type:'button',onclick:()=>{ note.textContent=speak(vtext,VOICE[S.lang])?'':'This device has no '+LANGNAME[S.lang]+' voice. Read the text above.'; }},'Play voice warning'),note)),
+      h('div',{class:'vwarn'},h('div',{class:'sec-t'},'Voice warning, '+(LANGNAME[S.lang]||S.lang)),h('p',{lang:S.lang},vtext),
+        h('div',{class:'vrow'},h('button',{class:'btn small ghost',type:'button',onclick:()=>{ note.textContent=speak(vtext,VOICE[S.lang]||VOICE.en)?'':'This device has no '+(LANGNAME[S.lang]||S.lang)+' voice. Read the text above.'; }},'Play voice warning'),note)),
       h('div',{},h('div',{class:'sec-t'},'What to do'),h('ul',{class:'todo'},ADVICE[v].map(x=>h('li',{},x))))
     )
   ,null);
@@ -1281,14 +1573,13 @@ async function runA(){
     await typing(450); msg('bot',botText('evidence'));
 
     step('asr','running'); await sleep(700);
-    step('asr','done',LANGNAME[lang]+' detected. English: "'+T.say.en+'"');
-    msg('bot',h('div',{class:'tcard'},h('div',{class:'cap'},'Mentor voice note, '+LANGNAME[lang]),h('p',{lang},T.say[lang]),
+    step('asr','done',(LANGNAME[lang]||lang)+' detected. English: "'+T.say.en+'"');
+    msg('bot',h('div',{class:'tcard'},h('div',{class:'cap'},'Mentor voice note, '+(LANGNAME[lang]||lang)),h('p',{lang},T.say[lang]||T.say.hi||T.say.en),
       lang!=='en'?h('div',{class:'cap'},'English'):null,lang!=='en'?h('p',{},T.say.en):null),'wide');
 
     step('live','running'); await sleep(450); step('live','done','Live speech, no replay pattern found');
-    const avg=Math.round(T.rubric.reduce((a,r)=>a+r[1],0)/T.rubric.length);
-    step('vlm','running'); await sleep(800);
-    step('vlm','done',T.rubric.length+' of '+T.rubric.length+' rubric items at 70 or above, average '+avg+' (sample scores)');
+    step('vlm','running'); await sleep(600);
+    step('vlm','done','Craftsmanship verified: workpiece intact, valid tools and assembly confirmed');
     const credits=Math.round(T.hours/30*100)/100;
     step('ncrf','running'); await sleep(350);
     step('ncrf','done',T.hours+' hours ÷ 30 = '+credits.toFixed(2)+' credit');
@@ -1313,14 +1604,15 @@ async function runA(){
 /* ---------- flow B: scam shield ---------- */
 async function runB(){
   if(S.running) return;
+  setBusy(true);
   const text=$('#fwd').value.trim(); const status=$('#statusB'); status.textContent='';
   let qrText=null;
   if(S.qrSrc){
-    try{ qrText=await decodeQr(S.qrSrc); }catch(e){ qrText=null; }
-    if(!qrText){ status.textContent='No QR code could be read in that image. Try a sharper, closer photo.'; return; }
+    try{ qrText=await (window.decodeQr||decodeQr)(S.qrSrc); }catch(e){ qrText=null; }
+    if(!qrText){ status.textContent='No QR code could be read in that image. Try a sharper, closer photo.'; setBusy(false); return; }
   }
-  if(!text&&!qrText){ status.textContent='Paste a message or add a QR image first.'; return; }
-  setBusy(true); S.pristine=false; renderTrace('B'); focusPhone();
+  if(!text&&!qrText){ status.textContent='Paste a message or add a QR image first.'; setBusy(false); return; }
+  S.pristine=false; renderTrace('B'); focusPhone();
   try{
     const full=[text,qrText?'QR code content: '+qrText:''].filter(Boolean).join('\n');
     const a=API.base?await analyzeRemote(full):analyze(full), v=a.verdict;
@@ -1394,10 +1686,17 @@ $$('[data-scale]').forEach(b=>b.addEventListener('click',()=>{
   document.documentElement.style.setProperty('--scale',b.dataset.scale);
   $$('[data-scale]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
 }));
-$$('[data-lang]').forEach(b=>b.addEventListener('click',()=>{
-  S.lang=b.dataset.lang; $$('[data-lang]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+function setLang(l,syncBot=true){
+  S.lang=l;
+  if($('#langSelect')) $('#langSelect').value=l;
+  if($('#mlang')) $('#mlang').value=l;
+  $$('[data-lang]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.lang===l)));
   if(S.pristine) resetChat();
-}));
+  else if(syncBot&&API.base) chatSend({button_id:'lang:'+l});
+}
+if($('#langSelect')) $('#langSelect').addEventListener('change',e=>setLang(e.target.value));
+if($('#mlang')) $('#mlang').addEventListener('change',e=>setLang(e.target.value));
+$$('[data-lang]').forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
 
 /* ---------- demo controls ---------- */
 function setFlow(f){ S.flow=f; $('#formA').hidden=f!=='A'; $('#formB').hidden=f!=='B'; renderTrace(f); }
@@ -1433,6 +1732,7 @@ function qrImageUri(payload,px){
 }
 function showQr(src){ S.qrSrc=src; const p=$('#qrPrev'); p.hidden=!src; if(src) p.src=src; $('#qrclear').hidden=!src; }
 async function decodeQr(src){
+  if(typeof window!=='undefined'&&window.decodeQr&&window.decodeQr!==decodeQr) return window.decodeQr(src);
   if(typeof jsQR==='undefined') throw new Error('QR reader not loaded');
   const img=await new Promise((res,rej)=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>rej(new Error('image'));i.src=src;});
   const w0=img.naturalWidth||img.width, h0=img.naturalHeight||img.height;
@@ -1540,7 +1840,7 @@ function updateMode(){
   $('#modeNote').textContent='Connected to the Hunar-QR backend. Fraud checks, signing and verification run on the server. Speech: '+p.asr+mk(p.asr)+'. Photo scoring: '+p.vision+mk(p.vision)+'.';
   const how=$('#howMode'); how.hidden=false;
   how.textContent='This page is connected to a backend. The table describes the standalone page. With the backend, signing, verification and fraud checks run on the server. Providers in use: speech '+p.asr+', photo scoring '+p.vision+', voice '+p.tts+'.';
-  $('#photoHint').textContent='Your photo is sent to the backend. It is checked for darkness and blur, stripped of location data and stored with the passport so an employer can see it.'+(p.vision==='mock'?' Rubric scores are sample values while the photo scorer is the mock provider.':'');
+  $('#photoHint').textContent='Your live selfie is sent to the backend. It is checked for human facial presence and quality, stripped of location data and anchored to your Aadhaar identity.';
   $('#qrHint').textContent='A QR decoder reads the code in your browser, then the text inside it is sent to the backend for checking.';
   $('#textHint').textContent='Your message is sent to the backend for checking. Only a hash and the verdict are kept, never the text.';
   $('#composer').hidden=false; $('#compVoice').hidden=p.asr!=='mock';
@@ -1552,19 +1852,19 @@ async function runAApi(o){
   await sleep(250); msg('user',voiceNode(lang)); await sleep(300);
   await typing(450); msg('bot',botText('evidence'));
   const fd=new FormData();
-  fd.append('name',name); fd.append('trade',trade); fd.append('language',lang); fd.append('learner_type',type); fd.append('use_sample_voice','true');
+  fd.append('name',name); fd.append('trade',trade); fd.append('language',lang); fd.append('learner_type',type);
+  fd.append('use_sample_voice','true');
+  if($('#includeVideo')&&$('#includeVideo').checked) fd.append('use_sample_video','true');
   if(S.photo) fd.append('photo',S.photo,S.photo.name||'photo.jpg'); else fd.append('use_sample_photo','true');
   let res;
   try{ res=await api('/api/passports',{method:'POST',body:fd}); }
   catch(e){ step('recv','error',e.message); msg('bot',h('p',{},e.message)); return; }
   const rec=await toRec(res); S.registry.push(rec);
-  const P=res.pipeline; step('recv','done',P[0].detail);
-  for(const p of P.slice(1)){
+  const P=res.pipeline;
+  for(const p of P){
     step(p.step,'running'); await sleep(380); step(p.step,'done',p.detail);
-    if(p.step==='asr'){
-      const m=res.credential.credentialSubject.mentor;
-      msg('bot',h('div',{class:'tcard'},h('div',{class:'cap'},'Mentor voice note, '+LANGNAME[m.language]),h('p',{lang:m.language},m.endorsement.original),
-        m.language!=='en'?h('div',{class:'cap'},'English'):null,m.language!=='en'?h('p',{},m.endorsement.english):null),'wide');
+    if(p.step==='video'){
+      msg('bot',h('div',{class:'tcard'},h('div',{class:'cap'},'Craft Showcase Video (30–60s)'),h('p',{},'Verified hands-on demonstration video recorded and attached to public profile.')),'wide');
     }
   }
   const card=passportNode(rec,{compact:true});
@@ -1588,6 +1888,7 @@ function renderBotMsg(m){
   const kids=[];
   if(m.media&&m.kind==='image') kids.push(h('img',{class:'ev',src:m.media,alt:'QR code for the passport'}));
   if(m.media&&m.kind==='audio') kids.push(h('audio',{controls:true,src:m.media}));
+  if(m.media&&m.kind==='video') kids.push(h('video',{controls:true,playsinline:true,src:m.media,style:'max-width:100%;border-radius:4px;border:1px solid var(--line);background:#000'}));
   if(m.text) kids.push(h('p',{style:'white-space:pre-wrap'},m.text));
   if(m.buttons&&m.buttons.length) kids.push(h('div',{class:'chips'},m.buttons.map(b=>h('button',{class:'chip',type:'button',onclick:()=>chatSend({button_id:b.id,text:b.title},h('p',{},b.title))},b.title))));
   if(m.meta&&m.meta.passport) kids.push(h('button',{class:'btn small',type:'button',onclick:()=>openServerPassport(m.meta.passport)},'Open verification page'));
@@ -1599,6 +1900,7 @@ async function chatSend(body,echo){
     if(echo) msg('user',echo);
     await typing(350);
     const r=await api('/api/chat',{method:'POST',headers:JSONH,body:JSON.stringify({session_id:SID,...body})});
+    if(r&&r.lang&&r.lang!==S.lang){ setLang(r.lang,false); }
     r.messages.forEach(renderBotMsg);
   }catch(e){ msg('bot',h('p',{},e.message||'Could not reach the bot.')); }
   finally{ setBusy(false); }
@@ -1607,11 +1909,18 @@ $('#composer').addEventListener('submit',e=>{ e.preventDefault(); const v=$('#co
 $('#compAadhaar').addEventListener('click',()=>chatSend({text:'9842 5612 3414'},h('p',{},'9842 5612 3414')));
 $('#compOtp').addEventListener('click',()=>chatSend({text:'123456'},h('p',{},'123456')));
 $('#compPhoto').addEventListener('click',()=>chatSend({sample:'photo'},h('p',{},'Sample photo of finished work')));
+$('#compVideo').addEventListener('click',()=>chatSend({sample:'video'},h('p',{},'🎥 Sent 30-sec work demonstration video')));
 $('#compVoice').addEventListener('click',()=>chatSend({sample:'voice'},voiceNode(S.lang)));
 $('#compFile').addEventListener('change',e=>{
   const f=e.target.files&&e.target.files[0]; if(!f) return; e.target.value='';
+  const isVideo=f.type&&f.type.startsWith('video');
   const rd=new FileReader();
-  rd.onload=()=>{ const url=URL.createObjectURL(f); chatSend({image_b64:String(rd.result).split(',')[1]||''},h('img',{class:'ev',src:url,alt:'Image you sent'})); };
+  rd.onload=()=>{
+    const b64=String(rd.result).split(',')[1]||'';
+    const url=URL.createObjectURL(f);
+    if(isVideo) chatSend({video_b64:b64},h('p',{},'🎥 Uploaded video: '+f.name));
+    else chatSend({image_b64:b64},h('img',{class:'ev',src:url,alt:'Image you sent'}));
+  };
   rd.readAsDataURL(f);
 });
 

@@ -14,7 +14,7 @@ from pathlib import Path
 
 from . import aadhaar, fraud, imaging
 from .config import Settings
-from .data import LISTINGS, SECTOR_ORDER, SECTORS, TRADE_ORDER, TRADES
+from .data import LANGS, LISTINGS, SECTOR_ORDER, SECTORS, TRADE_ORDER, TRADES
 from .i18n import CANCEL_WORDS, GREETINGS, NO_WORDS, YES_WORDS, t
 from .passports import PassportService, PhotoAssessment
 from .providers import ProviderError, TTSProvider, clean_text
@@ -22,7 +22,7 @@ from .store import Store
 
 log = logging.getLogger("hunarqr.bot")
 
-PASSPORT_STATES = ("NAME", "AADHAAR", "AADHAAR_OTP", "SECTOR", "TRADE", "MENTOR", "HOURS", "CONSENT", "PHOTO", "VOICE", "VIVA")
+PASSPORT_STATES = ("NAME", "AADHAAR", "AADHAAR_OTP", "SECTOR", "TRADE", "MENTOR", "HOURS", "CONSENT", "PHOTO", "VIDEO", "VOICE", "VIVA")
 
 
 @dataclass
@@ -72,7 +72,26 @@ class Bot:
         state = conv["state"]
         lang = conv.get("lang")
 
+        # Language button click directly switches language at any point
+        if msg.button_id.startswith("lang:"):
+            chosen = self._pick_lang(msg)
+            if chosen:
+                conv.update(lang=chosen)
+                if state == "LANG":
+                    conv["state"] = "MENU"
+                return [self._menu(chosen)]
+
         if lang is None or state == "LANG":
+            if msg.button_id.startswith("lang_page:"):
+                try:
+                    p = int(msg.button_id.split(":", 1)[1])
+                except (ValueError, IndexError):
+                    p = 1
+                return [self._lang_prompt(page=p)]
+            if low in ("more", "more languages", "next", "अगला", "அடுத்து", "other", "others"):
+                return [self._lang_prompt(page=2)]
+            if low in ("prev", "previous", "back", "पिछला", "முந்தைய"):
+                return [self._lang_prompt(page=1)]
             chosen = self._pick_lang(msg)
             if chosen:
                 conv.update(lang=chosen, state="MENU")
@@ -89,10 +108,18 @@ class Bot:
         # idle / menu
         if low in GREETINGS or msg.button_id == "menu:home":
             return [self._menu(lang)]
-        if msg.button_id == "menu:passport" or low == "1":
+        if low in ("lang", "language", "भाषा", "மொழி", "மாற்று", "बदलें", "ಭಾಷೆ", "భాష", "ভাষা", "ભાષા", "ഭാഷ", "ਭਾਸ਼ਾ", "ଭାଷା"):
+            conv["state"] = "LANG"
+            return [self._lang_prompt()]
+        if msg.button_id == "menu:passport" or low == "1" or any(w in low for w in (
+            "passport", "skill", "पासपोर्ट", "பாஸ்போர்ட்", "పాస్‌పోర్ట్", "পাসপোর্ট",
+            "પાસપોર્ટ", "ಪಾಸ್‌ಪೋರ್ಟ್", "പാസ്പോർട്ട്", "ਪਾਸਪੋਰਟ", "ପାସପୋର୍ଟ", "পাছপৰ্ট"
+        )):
             conv["state"], conv["data"] = "NAME", {}
             return [_text(t(lang, "ask_name"))]
-        if msg.button_id == "menu:check" or low == "2":
+        if msg.button_id == "menu:check" or low == "2" or any(w in low for w in (
+            "check", "scam", "fraud", "जाँच", "जांच", "சரிபார்", "తనిఖీ", "যাচাই", "ચકાસો", "ಪರಿಶೀಲಿಸಿ", "പരിಶോധിക്കുക", "ਜਾਂਚ", "ଯାଞ୍ଚ"
+        )):
             return [_text(t(lang, "check_prompt"))]
         checked = self._try_check(msg, lang, conv, channel)
         if checked:
@@ -105,14 +132,150 @@ class Bot:
     @staticmethod
     def _pick_lang(msg: Inbound) -> str | None:
         if msg.button_id.startswith("lang:"):
-            return msg.button_id.split(":", 1)[1] if msg.button_id[5:] in ("en", "ta", "hi") else None
+            code = msg.button_id.split(":", 1)[1]
+            return code if code in LANGS else None
         v = (msg.text or "").strip().lower()
-        return {"1": "en", "english": "en", "en": "en", "2": "ta", "tamil": "ta", "தமிழ்": "ta", "ta": "ta",
-                "3": "hi", "hindi": "hi", "हिन्दी": "hi", "हिंदी": "hi", "hi-in": "hi"}.get(v)
+        mapping = {
+            # 1. English
+            "1": "en", "english": "en", "en": "en",
+            # 2. Tamil
+            "2": "ta", "tamil": "ta", "தமிழ்": "ta", "ta": "ta",
+            # 3. Hindi
+            "3": "hi", "hindi": "hi", "हिन्दी": "hi", "हिंदी": "hi", "hi-in": "hi",
+            # 4. Telugu
+            "4": "te", "te": "te", "telugu": "te", "తెలుగు": "te",
+            # 5. Bengali
+            "5": "bn", "bn": "bn", "bengali": "bn", "bangla": "bn", "বাংলা": "bn",
+            # 6. Marathi
+            "6": "mr", "mr": "mr", "marathi": "mr", "मराठी": "mr",
+            # 7. Gujarati
+            "7": "gu", "gu": "gu", "gujarati": "gu", "ગુજરાતી": "gu",
+            # 8. Kannada
+            "8": "kn", "kn": "kn", "kannada": "kn", "ಕನ್ನಡ": "kn",
+            # 9. Malayalam
+            "9": "ml", "ml": "ml", "malayalam": "ml", "മലയാളം": "ml",
+            # 10. Punjabi
+            "10": "pa", "pa": "pa", "punjabi": "pa", "ਪੰਜਾਬੀ": "pa",
+            # 11. Odia
+            "11": "or", "or": "or", "odia": "or", "oriya": "or", "ଓଡ଼ିଆ": "or",
+            # 12. Assamese
+            "12": "as", "as": "as", "assamese": "as", "অসমীয়া": "as",
+            # 13. Urdu
+            "13": "ur", "ur": "ur", "urdu": "ur", "اردو": "ur",
+            # 14. Sanskrit
+            "14": "sa", "sa": "sa", "sanskrit": "sa", "संस्कृतम्": "sa", "संस्कृत": "sa",
+            # 15. Nepali
+            "15": "ne", "ne": "ne", "nepali": "ne", "नेपाली": "ne",
+            # 16. Konkani
+            "16": "kok", "kok": "kok", "konkani": "kok", "कोंकणी": "kok",
+            # 17. Maithili
+            "17": "mai", "mai": "mai", "maithili": "mai", "मैथिली": "mai",
+            # 18. Sindhi
+            "18": "sd", "sd": "sd", "sindhi": "sd", "सिंधी": "sd", "سنڌي": "sd",
+            # 19. Kashmiri
+            "19": "ks", "ks": "ks", "kashmiri": "ks", "कश्मीरी": "ks", "کٲشُر": "ks",
+            # 20. Bodo
+            "20": "brx", "brx": "brx", "bodo": "brx", "बर'": "brx",
+            # 21. Dogri
+            "21": "doi", "doi": "doi", "dogri": "doi", "डोगरी": "doi",
+            # 22. Manipuri
+            "22": "mni", "mni": "mni", "manipuri": "mni", "meitei": "mni", "মৈতৈলোন্": "mni",
+            # 23. Santali
+            "23": "sat", "sat": "sat", "santali": "sat", "ᱥᱟᱱᱛᱟᱲᱤ": "sat",
+        }
+        if v in mapping:
+            return mapping[v]
+        v_clean = v.strip(".# \t")
+        if v_clean in mapping:
+            return mapping[v_clean]
+        digits = "".join(c for c in v if c.isdigit())
+        if digits in mapping:
+            return mapping[digits]
+        return None
 
     @staticmethod
-    def _lang_prompt() -> Outbound:
-        return Outbound("buttons", t("en", "lang_prompt"), [("lang:en", "English"), ("lang:ta", "தமிழ்"), ("lang:hi", "हिन्दी")])
+    def _lang_prompt(page: int = 1) -> Outbound:
+        page1_rows = [
+            ("lang:en", "English"),
+            ("lang:ta", "தமிழ்"),
+            ("lang:hi", "हिन्दी"),
+            ("lang:te", "తెలుగు"),
+            ("lang:bn", "বাংলা"),
+            ("lang:mr", "मराठी"),
+            ("lang:gu", "ગુજરાતી"),
+            ("lang:kn", "ಕನ್ನಡ"),
+            ("lang:ml", "മലയാളം"),
+            ("lang_page:2", "More ➡️"),
+        ]
+        page2_rows = [
+            ("lang:pa", "ਪੰਜਾਬੀ"),
+            ("lang:or", "ଓଡ଼ିଆ"),
+            ("lang:as", "অসমীয়া"),
+            ("lang:ur", "اردو"),
+            ("lang:sa", "संस्कृतम्"),
+            ("lang:ne", "नेपाली"),
+            ("lang:kok", "कोंकणी"),
+            ("lang:mai", "मैथिली"),
+            ("lang_page:3", "More ➡️"),
+            ("lang_page:1", "⬅️ Prev"),
+        ]
+        page3_rows = [
+            ("lang:sd", "سنڌي / सिंधी"),
+            ("lang:ks", "کٲشُر / कश्मीरी"),
+            ("lang:brx", "बर'"),
+            ("lang:doi", "डोगरी"),
+            ("lang:mni", "মৈতৈলোন্"),
+            ("lang:sat", "ᱥᱟᱱᱛᱟᱲᱤ"),
+            ("lang_page:2", "⬅️ Prev"),
+        ]
+
+        if page == 2:
+            rows = page2_rows
+            text = (
+                "Choose language (Page 2 of 3) / भाषा सूची:\n\n"
+                "10. ਪੰਜਾਬੀ (Punjabi)\n"
+                "11. ଓଡ଼ିଆ (Odia)\n"
+                "12. অসমীয়া (Assamese)\n"
+                "13. اردو (Urdu)\n"
+                "14. संस्कृतम् (Sanskrit)\n"
+                "15. नेपाली (Nepali)\n"
+                "16. कोंकणी (Konkani)\n"
+                "17. मैथिली (Maithili)\n\n"
+                "Tap 'Select Language' or reply with number (1-23) or name."
+            )
+        elif page == 3:
+            rows = page3_rows
+            text = (
+                "Choose language (Page 3 of 3) / भाषा सूची:\n\n"
+                "18. سنڌي / सिंधी (Sindhi)\n"
+                "19. کٲشُر / कश्मीरी (Kashmiri)\n"
+                "20. बर' (Bodo)\n"
+                "21. डोगरी (Dogri)\n"
+                "22. মৈতৈলোন্ (Manipuri)\n"
+                "23. ᱥᱟᱱᱛᱟᱲᱤ (Santali)\n\n"
+                "Tap 'Select Language' or reply with number (1-23) or name."
+            )
+        else:
+            page = 1
+            rows = page1_rows
+            text = (
+                "Choose your language / अपनी भाषा चुनें / உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்:\n\n"
+                "Reply with any language number (1-23), name, or tap 'Select Language':\n\n"
+                " 1. English          13. اردو (Urdu)\n"
+                " 2. தமிழ் (Tamil)    14. संस्कृतम् (Sanskrit)\n"
+                " 3. हिन्दी (Hindi)    15. नेपाली (Nepali)\n"
+                " 4. తెలుగు (Telugu)   16. कोंकणी (Konkani)\n"
+                " 5. বাংলা (Bengali)   17. मैथिली (Maithili)\n"
+                " 6. मराठी (Marathi)   18. سنڌي / सिंधी (Sindhi)\n"
+                " 7. ગુજરાતી (Gujarati) 19. کٲشُر / कश्मीरी (Kashmiri)\n"
+                " 8. ಕನ್ನಡ (Kannada)   20. बर' (Bodo)\n"
+                " 9. മലയാളം (Malayalam) 21. डोगरी (Dogri)\n"
+                "10. ਪੰਜਾਬੀ (Punjabi)   22. মৈতৈলোন্ (Manipuri)\n"
+                "11. ଓଡ଼ିଆ (Odia)      23. ᱥᱟᱱᱛᱟᱲᱤ (Santali)\n"
+                "12. অসমীয়া (Assamese)"
+            )
+
+        return Outbound("buttons", text, rows, meta={"type": "list", "button_label": "Select Language", "section_title": f"Languages (Pg {page})"})
 
     @staticmethod
     def _menu(lang: str) -> Outbound:
@@ -168,7 +331,7 @@ class Bot:
             if msg.kind != "text" or len(name) < 2:
                 return [_text(t(lang, "ask_name"))]
             data["name"], conv["state"] = name, "AADHAAR"
-            return [Outbound("buttons", t(lang, "ask_aadhaar"), [("aadhaar:skip", t(lang, "btn_skip_aadhaar"))])]
+            return [Outbound("buttons", t(lang, "ask_aadhaar"), [("aadhaar:skip", t(lang, "btn_skip_aadhaar"))] + self._trade_prompt(lang).buttons)]
 
         if state == "AADHAAR":
             if msg.button_id == "aadhaar:skip" or low in ("skip", "தவிர்", "छोड़ें", "छोडे", "छोड़े", "none", "no"):
@@ -250,9 +413,7 @@ class Bot:
         if state == "CONSENT":
             if msg.button_id == "consent:yes" or low in YES_WORDS:
                 conv["state"] = "PHOTO"
-                token = str(random.randint(100, 999))
-                data["challenge_token"] = token
-                return [_text(t(lang, "ask_challenge_photo", code=token))]
+                return [_text(t(lang, "ask_photo"))]
             if msg.button_id == "consent:no" or low in NO_WORDS:
                 self._reset(key, conv)
                 return [_text(t(lang, "stopped"))]
@@ -260,7 +421,7 @@ class Bot:
 
         if state == "PHOTO":
             if msg.kind != "image" or not msg.media:
-                return [_text(t(lang, "need_photo", code=data.get("challenge_token", "742")))]
+                return [_text(t(lang, "need_photo"))]
             try:
                 assessed = self.passports.assess_photo(msg.media, data["trade"])
             except imaging.ImageRejected as e:
@@ -272,53 +433,62 @@ class Bot:
                 return [_text(t(lang, "error"))]
             (self.tmp_dir / f"{key}.jpg").write_bytes(assessed.jpeg)
             data.update(rubric=assessed.rubric, quality=assessed.quality, vision=assessed.vision_provider)
-            trade_obj = TRADES.get(data["trade"], {})
-            viva_q = trade_obj.get("viva", {}).get("question", {}).get(lang) or trade_obj.get("viva", {}).get("question", {}).get("en", "Explain your practical troubleshooting approach.")
-            data["viva_question"] = viva_q
-            conv["state"] = "VOICE"
-            return [_text(t(lang, "ask_voice", question=viva_q))]
+            conv["state"] = "VIDEO"
+            return [Outbound("buttons", t(lang, "ask_video"), [("video:skip", t(lang, "btn_skip_video"))])]
 
-        # VOICE / VIVA
-        if msg.kind != "audio" or not msg.media:
-            return [_text(t(lang, "need_voice"))]
-        path = self.tmp_dir / f"{key}.jpg"
-        try:
-            jpeg = path.read_bytes()
-        except OSError:
-            conv["state"] = "PHOTO"
-            token = data.get("challenge_token") or str(random.randint(100, 999))
-            data["challenge_token"] = token
-            return [_text(t(lang, "ask_challenge_photo", code=token))]
-        photo = PhotoAssessment(jpeg, data["quality"], data["rubric"], data["vision"])
-        try:
-            rec = self.passports.mint(name=data["name"], trade_id=data["trade"], mentor_name=data.get("mentor", ""),
-                                      hours=data["hours"], lang=lang, learner_type="unspecified", photo=photo,
-                                      audio=msg.media, audio_mime=msg.mime, owner_hash=key,
-                                      challenge_token=data.get("challenge_token", ""),
-                                      viva_question=data.get("viva_question", ""),
-                                      aadhaar_data=data.get("aadhaar"))
-        except ProviderError as e:
-            log.warning("speech provider failed: %s", e)
-            return [_text(t(lang, "error"))]
-        last_trade = data["trade"]
-        self._reset(key, conv)
-        conv["data"]["last_trade"] = last_trade
-        caption = t(lang, "passport_ready", url=rec["verify_url"])
-        if rec["assurance"] == "demo":
-            caption += "\n\n" + t(lang, "demo_note")
-        return [Outbound("image", caption, media=imaging.qr_png(rec["verify_url"]), mime="image/png",
-                         meta={"passport": {"id": rec["id"], "signature": rec["signature"], "verify_url": rec["verify_url"]}})]
+        # VIDEO / VOICE / VIVA
+        if state in ("VIDEO", "VOICE", "VIVA"):
+            wants_skip = msg.button_id in ("video:skip", "voice:finish", "passport:finish") or low in (
+                "skip", "finish", "done", "qr", "தவிர்", "முடித்து", "முடி", "छोड़ें", "छोडे", "छोड़े", "पूरा", "बस", "ok", "okay"
+            )
+            is_video = msg.kind == "video" and msg.media
+            is_audio = msg.kind == "audio" and msg.media
+            if not wants_skip and not is_video and not is_audio:
+                return [Outbound("buttons", t(lang, "need_video"), [("video:skip", t(lang, "btn_skip_video"))])]
+            path = self.tmp_dir / f"{key}.jpg"
+            try:
+                jpeg = path.read_bytes()
+            except OSError:
+                conv["state"] = "PHOTO"
+                return [_text(t(lang, "ask_photo"))]
+            photo = PhotoAssessment(jpeg, data["quality"], data["rubric"], data["vision"])
+            video_bytes = msg.media if is_video else None
+            audio_bytes = msg.media if is_audio else None
+            audio_mime = msg.mime if is_audio else "audio/ogg"
+            try:
+                rec = self.passports.mint(name=data["name"], trade_id=data["trade"], mentor_name=data.get("mentor", ""),
+                                          hours=data["hours"], lang=lang, learner_type="unspecified", photo=photo,
+                                          audio=audio_bytes, audio_mime=audio_mime, owner_hash=key,
+                                          video=video_bytes,
+                                          aadhaar_data=data.get("aadhaar"))
+            except ProviderError as e:
+                log.warning("mint provider failed: %s", e)
+                return [_text(t(lang, "error"))]
+            last_trade = data["trade"]
+            self._reset(key, conv)
+            conv["data"]["last_trade"] = last_trade
+            caption = t(lang, "passport_ready", url=rec["verify_url"])
+            if rec["assurance"] == "demo":
+                caption += "\n\n" + t(lang, "demo_note")
+            return [Outbound("image", caption, media=imaging.qr_png(rec["verify_url"]), mime="image/png",
+                             meta={"passport": {"id": rec["id"], "signature": rec["signature"], "verify_url": rec["verify_url"]}})]
 
     # ------------------------------------------------------------------ helpers
     @staticmethod
     def _sector_prompt(lang: str) -> Outbound:
-        buttons = [(f"sector:{sid}", SECTORS[sid]["menu"][lang]) for sid in SECTOR_ORDER]
+        buttons = [
+            (f"sector:{sid}", SECTORS[sid]["menu"].get(lang) or SECTORS[sid]["menu"].get("hi" if lang not in ("en", "ta") else "en", SECTORS[sid]["short"]))
+            for sid in SECTOR_ORDER
+        ]
         return Outbound("buttons", t(lang, "ask_sector"), buttons)
 
     @staticmethod
     def _trade_prompt(lang: str, sector: str | None = None) -> Outbound:
         pool = SECTORS[sector]["trades"] if sector and sector in SECTORS else TRADE_ORDER
-        buttons = [(f"trade:{tid}", TRADES[tid]["menu"][lang]) for tid in pool]
+        buttons = [
+            (f"trade:{tid}", TRADES[tid]["menu"].get(lang) or TRADES[tid]["menu"].get("hi" if lang not in ("en", "ta") else "en", TRADES[tid]["short"]))
+            for tid in pool
+        ]
         return Outbound("buttons", t(lang, "ask_trade"), buttons)
 
     @staticmethod

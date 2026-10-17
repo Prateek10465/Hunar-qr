@@ -57,10 +57,10 @@ def parse_webhook(payload: dict) -> list[WAMessage]:
                     inter = m.get("interactive") or {}
                     rep = inter.get("button_reply") or inter.get("list_reply") or {}
                     out.append(WAMessage(mid, sender, "button", text=rep.get("title", ""), button_id=rep.get("id", "")))
-                elif typ in ("image", "audio"):
+                elif typ in ("image", "audio", "video"):
                     media = m.get(typ) or {}
                     out.append(WAMessage(mid, sender, typ, media_id=media.get("id", ""), mime=media.get("mime_type", ""),
-                                         text=media.get("caption", "") if typ == "image" else ""))
+                                         text=media.get("caption", "") if typ in ("image", "video") else ""))
                 else:
                     out.append(WAMessage(mid, sender, "other"))
     return out
@@ -132,7 +132,7 @@ def process_webhook(payload: dict, *, bot: Bot, client: WhatsAppClient, store: S
         try:
             if wm.kind == "other":
                 inbound = Inbound("text", "")
-            elif wm.kind in ("image", "audio"):
+            elif wm.kind in ("image", "audio", "video"):
                 data, mime = client.download_media(wm.media_id)
                 inbound = Inbound(wm.kind, wm.text, media=data, mime=mime or wm.mime)
             else:

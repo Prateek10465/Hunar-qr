@@ -47,8 +47,10 @@ class ChatIn(BaseModel):
     button_id: str = Field("", max_length=64)
     image_b64: str = Field("", max_length=8_000_000)
     audio_b64: str = Field("", max_length=8_000_000)
-    sample: Literal["", "photo", "voice"] = ""
+    video_b64: str = Field("", max_length=30_000_000)
+    sample: Literal["", "photo", "voice", "video"] = ""
     reset: bool = False
+    lang: str = Field("", max_length=16)
 
 
 def _unb64(data: str, limit: int, what: str) -> bytes:
@@ -174,8 +176,10 @@ def create_app(settings: Settings | None = None, *, asr=None, vision=None, tts=N
     def create_passport(name: str = Form(...), trade: str = Form(...), language: str = Form("en"),
                         mentor_name: str = Form(""), hours: int | None = Form(None),
                         learner_type: str = Form("unspecified"), use_sample_photo: bool = Form(False),
-                        use_sample_voice: bool = Form(False), demo_seed: bool = Form(False),
-                        photo: UploadFile | None = File(None), audio: UploadFile | None = File(None)):
+                        use_sample_voice: bool = Form(False), use_sample_video: bool = Form(False),
+                        demo_seed: bool = Form(False),
+                        photo: UploadFile | None = File(None), audio: UploadFile | None = File(None),
+                        video: UploadFile | None = File(None)):
         """Web-demo minting. The WhatsApp bot is the real channel; this lets a browser demo the same pipeline."""
         if trade not in TRADES:
             raise HTTPException(422, "Unknown trade")
@@ -196,15 +200,17 @@ def create_app(settings: Settings | None = None, *, asr=None, vision=None, tts=N
                 raise HTTPException(422, "Send a photo or set use_sample_photo")
             raw_photo = imaging.sample_image(trade)
         raw_audio = _read_upload(audio, s.max_upload_bytes, "audio")
-        if raw_audio is None:
-            if not use_sample_voice or asr.name != "mock":
-                raise HTTPException(422, "Send a voice note" + ("" if asr.name == "mock" else " (sample voice is only available with the mock speech provider)"))
+        if raw_audio is None and use_sample_voice and asr.name == "mock":
             raw_audio = b"sample-voice-note"
+        raw_video = _read_upload(video, s.max_upload_bytes * 3, "video")
+        if raw_video is None and use_sample_video:
+            raw_video = imaging.sample_video(trade)
         try:
             assessed = svc.assess_photo(raw_photo, trade)
             rec = svc.mint(name=name, trade_id=trade, mentor_name=mentor, hours=hours, lang=language,
                            learner_type=learner_type, photo=assessed, audio=raw_audio,
                            audio_mime=audio.content_type if audio else "audio/ogg",
+                           video=raw_video, video_mime=video.content_type if video else "video/mp4",
                            owner_hash="demo" if demo_seed else "web")
         except imaging.ImageRejected as e:
             raise HTTPException(422, t("en", "bad_photo", reason=t("en", f"r_{e.code}")))
@@ -254,7 +260,7 @@ def create_app(settings: Settings | None = None, *, asr=None, vision=None, tts=N
         res = svc.verify(svc.verify_url(pid, rec["signature"]))
         return HTMLResponse(render_passport(pid=pid, cred=rec["credential"], result=res, sig_param=rec["signature"],
                                             fingerprint=fingerprint(unb64u(rec["signature"]))),
-                            headers={"Content-Security-Policy": "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"})
+                            headers={"Content-Security-Policy": "default-src 'none'; img-src 'self' data:; media-src 'self' data:; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'"})
 
     @app.get("/v/{pid}/evidence.jpg")
     def evidence(pid: str, sig: str = Query("", alias="s")):
@@ -263,6 +269,14 @@ def create_app(settings: Settings | None = None, *, asr=None, vision=None, tts=N
         if not p.is_file():
             raise HTTPException(404, "Evidence not found")
         return FileResponse(p, media_type="image/jpeg")
+
+    @app.get("/v/{pid}/video.mp4")
+    def video_evidence(pid: str, sig: str = Query("", alias="s")):
+        rec = _owned(pid, sig)
+        p = Path(rec["evidence_path"]).with_suffix(".mp4")
+        if not p.is_file():
+            raise HTTPException(404, "Showcase video not found")
+        return FileResponse(p, media_type="video/mp4")
 
     @app.get("/v/{pid}/qr.png")
     def qr_image(pid: str, sig: str = Query("", alias="s")):
@@ -286,15 +300,29 @@ def create_app(settings: Settings | None = None, *, asr=None, vision=None, tts=N
         if body.reset:
             store.delete_conversation(key)
         conv = store.get_conversation(key) or {}
+        if body.lang and body.lang in LANGS:
+            if not conv:
+                conv = {"state": "MENU", "lang": body.lang, "data": {}}
+                store.save_conversation(key, conv)
+            elif conv.get("state") == "LANG" or conv.get("lang") != body.lang:
+                conv["lang"] = body.lang
+                if conv.get("state") == "LANG":
+                    conv["state"] = "MENU"
+                store.save_conversation(key, conv)
         if body.sample == "photo":
             trade = (conv.get("data") or {}).get("trade") or "electrical"
             msg = Inbound("image", media=imaging.sample_image(trade), mime="image/png")
+        elif body.sample == "video":
+            trade = (conv.get("data") or {}).get("trade") or "electrical"
+            msg = Inbound("video", media=imaging.sample_video(trade), mime="video/mp4")
         elif body.sample == "voice":
             if asr.name != "mock":
                 raise HTTPException(422, "Sample voice is only available with the mock speech provider")
             msg = Inbound("audio", media=b"sample-voice-note", mime="audio/ogg")
         elif body.image_b64:
             msg = Inbound("image", media=_unb64(body.image_b64, s.max_upload_bytes, "image"), mime="image/jpeg")
+        elif body.video_b64:
+            msg = Inbound("video", media=_unb64(body.video_b64, s.max_upload_bytes * 3, "video"), mime="video/mp4")
         elif body.audio_b64:
             msg = Inbound("audio", media=_unb64(body.audio_b64, s.max_upload_bytes, "audio"), mime="audio/ogg")
         elif body.button_id:
@@ -330,6 +358,29 @@ def create_app(settings: Settings | None = None, *, asr=None, vision=None, tts=N
             raise HTTPException(400, "Invalid JSON")
         background.add_task(process_webhook, payload, bot=bot, client=wa, store=store, hash_user=hash_user)
         return {"status": "ok"}
+
+    # ------------------------------------------------------------------ favicon
+    @app.get("/favicon.ico", include_in_schema=False)
+    def favicon_ico():
+        for candidate in (
+            (Path(s.web_dir) / "favicon.ico") if s.web_dir else None,
+            Path("web/favicon.ico"),
+            Path(__file__).resolve().parent.parent.parent / "web" / "favicon.ico",
+        ):
+            if candidate and candidate.is_file():
+                return FileResponse(candidate, media_type="image/x-icon", headers={"Cache-Control": "public, max-age=86400"})
+        return Response(status_code=204)
+
+    @app.get("/favicon.png", include_in_schema=False)
+    def favicon_png():
+        for candidate in (
+            (Path(s.web_dir) / "favicon.png") if s.web_dir else None,
+            Path("web/favicon.png"),
+            Path(__file__).resolve().parent.parent.parent / "web" / "favicon.png",
+        ):
+            if candidate and candidate.is_file():
+                return FileResponse(candidate, media_type="image/png", headers={"Cache-Control": "public, max-age=86400"})
+        return Response(status_code=204)
 
     # ------------------------------------------------------------------ static web demo (last, so API routes win)
     web = Path(s.web_dir) if s.web_dir else None
